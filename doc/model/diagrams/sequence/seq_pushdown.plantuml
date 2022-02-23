@@ -1,0 +1,33 @@
+@startuml
+!include ../clean.skin
+
+title: Query Push-down
+
+Participant request_dispatcher
+Participant vs_adapter
+Participant query_rewriter
+Participant query_renderer
+
+activate request_dispatcher
+request_dispatcher -> vs_adapter : push down (request)
+activate vs_adapter
+vs_adapter -> vs_adapter : extract adapter notes (request)
+activate vs_adapter
+deactivate vs_adapter
+vs_adapter -> query_rewriter : rewrite (query, schema\nadapter notes, involved table[])
+activate query_rewriter
+
+ref over query_rewriter : **[[../activity/act_rewrite_with_protection.svg rewrite query]]** 
+
+create query_renderer
+query_rewriter -> query_renderer : create (query)
+'[dsn -> req~render-sql-query~1 >> impl, utest]
+query_rewriter -> query_renderer : render ()
+activate query_renderer
+query_renderer -->> query_rewriter : query : SQL string
+deactivate query_renderer
+query_rewriter --> vs_adapter : query : SQL string
+deactivate query_rewriter
+vs_adapter -->> request_dispatcher : wrapped response
+deactivate vs_adapter 
+@enduml

@@ -1,0 +1,10 @@
+/target/
+*.log
+*~
+*.md.html
+/.dbeaver
+Scripts
+*.out
+.idea
+*.iml
+.project

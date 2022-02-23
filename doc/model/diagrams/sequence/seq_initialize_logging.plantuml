@@ -1,0 +1,24 @@
+@startuml
+!include ../clean.skin
+
+title Initialize Logging
+
+participant request_dispatcher
+participant log <<external>>
+
+activate request_dispatcher
+
+alt DEBUG_ADDRESS property set
+    '[dsn -> req~remote-logging~1 >> impl, utest]
+    request_dispatcher -> request_dispatcher : extract host and port
+    activate request_dispatcher
+    deactivate request_dispatcher
+    request_dispatcher -> log : connect(host, port)
+    activate log
+    deactivate log
+else
+    '[dsn -> req~console-logging~1 >> impl, utest]
+    note over request_dispatcher, log : console logging active 
+end
+
+@enduml

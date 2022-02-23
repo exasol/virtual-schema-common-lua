@@ -1,0 +1,76 @@
+@startuml
+!include ../clean.skin
+
+title Dispatch Request
+
+participant entry <<external>>
+participant request_dispatcher
+participant vs_adapter <<external>>
+participant log <<external>>
+participant cjson <<external>>
+activate entry
+
+'[dsn -> req~translating-json-request-to-lua-tables~1 >> impl, utest]
+entry --> request_dispatcher : adapter_call (request : JSON string)
+
+activate request_dispatcher
+
+request_dispatcher -> cjson : decode (request : JSON string)
+activate cjson
+cjson -->> request_dispatcher : request
+deactivate cjson
+
+ref over request_dispatcher, log : **[[seq_initialize_logging.svg initialize logging]]**
+
+request_dispatcher -> log : debug(request : JSON string)
+activate log
+deactivate log
+
+request_dispatcher -> request_dispatcher : xpcall
+activate request_dispatcher
+alt
+    '[dsn -> req~dispatching-create-schema-requests~1 >> impl, utest]
+    request_dispatcher -> vs_adapter : [[seq_create_virtual_schema.svg create virtual schema (request)]]
+    activate vs_adapter
+else
+    '[dsn -> req~dispatching-adapter-capabilities-requests~1 >> impl, utest]
+    request_dispatcher -> vs_adapter : [[seq_get_capabilities.svg get capabilities (request)]]
+else
+    '[dsn -> req~dispatching-set-properties-requests~1 >> impl, utest]
+    request_dispatcher -> vs_adapter : [[seq_set_properties.svg set properties (request)]]
+else
+    '[dsn -> req~dispatching-push-down-requests~1 >> impl, utest]
+    request_dispatcher -> vs_adapter : [[seq_pushdown.svg pushdown (request)]]
+else
+    '[dsn -> req~dispatching-refresh-requests~1 >> impl, utest]
+    request_dispatcher -> vs_adapter : [[seq_refresh.svg refresh (request)]]
+else
+    '[dsn -> req~dispatching-drop-schema-requests~1 >> impl, utest]
+    request_dispatcher -> vs_adapter : [[seq_drop_virtual_schema.svg drop virtual schema(request)]]
+end
+activate vs_adapter
+...
+vs_adapter -->> request_dispatcher : response
+deactivate vs_adapter
+request_dispatcher -> cjson : encode (request)
+activate cjson
+cjson -->> request_dispatcher : request : JSON string
+deactivate cjson
+request_dispatcher -> log : debug(response : JSON string)
+activate log
+deactivate log
+deactivate request_dispatcher
+
+request_dispatcher -> log : disconnect ()
+
+alt success
+    
+    '[dsn -> req~translating-lua-tables-to-json-responses~1 >> impl, utest]
+    request_dispatcher -->> entry : response : JSON string
+else error
+    <<-- request_dispatcher : throw (error)
+end
+
+deactivate request_dispatcher
+
+@enduml

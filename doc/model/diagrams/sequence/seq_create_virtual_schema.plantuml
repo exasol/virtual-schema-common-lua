@@ -1,0 +1,14 @@
+@startuml
+!include ../clean.skin
+
+title: Create Virtual Schema
+
+Participant request_dispatcher
+Participant vs_adapter <<external>>
+
+activate request_dispatcher
+request_dispatcher -> vs_adapter : create virtual schema (request)
+activate vs_adapter
+vs_adapter -->> request_dispatcher : schema metadata, adapter notes
+deactivate vs_adapter 
+@enduml
