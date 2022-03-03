@@ -1,14 +1,16 @@
 local luaunit = require("luaunit")
-local renderer = require("exasolvs.query_renderer")
+local QueryRenderer = require("exasolvs.QueryRenderer")
 
 test_query_renderer = {}
 
 local function assert_renders_to(original_query, expected)
-    luaunit.assertEquals(renderer.new(original_query).render(), expected)
+    local renderer = QueryRenderer.create(original_query)
+    luaunit.assertEquals(renderer:render(), expected)
 end
 
 local function assert_rendering_error_contains(original_query, message)
-    luaunit.assertErrorMsgContains(message, renderer.new(original_query).render)
+    local renderer = QueryRenderer.create(original_query)
+    luaunit.assertErrorMsgContains(message, function () renderer:render() end)
 end
 
 function test_query_renderer.test_render_select_star()
@@ -1439,7 +1441,7 @@ function test_query_renderer.test_subselect()
 end
 
 function test_query_renderer.test_join()
-    for join_type, join_keyword in pairs(renderer.join_types) do
+    for join_type, join_keyword in pairs(QueryRenderer.get_join_types()) do
         local original_query = {
             type = "select",
             selectList = {

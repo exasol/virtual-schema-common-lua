@@ -1,3 +1,5 @@
+# This is a hybrid Lua /Java project, so we need to check in .project and .classpath
+
 /target/
 *.log
 *~
@@ -7,4 +9,3 @@ Scripts
 *.out
 .idea
 *.iml
-.project
