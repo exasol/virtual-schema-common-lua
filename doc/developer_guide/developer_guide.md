@@ -77,7 +77,15 @@ The test output contains summaries and you will find reports in the `luaunit-rep
 
 ### Understanding the Sources
 
-Under [doc/model](../model) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
+Under [doc/model](../../model) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
+
+You can render the model by running:
+
+```bash
+mvn com.github.jeluard:plantuml-maven-plugin:generate
+```
+
+The resulting SVG files are located under [target/plantuml](../../target/plantuml). They contain links for drilling down.
 
 Since the model contains all imporant information, here just a very short summary.
 
