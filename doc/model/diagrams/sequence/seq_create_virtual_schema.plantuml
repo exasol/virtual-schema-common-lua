@@ -3,12 +3,12 @@
 
 title: Create Virtual Schema
 
-Participant request_dispatcher
-Participant vs_adapter <<external>>
+Participant RequestDispatcher
+Participant VirtualSchemaAdapter <<external>>
 
-activate request_dispatcher
-request_dispatcher -> vs_adapter : create virtual schema (request)
-activate vs_adapter
-vs_adapter -->> request_dispatcher : schema metadata, adapter notes
-deactivate vs_adapter 
+activate RequestDispatcher
+RequestDispatcher -> VirtualSchemaAdapter : create virtual schema (request)
+activate VirtualSchemaAdapter
+VirtualSchemaAdapter -->> RequestDispatcher : schema metadata, adapter notes
+deactivate VirtualSchemaAdapter 
 @enduml

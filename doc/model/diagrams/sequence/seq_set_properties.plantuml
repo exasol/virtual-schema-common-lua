@@ -3,12 +3,13 @@
 
 title: Set Properties
 
-Participant request_dispatcher
-Participant vs_adapter
+Participant RequestDispatcher
+Participant VirtualSchemaAdapter
 
-activate request_dispatcher
-request_dispatcher -> vs_adapter : set properties (request)
-activate vs_adapter
-vs_adapter -->> request_dispatcher
-deactivate vs_adapter 
+activate RequestDispatcher
+RequestDispatcher -> VirtualSchemaAdapter : set properties (request)
+activate VirtualSchemaAdapter
+VirtualSchemaAdapter -->> RequestDispatcher
+deactivate VirtualSchemaAdapter
+deactivate RequestDispatcher 
 @enduml

@@ -29,5 +29,5 @@ Engine - virtual_schema
 
 source -[hidden]d- virtual_schema
 
-url of vs_adapter is [[../component/comp_rls_virtual_schema.svg]]
+url of vs_adapter is [[../class/cl_rls_virtual_schema.svg]]
 @enduml

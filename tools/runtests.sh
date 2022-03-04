@@ -13,9 +13,7 @@ fi
 readonly exit_ok=0
 readonly exit_software=2
 readonly src_module_path="$base_dir/src/main/lua"
-readonly src_exasolrls_path="$src_module_path/exasolrls"
 readonly src_exasolvs_path="$src_module_path/exasolvs"
-readonly src_administration_path="$src_module_path/administration"
 readonly test_module_path="$base_dir/src/test/lua"
 readonly target_dir="$base_dir/target"
 readonly reports_dir="$target_dir/luaunit-reports"
@@ -95,14 +93,17 @@ function print_coverage_summary {
 ##
 # Analyze the Lua code with "luacheck".
 #
+# Ignores
+# - 212: unused argrument self
+#
 # Return exit status of code coverage.
 #
 function run_static_code_analysis {
     echo
     echo "Running static code analysis"
     echo
-    luacheck "$src_exasolrls_path" "$src_exasolvs_path" "$test_module_path" --codes --ignore 111 --ignore 112
-    luacheck "$src_administration_path" --codes --ignore 111 --ignore 112 --ignore 113
+    luacheck "$src_exasolvs_path" "$test_module_path" --codes \
+    --ignore 111 --ignore 112 --ignore 212
     return "$?"
 }
 

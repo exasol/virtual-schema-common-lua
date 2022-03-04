@@ -44,22 +44,6 @@ Most of those packages are only required for testing. While `cjson` is needed at
 
 The `luacov` and `luacov-coveralls` libraries take care of measuring and reporting code coverage in the tests.
 
-### Bundling the Main Script and the Modules
-
-As most non-trivial pieces of software, `row-level-security-lua` is modularized. While it is possible to install individual modules as Lua scripts in Exasol, this is also a lot of work. And the more modules you install individually, the higher the chances you forget to update one of them. A safer and more convenient way is to bundle everything into one script before the installation using [lua-amalg](https://github.com/siffiejoe/lua-amalg/).
-
-To make this process easier, the [Maven POM file](../../pom.xml) contains an execution that automates this step. Still it is necessary to add new modules by hand in the list of modules to be bundled in the POM.
-
-Note that the entry point `request_dispatcher.lua` is a regular Lua script that must be added to the bundle using the `-s` switch and its relative path. The remaining bundle elements are Lua modules and must be listed in dot-notation.
-
-To make a bundle via Maven run the following command:
-
-```bash
-mvn exec:exec@bundle
-```
-
-This is quite fast since it skips the other Maven steps.
-
 ## How to Run Lua Unit Tests
 
 ### Run Unit Tests From Terminal
@@ -90,6 +74,18 @@ tools/runtests.sh
 ```
 
 The test output contains summaries and you will find reports in the `luaunit-reports` and `luacov-reports` directories.
+
+### Understanding the Sources
+
+Under [doc/model](../model) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
+
+Since the model contains all imporant information, here just a very short summary.
+
+1. VSCL provides a base library for writing your own Virtual Schemas in Lua
+1. The resulting package is available as LuaRocks package `virtual-schema-common-lua`
+1. In your concrete Virtual Schema implementation you need to write an `entry` module, that has an `adapter_call` entry function
+1. The `entry` module should create and wire up all static objects (like the `RequestDispatcher` for example)
+1. Use the `remotelog` package for logging
 
 ### Running the Unit Tests From Intellij IDEA
 

@@ -1,7 +1,7 @@
 local text = require("text")
 
 ---
--- @module exasolvs.VsAdapter
+-- @module exasolvs.AbstractVirtualSchemaAdapter
 --
 -- This module implements an abstract base adapter with common behavior for some of the request callback functions.
 -- <p>
@@ -10,26 +10,26 @@ local text = require("text")
 -- request.
 -- </p>
 --
-local VsAdapter = {
-}
+local AbstractVirtualSchemaAdapter = {
+    }
 
 ---
 -- Get the adapter name
--- 
+--
 -- @return adapter name
--- 
-function VsAdapter:get_name()
-    error("Method 'VsAdapter:get_name' is abstract.")
-end 
+--
+function AbstractVirtualSchemaAdapter:get_name()
+    error("Method 'AbstractVirtualSchemaAdapter:get_name' is abstract.")
+end
 
 ---
 -- Get the adapter version
--- 
+--
 -- @return version of the adapter
--- 
-function VsAdapter:get_version()
-    error("Method 'VsAdapter:get_version' is abstract.")
-end 
+--
+function AbstractVirtualSchemaAdapter:get_version()
+    error("Method 'AbstractVirtualSchemaAdapter:get_version' is abstract.")
+end
 
 ---
 -- Define the list of all capabilities this adapter supports.
@@ -37,12 +37,12 @@ end
 -- Override this method in derived adapter class. Note that this differs from <code>get_capabilities</code> because
 -- the later takes exclusions defined by the user into consideration.
 -- </p>
--- 
+--
 -- @return list of all capabilities of this adapter
--- 
-function VsAdapter:_define_capabilities()
-    error("Method 'VsAdapter:_define_capabilites' is abstract.")
-end 
+--
+function AbstractVirtualSchemaAdapter:_define_capabilities()
+    error("Method 'AbstractVirtualSchemaAdapter:_define_capabilites' is abstract.")
+end
 
 ---
 -- Create a new instance of a Virtual Schema base adapter
@@ -51,7 +51,7 @@ end
 --
 -- @return adapter instance
 --
-function VsAdapter:new(object)
+function AbstractVirtualSchemaAdapter:new(object)
     object = object or {}
     self.__index = self
     setmetatable(object, self)
@@ -88,7 +88,7 @@ end
 --
 -- @return list of non-excluded adapter capabilities
 --
-function VsAdapter:get_capabilities(_, request)
+function AbstractVirtualSchemaAdapter:get_capabilities(_, request)
     local excluded_capabilities_property_value = (((request or {}).schemaMetadataInfo or {}).properties or {})
         .EXCLUDED_CAPABILITIES
     if excluded_capabilities_property_value == nil then
@@ -105,17 +105,17 @@ end
 ---
 -- Drop the virtual schema.
 -- <p>
---
---
+-- Override this method to implement clean-up if the adapter is not stateless.
+-- </p>
 --
 -- @param _ Exasol metadata (not used)
 --
--- @param request virtual schema request (not used)
+-- @param _ virtual schema request (not used)
 --
 -- @return response confirming the request (otherwise empty)
 --
-function VsAdapter:drop_virtual_schema(_, request)
+function AbstractVirtualSchemaAdapter:drop_virtual_schema(_, _)
     return {type = "dropVirtualSchema"}
 end
 
-return VsAdapter
+return AbstractVirtualSchemaAdapter

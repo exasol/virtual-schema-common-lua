@@ -4,16 +4,16 @@
 
 title: Get Capabilities
 
-Participant request_dispatcher
-Participant vs_adapter
+Participant RequestDispatcher
+Participant VirtualSchemaAdapter <<external>>
 
-activate request_dispatcher
-request_dispatcher -> vs_adapter : get capabilities (request)
-activate vs_adapter
-'[dsn -> req~excluding-capabilities~1 >> impl, utest]
-vs_adapter -> vs_adapter : subtract excluded capabilities()
-activate vs_adapter
-deactivate vs_adapter
-vs_adapter -->> request_dispatcher : capability[]
-deactivate vs_adapter 
+activate RequestDispatcher
+RequestDispatcher -> VirtualSchemaAdapter : get capabilities (request)
+activate VirtualSchemaAdapter
+'[dsn -> req~excluding-capabilities~1]
+VirtualSchemaAdapter -> VirtualSchemaAdapter : subtract excluded capabilities()
+activate VirtualSchemaAdapter
+deactivate VirtualSchemaAdapter
+VirtualSchemaAdapter -->> RequestDispatcher : capability[]
+deactivate VirtualSchemaAdapter 
 @enduml

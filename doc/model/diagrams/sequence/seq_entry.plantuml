@@ -5,25 +5,29 @@ title: Virtual Schema Adapter Entrypoint for Request Handling
 
 participant "Exasol Compiler" as compiler <<external>>
 participant entry <<external>>
-participant request_dispatcher
-participant vs_adapter
+participant RequestDispatcher
+participant VirtualSchemaAdapter <<external>>
 
 activate compiler
 compiler -> entry : adapter_call(request : JSON string)
 activate entry
-create vs_adapter
-entry -> vs_adapter : create
-create request_dispatcher
-entry -> request_dispatcher : create
-entry -> request_dispatcher : init(vs_adapter)
-activate request_dispatcher
-request_dispatcher -->> entry : self-pointer
-deactivate request_dispatcher
-entry --> request_dispatcher : adapter_call(request : JSON stiring)
-activate request_dispatcher
-ref over request_dispatcher, vs_adapter : **[[seq_handle_request.svg handle request]]**
-request_dispatcher -->> entry : response : JSON string
-deactivate request_dispatcher
+create VirtualSchemaAdapter
+entry -> VirtualSchemaAdapter : create
+note left
+    Create a concrete class from
+    the ""AbstractVsAdapter"" class
+end note
+create RequestDispatcher
+entry -> RequestDispatcher : create
+entry -> RequestDispatcher : init(VirtualSchemaAdapter)
+activate RequestDispatcher
+RequestDispatcher -->> entry : self-pointer
+deactivate RequestDispatcher
+entry --> RequestDispatcher : adapter_call(request : JSON stiring)
+activate RequestDispatcher
+ref over RequestDispatcher, VirtualSchemaAdapter : **[[seq_handle_request.svg handle request]]**
+RequestDispatcher -->> entry : response : JSON string
+deactivate RequestDispatcher
 entry --> compiler : response : JSON string
 deactivate entry
 

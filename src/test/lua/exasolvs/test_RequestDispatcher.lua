@@ -3,11 +3,12 @@ local mockagne = require("mockagne")
 local log_mock = mockagne.getMock()
 package.preload["remotelog"] = function () return log_mock end
 local cjson = require("cjson")
-local VsAdapter = require("exasolvs.VsAdapter")
+local verify = mockagne.verify
+local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")
 local RequestDispatcher = require("exasolvs.RequestDispatcher")
 
 local function stub_adapter()
-    return VsAdapter:new({
+    return AbstractVirtualSchemaAdapter:new({
         get_name = function () return "Adapter Stub" end,
         get_version = function () return "0.0.0" end,
         _define_capabilities = function () return {} end
@@ -15,8 +16,6 @@ local function stub_adapter()
 end
 
 local dispatcher = RequestDispatcher.create(stub_adapter())
-
-local verify = mockagne.verify
 
 test_request_dispatcher = {}
 

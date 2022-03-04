@@ -67,9 +67,9 @@ end
 
 ---
 -- Get a map of supported JOIN type to the join keyword.
--- 
+--
 -- @return join type (key) mapped to SQL join keyword
--- 
+--
 function QueryRenderer.get_join_types()
     return JOIN_TYPES
 end
@@ -83,7 +83,7 @@ end
 -- @return query renderer instance
 --
 function QueryRenderer:new(object)
-    local object = object or {}
+    object = object or {}
     self.__index = self
     setmetatable(object, self)
     self.query_elements = {}
@@ -91,8 +91,8 @@ function QueryRenderer:new(object)
 end
 
 -- forward declarations
-local append_unary_predicate, append_binary_predicate, append_iterated_predicate, append_expression,
-    append_predicate_in, append_select, append_sub_select
+--#local append_unary_predicate, append_binary_predicate, append_iterated_predicate, append_expression,
+--    append_predicate_in, append_select, append_sub_select
 
 function QueryRenderer:append(value)
     self.query_elements[#self.query_elements + 1] = value

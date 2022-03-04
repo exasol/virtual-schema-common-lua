@@ -1,33 +1,37 @@
 @startuml
 !include ../clean.skin
 
-title: Query Push-down
+title: Query Push-down Example
 
-Participant request_dispatcher
-Participant vs_adapter
-Participant query_rewriter
-Participant query_renderer
+Participant RequestDispatcher
+Participant VirtualSchemaAdapter <<external>>
+Participant QueryRewriter <<external>>
+Participant QueryRenderer
 
-activate request_dispatcher
-request_dispatcher -> vs_adapter : push down (request)
-activate vs_adapter
-vs_adapter -> vs_adapter : extract adapter notes (request)
-activate vs_adapter
-deactivate vs_adapter
-vs_adapter -> query_rewriter : rewrite (query, schema\nadapter notes, involved table[])
-activate query_rewriter
+activate RequestDispatcher
+RequestDispatcher -> VirtualSchemaAdapter : push down (request)
+activate VirtualSchemaAdapter
+VirtualSchemaAdapter -> VirtualSchemaAdapter : extract adapter notes (request)
+activate VirtualSchemaAdapter
+deactivate VirtualSchemaAdapter
+group Example for rewriting Queries to an RDBMS data source
+VirtualSchemaAdapter -> QueryRewriter : rewrite (query, schema\nadapter notes, involved table[])
+activate QueryRewriter
 
-ref over query_rewriter : **[[../activity/act_rewrite_with_protection.svg rewrite query]]** 
+group Query rewriting
+    note over QueryRewriter: Here you rewrite the query to an **""IMPORT""** or\n**""SELECT FROM VALUES""** statement.
+end group
 
-create query_renderer
-query_rewriter -> query_renderer : create (query)
-'[dsn -> req~render-sql-query~1 >> impl, utest]
-query_rewriter -> query_renderer : render ()
-activate query_renderer
-query_renderer -->> query_rewriter : query : SQL string
-deactivate query_renderer
-query_rewriter --> vs_adapter : query : SQL string
-deactivate query_rewriter
-vs_adapter -->> request_dispatcher : wrapped response
-deactivate vs_adapter 
+create QueryRenderer
+QueryRewriter -> QueryRenderer : create (query)
+    '[dsn -> req~render-sql-query~1]
+    QueryRewriter -> QueryRenderer : render ()
+    activate QueryRenderer
+    QueryRenderer -->> QueryRewriter : query : SQL string
+    deactivate QueryRenderer
+    QueryRewriter --> VirtualSchemaAdapter : query : SQL string
+    deactivate QueryRewriter
+end group
+VirtualSchemaAdapter -->> RequestDispatcher : wrapped response
+deactivate VirtualSchemaAdapter 
 @enduml

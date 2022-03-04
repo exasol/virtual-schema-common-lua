@@ -23,9 +23,9 @@ local RequestDispatcher = {
 --
 -- @return dispatcher instance
 --
-function RequestDispatcher:new(self, object)
-    local object = object or {}
-    self.__index=self
+function RequestDispatcher:new(object)
+    object = object or {}
+    self.__index = self
     setmetatable(object, self)
     return object
 end
@@ -82,7 +82,7 @@ local function handle_error(message)
             "\n... (error message truncated after " .. RequestDispatcher.TRUNCATE_ERRORS_AFTER .. " characters)"
     end
     log_error(message)
-    return message 
+    return message
 end
 
 ---

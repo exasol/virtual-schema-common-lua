@@ -4,8 +4,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
-    <artifactId>row-level-security-lua</artifactId>
-    <version>1.0.1</version>
+    <artifactId>virtual-schema-common-lua</artifactId>
+    <version>1.0.0</version>
     <name>Exasol Row Level Security (Lua)</name>
     <description>This projects provides a plug-in to the Exasol database that adds per-row access control.</description>
     <properties>
@@ -217,71 +217,6 @@
                             <useMavenLogger>true</useMavenLogger>
                             <arguments>
                                 <argument>${project.basedir}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <!-- Bundle the main script (dispatcher) and the modules into a single lua package 
-                            that can be deployed as Lua adapter script. -->
-                        <id>bundle</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>lua</executable>
-                            <useMavenLogger>true</useMavenLogger>
-                            <workingDirectory>${lua.src}</workingDirectory>
-                            <arguments>
-                                <argument>${basedir}/tools/amalg.lua</argument>
-                                <argument>-o</argument>
-                                <argument>${basedir}/target/row-level-security-dist-${project.version}.lua</argument>
-                                <!-- Include main script containing the adapter entry point -->
-                                <argument>-s</argument>
-                                <argument>entry.lua</argument>
-                                <!-- Include modules by name (no slashes, no ".lua"!) -->
-                                <argument>exasolvs.request_dispatcher</argument>
-                                <argument>exasolvs.query_renderer</argument>
-                                <argument>exasolrls.adapter_properties</argument>
-                                <argument>exasolrls.adapter_capabilities</argument>
-                                <argument>exasolrls.rls_adapter</argument>
-                                <argument>exasolrls.metadata_reader</argument>
-                                <argument>exasolrls.table_protection_reader</argument>
-                                <argument>exasolrls.query_rewriter</argument>
-                                <argument>remotelog</argument>
-                                <argument>text</argument>
-                                <argument>exaerror</argument>
-                                <argument>message_expander</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>Administration SQL Scripts Assembler</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${basedir}/tools/assemble_sql_scripts.sh</executable>
-                            <useMavenLogger>true</useMavenLogger>
-                            <arguments>
-                                <argument>target/administration-sql-scripts-${project.version}.sql</argument>
-                                <!-- Administration scripts: -->
-                                <argument>${source.admin.scripts}/exa_rls_base.lua</argument>
-                                <argument>${source.admin.scripts}/exa_identifier.lua</argument>
-                                <argument>${source.admin.scripts}/add_rls_role.lua</argument>
-                                <argument>${source.admin.scripts}/assign_roles_to_user.lua</argument>
-                                <argument>${source.admin.scripts}/delete_rls_role.lua</argument>
-                                <argument>${source.admin.scripts}/add_user_to_group.lua</argument>
-                                <argument>${source.admin.scripts}/remove_user_from_group.lua</argument>
-                                <argument>${source.admin.scripts}/list_all_groups.lua</argument>
-                                <argument>${source.admin.scripts}/list_user_groups.lua</argument>
-                                <argument>${source.admin.scripts}/list_all_roles.lua</argument>
-                                <argument>${source.admin.scripts}/bit_positions.lua</argument>
-                                <argument>${source.admin.scripts}/list_user_roles.lua</argument>
-                                <argument>${source.admin.scripts}/list_users_and_roles.lua</argument>
-                                <!-- SQL scripts -->
-                                <argument>${source.sql.scripts}/role_mask.sql</argument>
                             </arguments>
                         </configuration>
                     </execution>

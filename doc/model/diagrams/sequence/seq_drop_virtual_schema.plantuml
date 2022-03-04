@@ -3,12 +3,12 @@
 
 title: Drop Virtual Schema
 
-Participant request_dispatcher
-Participant vs_adapter
+Participant RequestDispatcher
+Participant VirtualSchemaAdapter <<external>>
 
-activate request_dispatcher
-request_dispatcher -> vs_adapter : drop virtual schema (request)
-activate vs_adapter
-vs_adapter -->> request_dispatcher
-deactivate vs_adapter 
+activate RequestDispatcher
+RequestDispatcher -> VirtualSchemaAdapter : drop virtual schema (request)
+activate VirtualSchemaAdapter
+VirtualSchemaAdapter -->> RequestDispatcher
+deactivate VirtualSchemaAdapter 
 @enduml
