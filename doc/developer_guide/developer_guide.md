@@ -54,7 +54,7 @@ To run unit tests from terminal, you first need to install Lua:
 sudo apt install lua5.1
 ```
 
-Another important thing to do, you need to add the project's directories with lua files to LUA_PATH environment variable.
+Another important thing to do, you need to add the project's directories with lua files to `LUA_PATH` environment variable.
 We add two absolute paths, one to the `main` and another to the `test` folder: 
 
 ```bash
@@ -73,7 +73,7 @@ If you want to run all unit tests including code coverage and static code analys
 tools/runtests.sh
 ```
 
-The test output contains summaries and you will find reports in the `luaunit-reports` and `luacov-reports` directories.
+The test output contains summaries and you will find reports in the `target/luaunit-reports` and `target/luacov-reports` directories.
 
 ### Understanding the Sources
 
@@ -89,7 +89,7 @@ The resulting SVG files are located under [target/plantuml](../../target/plantum
 
 Since the model contains all imporant information, here just a very short summary.
 
-1. VSCL provides a base library for writing your own Virtual Schemas in Lua
+1. virtual-schema-common-lua (VSCL) provides a base library for writing your own Virtual Schemas in Lua
 1. The resulting package is available as LuaRocks package `virtual-schema-common-lua`
 1. In your concrete Virtual Schema implementation you need to write an `entry` module, that has an `adapter_call` entry function
 1. The `entry` module should create and wire up all static objects (like the `RequestDispatcher` for example)
@@ -99,10 +99,10 @@ Since the model contains all imporant information, here just a very short summar
 
 First, you need to install a plug-in that handles Lua code. We recommend to use `lua` plugin by `sylvanaar`.
 
-In the next step we add a Lua interpreter. Fow that go to `File` &rarr; `Project structure` &rarr; `Modules`.
+In the next step we add a Lua interpreter. For that go to `File` &rarr; `Project structure` &rarr; `Modules`.
 Here press `Add` button in the upper left corner and add a new Lua framework.
 You can use one of the default Lua interpreters suggested by Intellij or add your own in `SDKs` tab of the `Project structure`.
-We recommend installing and using `lua5.1`.
+We recommend installing and using `lua5.4`.
 
 Now add the `LUA_PATH` environment variable here too. Go to `Run` &rarr; `Edit configurations` &rarr; `Templates` &rarr; `Lua Script`.
 We assume that you have already run the tests via a terminal and you added an environment variable there. Now check it via a terminal command:
