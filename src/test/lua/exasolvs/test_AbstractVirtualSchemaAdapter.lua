@@ -1,3 +1,4 @@
+package.path = '../../main/lua/?.lua;' .. package.path
 local luaunit = require("luaunit")
 local AbstractVirtualSchemaAdapter = require("exasolvs/AbstractVirtualSchemaAdapter")
 
