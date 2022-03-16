@@ -13,9 +13,9 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         run: |
-          apt install lua5.4 liblua5.4-dev luarocks
-          luarocks config lua_version 5.4
-          luarocks build virtual-schema-common-lua-0.1.0-1.rockspec
+          sudo apt install lua5.4 liblua5.4-dev luarocks
+          sudo luarocks config lua_version 5.4
+          luarocks build --local --deps-only virtual-schema-common-lua-0.1.0-1.rockspec
       - name: Run tests
         run: |
           busted
