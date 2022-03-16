@@ -21,7 +21,7 @@ description = {
 dependencies = {
     "lua >= 5.4, < 5.5",
     "remotelog >= 1.1.1",
-    "luacjson >= 2.1.0",
+    "lua-cjson >= 2.1.0",
 }
 
 build_dependencies = {
