@@ -1,0 +1,51 @@
+@startuml
+!include ../clean.skin
+
+title: Virtual Schema Base Library and Concrete Implementation
+
+package exasolvs {
+    class QueryRenderer
+    together {
+        class RequestDispatcher
+        ' [dsn->req~lua-virtual-schema-adapter-abstraction~1]
+        interface "adapter" <<interface>> {
+            + create_virtual_schema(request) : CreateVirtualSchemaResponse 
+            + drop_virtual_schema(request) : DropVirtualSchemaResponse 
+            + get_capabilities(request) : GetCapabilitiesResponse 
+            + set_properties(request) : SetPropertiesResponse 
+            + refresh(request) : RefreshResponse 
+            + pushdown(request) : PushdownResponse 
+        }
+        note top of adapter
+            Lua interface
+            implicitly defined
+        end note
+        
+        abstract class AbstractVirtualSchemaAdapter <<abstract>>
+    }
+    
+    RequestDispatcher .l.> adapter : use
+    AbstractVirtualSchemaAdapter .d.|> adapter
+}
+
+'[dsn->req~lua-virtual-schema-adapter-abstraction~1]
+
+package example_vs <<external>> {
+    class entry
+    note left of entry
+         The entry module creates
+         all objects and wires them. 
+    end note
+    class VirtualSchemaAdapter
+    
+    entry -> VirtualSchemaAdapter : create
+}
+
+entry --> QueryRenderer : create
+entry --> RequestDispatcher : create
+VirtualSchemaAdapter -d--|> AbstractVirtualSchemaAdapter
+VirtualSchemaAdapter -d-> QueryRenderer
+
+url of entry is [[../sequence/seq_entry.svg]]
+url of RequestDispatcher is [[../sequence/seq_handle_request.svg]]
+@enduml

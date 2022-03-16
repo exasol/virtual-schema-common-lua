@@ -1,0 +1,19 @@
+
+@startuml
+!include ../clean.skin
+
+title: Get Capabilities
+
+Participant RequestDispatcher
+Participant VirtualSchemaAdapter <<external>>
+
+activate RequestDispatcher
+RequestDispatcher -> VirtualSchemaAdapter : get capabilities (request)
+activate VirtualSchemaAdapter
+'[dsn -> req~excluding-capabilities~1]
+VirtualSchemaAdapter -> VirtualSchemaAdapter : subtract excluded capabilities()
+activate VirtualSchemaAdapter
+deactivate VirtualSchemaAdapter
+VirtualSchemaAdapter -->> RequestDispatcher : capability[]
+deactivate VirtualSchemaAdapter 
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+!include ../clean.skin
+
+title: Set Properties
+
+Participant RequestDispatcher
+Participant VirtualSchemaAdapter
+
+activate RequestDispatcher
+RequestDispatcher -> VirtualSchemaAdapter : set properties (request)
+activate VirtualSchemaAdapter
+VirtualSchemaAdapter -->> RequestDispatcher
+deactivate VirtualSchemaAdapter
+deactivate RequestDispatcher 
+@enduml
