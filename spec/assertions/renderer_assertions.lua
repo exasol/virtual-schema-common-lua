@@ -11,7 +11,7 @@ local function renders_to(_, arguments)
     local renderer = QueryRenderer.create(original_query)
     local ok, result = pcall(renderer.render, renderer)
     arguments[1] = original_query
-    arguments[2] =expected
+    arguments[2] = expected
     if ok then
         arguments[3] = result or "<nil>"
     else

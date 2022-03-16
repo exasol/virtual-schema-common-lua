@@ -8,10 +8,10 @@ describe("QueryRenderer", function()
             type = "select",
             from = {type  = "table", name = "T1"}
         }
-        assert.renders_to('SELECT * FROM "T1"', original_query )
+        assert.renders_to('SELECT * FROM "T1"', original_query)
     end)
 
-    it("renders a SELECT with a table an two columns", function()
+    it("renders a SELECT with a table and two columns", function()
         local original_query = {
             type = "select",
             selectList = {
@@ -104,7 +104,6 @@ describe("QueryRenderer", function()
         }
         assert.renders_to('SELECT "MONTHS"."NAME" FROM "MONTHS" WHERE ((\'Q3\' = "MONTHS"."QUARTER") '
                 .. 'AND ("MONTHS"."DAYS_IN_MONTH" > 30))', original_query)
-
     end)
 
     it("renders a unary NOT filter", function()
@@ -587,7 +586,7 @@ describe("QueryRenderer", function()
         end
     end)
 
-    describe("renders a scalar function in the SELECT list with a two arguments:", function()
+    describe("renders a scalar function in the SELECT list with two arguments:", function()
         local parameters = {
             {
                 func_name = "ADD",
@@ -1051,7 +1050,7 @@ describe("QueryRenderer", function()
         end
     end)
 
-    describe("renders a scalar function in the SELECT list with a three arguments:", function()
+    describe("renders a scalar function in the SELECT list with three arguments:", function()
         local parameters = {
             {
                 func_name = "TRANSLATE",
@@ -1108,7 +1107,7 @@ describe("QueryRenderer", function()
         end
     end)
 
-    describe("renders a scalar function in the SELECT list with a four arguments:", function()
+    describe("renders a scalar function in the SELECT list with four arguments:", function()
         local parameters = {
             {
                 func_name = "INSERT",
@@ -1149,7 +1148,7 @@ describe("QueryRenderer", function()
         end
     end)
 
-    describe("renders a the scalar function EXTRACT", function()
+    describe("renders the scalar function EXTRACT", function()
         local parameters = {
             {
                 to_extract = 'YEAR',

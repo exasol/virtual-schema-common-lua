@@ -26,7 +26,7 @@ luarocks path >> ~/.bashrc
 
 ### Installing the Required Lua Packages
 
-You need the packages for unit testing and JSON processing.
+You need the packages for unit testing, mocking and JSON processing.
 
 Execute as `root` or modify to install in your home directory:
 
@@ -45,7 +45,7 @@ The `luacov` and `luacov-coveralls` libraries take care of measuring and reporti
 To run unit tests from terminal, you first need to install Lua:
 
 ```bash
-sudo apt install lua5.4
+sudo apt install lua5.1
 ```
 
 The tests reside in the `spec` directory. You can run all tests by calling `busted` from the project root.
@@ -89,10 +89,10 @@ Since the model contains all important information, here just a very short summa
 
 First, you need to install a plug-in that handles Lua code. We recommend to use `lua` plugin by `sylvanaar`.
 
-In the next step we add a Lua interpreter. Fow that go to `File` &rarr; `Project structure` &rarr; `Modules`.
+In the next step we add a Lua interpreter. For that go to `File` &rarr; `Project structure` &rarr; `Modules`.
 Here press `Add` button in the upper left corner and add a new Lua framework.
 You can use one of the default Lua interpreters suggested by Intellij or add your own in `SDKs` tab of the `Project structure`.
-We recommend installing and using `lua5.1`.
+We recommend installing and using `lua5.4`.
 
 Now add the `LUA_PATH` environment variable here too. Go to `Run` &rarr; `Edit configurations` &rarr; `Templates` &rarr; `Lua Script`.
 We assume that you have already run the tests via a terminal and you added an environment variable there. Now check it via a terminal command:
