@@ -41,7 +41,7 @@ describe("text manipulation", function()
             assert.are.same({}, text.split(""))
         end)
 
-        it("returns empty nil given nil", function()
+        it("returns nil given nil", function()
             assert.are.same(nil, text.split(nil))
         end)
     end)
