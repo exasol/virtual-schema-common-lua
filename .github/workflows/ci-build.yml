@@ -5,31 +5,42 @@ on:
 
 jobs:
   build:
+    strategy:
+      fail-fast: true
+      matrix:
+        lua_version: [ 5.4 ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
+      - name: Install Lua ${{ matrix.lua_version }}
+        uses: leafo/gh-actions-lua@v8.0.0
         with:
-          distribution: 'temurin'
-          java-version: 11
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
+          luaVersion: ${{ matrix.lua_version }}
+      - name: Install LuaRocks
+        uses: leafo/gh-actions-luarocks@v4
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-      - name: Run tests and build with Maven
+          luarocksVersion: "3.8.0"
+      - name: Install Lua dependencies
         run: |
-          mvn --batch-mode --update-snapshots clean verify sonar:sonar \
-              -DtrimStackTrace=false \
-              -Dsonar.organization=exasol \
-              -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.login=$SONAR_TOKEN
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          luarocks make --local
+      - name: Run tests
+        run: |
+          busted --coverage
+      - name: Run static code analysis
+        # Ignore:
+        # - 212: unused argument self
+        run: |
+          luacheck src --codes --ignore 212
+      - name: Create report
+        run: |
+          luacov -c .coverage_config.lua luacov.stats.out
+          mkdir -p target/luacov-reports
+          mv luacov.*.out target/luacov-reports/
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: luacov-report
+          path: target/luacov-reports/*
