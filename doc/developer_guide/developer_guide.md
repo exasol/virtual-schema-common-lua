@@ -28,7 +28,7 @@ luarocks path >> ~/.bashrc
 
 You need the packages for unit testing, mocking and JSON processing.
 
-Execute as `root` or modify to install in your home directory:
+Execute this to install in your home directory:
 
 ```bash
 luarocks install --local --deps-only *.rockspec
