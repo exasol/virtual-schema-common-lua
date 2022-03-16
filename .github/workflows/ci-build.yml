@@ -28,7 +28,7 @@ jobs:
           luarocks make --local
       - name: Run tests
         run: |
-          busted
+          busted --coverage
       - name: Run static code analysis
         # Ignore:
         # - 212: unused argument self
