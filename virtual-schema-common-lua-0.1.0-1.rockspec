@@ -20,16 +20,16 @@ description = {
 
 dependencies = {
     "lua >= 5.4, < 5.5",
-    "remotelog >= 1.1.1",
     "exaerror >= 1.2.2",
     "lua-cjson = 2.1.0", -- pinned to prevent "undefined symbol: lua_objlen" in 2.1.0.6
+    "remotelog >= 1.1.1"
 }
 
 build_dependencies = {
+    "busted >= 2.0.0",
     "luacheck >= 0.25.0",
     "luacov >= 0.15.0",
-    "luacov-coveralls >= 0.2.3",
-    "busted >= 2.0.0"
+    "luacov-coveralls >= 0.2.3"
 }
 
 build = {
@@ -40,5 +40,5 @@ build = {
         ["exasolvs.RequestDispatcher"] = "src/exasolvs/RequestDispatcher.lua",
         ["text"] = "src/text.lua"
     },
-    copy_directories = { "doc" }
+    copy_directories = { "doc", "spec" }
 }

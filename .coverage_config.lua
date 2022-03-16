@@ -1,5 +1,5 @@
 include = {
-    "main/lua/exasolvs$",
-    "main/lua/exasolvs%/.+$",
-    "main/lua/text$"
+    "src/exasolvs$",
+    "src/exasolvs%/.+$",
+    "src/text$"
 }

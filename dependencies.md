@@ -20,8 +20,11 @@ To use this library at runtime you need Lua 5.4 or later.
 
 ## Test Dependencies
 
-| Dependency                               | License    |
-|------------------------------------------|------------|
-| [busted](http://olivinelabs.com/busted/) | [MIT][mit] |
+| Dependency                                        | License    |
+|---------------------------------------------------|------------|
+| [busted](http://olivinelabs.com/busted/)          | [MIT][mit] |
+| [luacheck](https://github.com/mpeterv/luacheck)   | [MIT][mit] |
+| [luacov](https://github.com/keplerproject/luacov) | [MIT][mit] |
+
 
 [mit]: https://mit-license.org/
