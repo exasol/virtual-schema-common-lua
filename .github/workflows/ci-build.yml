@@ -11,25 +11,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: 11
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-      - name: Run tests and build with Maven
+      - name: Install dependencies
         run: |
-          mvn --batch-mode --update-snapshots clean verify sonar:sonar \
-              -DtrimStackTrace=false \
-              -Dsonar.organization=exasol \
-              -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.login=$SONAR_TOKEN
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          apt install lua5.4 liblua5.4-dev luarocks
+          luarocks config lua_version 5.4
+          luarocks build virtual-schema-common-lua-0.1.0-1.rockspec
+      - name: Run tests
+        run: |
+          busted
