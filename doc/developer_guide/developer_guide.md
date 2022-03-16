@@ -54,7 +54,7 @@ To run unit tests from terminal, you first need to install Lua:
 sudo apt install lua5.1
 ```
 
-Another important thing to do, you need to add the project's directories with lua files to LUA_PATH environment variable.
+Another important thing to do, you need to add the project's directories with lua files to `LUA_PATH` environment variable.
 We add two absolute paths, one to the `main` and another to the `test` folder: 
 
 ```bash
