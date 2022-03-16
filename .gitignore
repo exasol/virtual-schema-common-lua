@@ -4,6 +4,7 @@
 *.md.html
 /.dbeaver
 Scripts
+/out/
 *.out
 .idea
 *.iml
