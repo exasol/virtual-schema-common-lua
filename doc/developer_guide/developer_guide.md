@@ -26,21 +26,15 @@ luarocks path >> ~/.bashrc
 
 ### Installing the Required Lua Packages
 
-You need the packages for unit testing, mocking and JSON processing.
+You need the packages for unit testing and JSON processing.
 
 Execute as `root` or modify to install in your home directory:
 
 ```bash
-sudo luarocks install LuaUnit
-sudo luarocks install Mockagne
-sudo luarocks install lua-cjson
-sudo luarocks install remotelog
-sudo luarocks install luacov
-sudo luarocks install luacov-coveralls
-sudo luarocks install luacheck
+luarocks install --local --deps-only *.rockspec
 ```
 
-Most of those packages are only required for testing. While `cjson` is needed at runtime, it is prepackaged with Exasol, so no need to install it at runtime.
+Most of the packages are only required for testing. While `cjson` is needed at runtime, it is prepackaged with Exasol, so no need to install it at runtime.
 
 The `luacov` and `luacov-coveralls` libraries take care of measuring and reporting code coverage in the tests.
 
@@ -51,20 +45,19 @@ The `luacov` and `luacov-coveralls` libraries take care of measuring and reporti
 To run unit tests from terminal, you first need to install Lua:
 
 ```bash
-sudo apt install lua5.1
+sudo apt install lua5.4
 ```
 
-Another important thing to do, you need to add the project's directories with lua files to LUA_PATH environment variable.
-We add two absolute paths, one to the `main` and another to the `test` folder: 
+The tests reside in the `spec` directory. You can run all tests by calling `busted` from the project root.
 
 ```bash
-export LUA_PATH='/home/<absolute>/<path>/row-level-security-lua/src/main/lua/?.lua;/home/<absolute>/<path>/row-level-security-lua/src/test/lua/?.lua;'"$LUA_PATH"
+busted
 ```
 
-After that you can try to run any test file:
+To run a single test add the file name:
 
 ```bash
-lua src/test/lua/exasolvs/test_query_renderer.lua 
+busted spec/QueryRenderer_spec.lua 
 ```
 
 If you want to run all unit tests including code coverage and static code analysis, issue the following command:
@@ -72,12 +65,9 @@ If you want to run all unit tests including code coverage and static code analys
 ```bash
 tools/runtests.sh
 ```
-
-The test output contains summaries and you will find reports in the `luaunit-reports` and `luacov-reports` directories.
-
 ### Understanding the Sources
 
-Under [doc/model](../../model) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
+Under [doc/model](../model) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
 
 You can render the model by running:
 
@@ -85,9 +75,9 @@ You can render the model by running:
 mvn com.github.jeluard:plantuml-maven-plugin:generate
 ```
 
-The resulting SVG files are located under [target/plantuml](../../target/plantuml). They contain links for drilling down.
+The resulting SVG files are located under `target/plantuml`. They contain links for drilling down.
 
-Since the model contains all imporant information, here just a very short summary.
+Since the model contains all important information, here just a very short summary.
 
 1. VSCL provides a base library for writing your own Virtual Schemas in Lua
 1. The resulting package is available as LuaRocks package `virtual-schema-common-lua`
@@ -118,4 +108,4 @@ Now you can right-click any unit-test class and `Run...` or use hot keys `[CTRL]
 
 ### Running the Unit Tests From Eclipse IDE
 
-We recommend you install the [Lua Development Tools (LDT)](https://www.eclipse.org/ldt/) when working on this project using the Eclipse IDE. If you add the Lua nature to the project, you can set the paths `src/main/lua` and `src/test/lua` as source paths. This way you can directly run the unit test as Lua application (`[CTRL] + [F11]`) without further configuration.
+We usually recommend you install the [Lua Development Tools (LDT)](https://www.eclipse.org/ldt/). Unfortunately Lua 5.4 is not supported and the project does not receive any updates anymore.
