@@ -35,8 +35,9 @@ build_dependencies = {
 build = {
     type = "builtin",
     modules = {
-        ["exasolvs.QueryRenderer"] = "src/exasolvs/QueryRenderer.lua",
+        ["exasolvs.AdapterProperties"] = "src/exasolvs/AdapterProperties.lua",
         ["exasolvs.AbstractVirtualSchemaAdapter"] = "src/exasolvs/AbstractVirtualSchemaAdapter.lua",
+        ["exasolvs.QueryRenderer"] = "src/exasolvs/QueryRenderer.lua",
         ["exasolvs.RequestDispatcher"] = "src/exasolvs/RequestDispatcher.lua",
         ["text"] = "src/text.lua"
     },

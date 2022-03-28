@@ -5,6 +5,9 @@ require("spec.assertions.assertions")
 local RequestDispatcher = require("exasolvs.RequestDispatcher")
 local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")
 
+--package.cpath = package.cpath .. ';/home/sebastian/.local/share/JetBrains/IdeaIC2021.3/EmmyLua/debugger/emmy/linux/?.so'
+--require('emmy_core').tcpConnect('localhost', 9967)
+
 local function stub_adapter()
     return AbstractVirtualSchemaAdapter:new({
         get_name = function () return "Adapter Stub" end,
@@ -16,6 +19,11 @@ end
 local dispatcher = RequestDispatcher.create(stub_adapter())
 
 describe("RequestDispatcher", function()
+    it("asserts that a virtual schema adapter is present", function()
+        assert.error_contains(function() RequestDispatcher:new() end,
+                "Request Dispatcher requires an adapter to dispatch too")
+    end)
+
     it("dispatches get-capabilities request",function()
         local response = dispatcher:adapter_call('{"type" : "getCapabilities"}')
         local expected = {type = "getCapabilities", capabilities = {}}
@@ -26,7 +34,7 @@ describe("RequestDispatcher", function()
         dispatcher:adapter_call('{"type" : "getCapabilities", "schemaMetadataInfo" : '
                 .. '{"properties" : {"DEBUG_ADDRESS" : "10.0.0.1:4000", "LOG_LEVEL" : "TRACE"}}}')
         assert.spy(log_mock.set_level).was.called_with("TRACE")
-        assert.spy(log_mock.connect).was.called_with("10.0.0.1", "4000")
+        assert.spy(log_mock.connect).was.called_with("10.0.0.1", 4000)
     end)
 
     local function call_with_illegal_request_type()
