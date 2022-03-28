@@ -5,9 +5,6 @@ require("spec.assertions.assertions")
 local RequestDispatcher = require("exasolvs.RequestDispatcher")
 local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")
 
---package.cpath = package.cpath .. ';/home/sebastian/.local/share/JetBrains/IdeaIC2021.3/EmmyLua/debugger/emmy/linux/?.so'
---require('emmy_core').tcpConnect('localhost', 9967)
-
 local function stub_adapter()
     return AbstractVirtualSchemaAdapter:new({
         get_name = function () return "Adapter Stub" end,
