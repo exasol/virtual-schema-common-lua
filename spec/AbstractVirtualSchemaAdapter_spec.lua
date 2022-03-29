@@ -8,7 +8,7 @@ describe("Stubbed AbstractVirtualSchemaAdapter", function()
         local adapter_stub = {_define_capabilities = function () return {"cap1", "cap2"} end}
         local properties = AdapterProperties:new()
         local vs_adapter = AbstractVirtualSchemaAdapter:new(adapter_stub)
-        assert.are.same(vs_adapter:get_capabilities(nul, properties),
+        assert.are.same(vs_adapter:get_capabilities(nil, properties),
                 {type = "getCapabilities", capabilities={"cap1", "cap2"}})
     end)
 
