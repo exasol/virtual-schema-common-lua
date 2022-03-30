@@ -25,11 +25,15 @@ dependencies = {
     "remotelog >= 1.1.1"
 }
 
-build_dependencies = {
+test_dependencies = {
     "busted >= 2.0.0",
     "luacheck >= 0.25.0",
     "luacov >= 0.15.0",
     "luacov-coveralls >= 0.2.3"
+}
+
+test = {
+    type = "busted"
 }
 
 build = {
@@ -41,5 +45,5 @@ build = {
         ["exasolvs.RequestDispatcher"] = "src/exasolvs/RequestDispatcher.lua",
         ["text"] = "src/text.lua"
     },
-    copy_directories = { "doc", "spec" }
+    copy_directories = { "doc"}
 }
