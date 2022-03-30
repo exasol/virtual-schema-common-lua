@@ -19,18 +19,6 @@ local RequestDispatcher = {
 }
 
 ---
--- Create a new <code>RequestDispatcher</code>.
---
--- @return dispatcher instance
---
-function RequestDispatcher:new(object)
-    object = object or {}
-    self.__index = self
-    setmetatable(object, self)
-    return object
-end
-
----
 -- Inject the adapter that the dispatcher should dispatch requests to.
 --
 -- @param adapter adapter that receives the dispatched requests
@@ -38,12 +26,25 @@ end
 -- @return this module for fluent programming
 --
 function RequestDispatcher.create(adapter)
-    local dispatcher = RequestDispatcher:new({adapter=adapter})
+    local dispatcher = RequestDispatcher:new({adapter = adapter})
     return dispatcher
 end
 
+---
+-- Create a new <code>RequestDispatcher</code>.
+--
+-- @return dispatcher instance
+--
+function RequestDispatcher:new(object)
+    object = object or {}
+    assert(object.adapter ~= nil, "Request Dispatcher requires an adapter to dispatch too")
+    object.properties_reader = object.properties_reader_class or require("exasolvs.AdapterProperties")
+    self.__index = self
+    setmetatable(object, self)
+    return object
+end
 
-local function handle_request(self, request)
+function RequestDispatcher:_handle_request(request, properties)
     local handlers = {
         pushdown =  self.adapter.push_down,
         createVirtualSchema = self.adapter.create_virtual_schema,
@@ -55,7 +56,7 @@ local function handle_request(self, request)
     log.info('Received "%s" request.', request.type)
     local handler = handlers[request.type]
     if(handler ~= nil) then
-        local response = cjson.encode(handler(self.adapter, nil, request))
+        local response = cjson.encode(handler(self.adapter, request, properties))
         log.debug("Response:\n" .. response)
         return response
     else
@@ -85,6 +86,22 @@ local function handle_error(message)
     return message
 end
 
+function RequestDispatcher:_extract_properties(request)
+    local raw_properties = (request.schemaMetadataInfo or {}).properties or {}
+    return self.properties_reader.create(raw_properties)
+end
+
+function RequestDispatcher:_init_logging(properties)
+    log.set_client_name(self.adapter:get_name() .. " " .. self.adapter:get_version())
+    if properties:has_log_level() then
+        log.set_level(string.upper(properties:get_log_level()))
+    end
+    local host, port = properties:get_debug_address()
+    if host then
+        log.connect(host, port)
+    end
+end
+
 ---
 -- RLS adapter entry point.
 -- <p>
@@ -96,23 +113,12 @@ end
 -- @return JSON-encoded adapter response
 --
 function RequestDispatcher:adapter_call(request_as_json)
-    log.set_client_name(self.adapter:get_name() .. " " .. self.adapter:get_version())
     local request = cjson.decode(request_as_json)
-    local properties = (request.schemaMetadataInfo or {}).properties or {}
-    local log_level = properties.LOG_LEVEL
-    if(log_level) then
-        log.set_level(string.upper(log_level))
-    end
-    local debug_address = properties.DEBUG_ADDRESS
-    if(debug_address) then
-        local colon_position = string.find(debug_address,":", 1, true)
-        local host = string.sub(debug_address, 1, colon_position - 1)
-        local port = string.sub(debug_address, colon_position + 1)
-        log.connect(host, port)
-    end
+    local properties = self:_extract_properties(request)
+    self:_init_logging(properties)
     log.debug("Raw request:\n%s", request_as_json)
-    local ok, result = xpcall(function () return handle_request(self, request) end, handle_error)
-    if(ok) then
+    local ok, result = xpcall(RequestDispatcher._handle_request, handle_error, self, request, properties)
+    if ok then
         log.disconnect()
         return result
     else
