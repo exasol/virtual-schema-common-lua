@@ -14,9 +14,9 @@ describe("adapter_properties", function()
                     expected = "Unknown log level 'INVALID' in LOG_LEVEL property"
                 },
                 {
-                    properties = {DEBUG_ADDRESS = "host:no-a-number"},
+                    properties = {DEBUG_ADDRESS = "host:not-a-number"},
                     expected = "Expected log address in DEBUG_ADDRESS to look like '<ip>|<host>[:<port>]'"
-                    .. ", but got 'host:no-a-number' instead"
+                    .. ", but got 'host:not-a-number' instead"
                 }
             }
             for _, test in ipairs(tests) do
@@ -49,7 +49,7 @@ describe("adapter_properties", function()
 
     it("gets the EXCLUDED_CAPABILITIES property", function()
         assert.are.same({"a", "b", "c"},
-                AdapterProperties.create({EXCLUDED_CAPABILITIES = "a,b,c"}):get_excluded_capabilities())
+                AdapterProperties.create({EXCLUDED_CAPABILITIES = "a,b, c"}):get_excluded_capabilities())
     end)
 
     it("checks if a property is present", function()

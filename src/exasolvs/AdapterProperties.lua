@@ -21,7 +21,7 @@ end
 -- @param object pre-initialized object
 -- @return new instance
 function AdapterProperties:new (object)
-    object = object or {raw_properties = ""}
+    object = object or {raw_properties = {}}
     self.__index = self
     setmetatable(object, self)
     return object
@@ -151,7 +151,7 @@ function AdapterProperties:get_debug_address()
             return host, port
         end
     else
-        return nil
+        return nil, nil
     end
 end
 
