@@ -49,7 +49,7 @@ describe("adapter_properties", function()
 
     it("gets the EXCLUDED_CAPABILITIES property", function()
         assert.are.same({"a", "b", "c"},
-                AdapterProperties.create({EXCLUDED_CAPABILITIES = "a,b,c"}):get_excluded_capabilities())
+                AdapterProperties.create({EXCLUDED_CAPABILITIES = "a,b, c"}):get_excluded_capabilities())
     end)
 
     it("checks if a property is present", function()
