@@ -52,4 +52,13 @@ Mitigations:
 * This is an internal software error. Please report it via the project's ticket tracker.]])
     end)
 
+    it("works around the (x)pcall problem in https://github.com/exasol/virtual-schema-common-lua/issues/9", function()
+        local original_pcall = _G.pcall
+        local recorded_message
+        local record_message = function (message)  recorded_message = message end
+        _G.pcall = function() return false, "not what you expect" end
+        xpcall(call_with_illegal_request_type, record_message)
+        _G.pcall= original_pcall
+        assert.match("Unknown Virtual Schema request", recorded_message, 1, true)
+    end)
 end)

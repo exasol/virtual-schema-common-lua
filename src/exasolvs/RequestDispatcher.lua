@@ -18,15 +18,13 @@ local RequestDispatcher = {
     TRUNCATE_ERRORS_AFTER = 3000
 }
 
----
--- Inject the adapter that the dispatcher should dispatch requests to.
---
+--- Inject the adapter that the dispatcher should dispatch requests to.
 -- @param adapter adapter that receives the dispatched requests
---
+-- @param properties_reader properties reader
 -- @return this module for fluent programming
 --
-function RequestDispatcher.create(adapter)
-    local dispatcher = RequestDispatcher:new({adapter = adapter})
+function RequestDispatcher.create(adapter, properties_reader)
+    local dispatcher = RequestDispatcher:new({adapter = adapter, properties_reader = properties_reader})
     return dispatcher
 end
 
@@ -38,7 +36,7 @@ end
 function RequestDispatcher:new(object)
     object = object or {}
     assert(object.adapter ~= nil, "Request Dispatcher requires an adapter to dispatch too")
-    object.properties_reader = object.properties_reader_class or require("exasolvs.AdapterProperties")
+    object.properties_reader = object.properties_reader or require("exasolvs.AdapterProperties")
     self.__index = self
     setmetatable(object, self)
     return object
@@ -102,6 +100,18 @@ function RequestDispatcher:_init_logging(properties)
     end
 end
 
+-- https://github.com/exasol/virtual-schema-common-lua/issues/9
+local function xpcall_workaround(callback, error_handler, ...)
+    local probe <const> = "PROBE:error"
+    local _, actual = pcall(function() error(probe, 0) end)
+    if(actual == probe) then
+        return xpcall(callback, error_handler, ...)
+    else
+        log.trace("This version of Exasol has a problem with (x)pcall. Applying workaround.")
+        return true, callback(...)
+    end
+end
+
 ---
 -- RLS adapter entry point.
 -- <p>
@@ -117,7 +127,7 @@ function RequestDispatcher:adapter_call(request_as_json)
     local properties = self:_extract_properties(request)
     self:_init_logging(properties)
     log.debug("Raw request:\n%s", request_as_json)
-    local ok, result = xpcall(RequestDispatcher._handle_request, handle_error, self, request, properties)
+    local ok, result = xpcall_workaround(RequestDispatcher._handle_request, handle_error, self, request, properties)
     if ok then
         log.disconnect()
         return result
