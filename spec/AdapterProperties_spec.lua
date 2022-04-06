@@ -1,4 +1,4 @@
-package.path = "src/main/lua/?.lua;" .. package.path
+package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 local AdapterProperties = require("exasolvs.AdapterProperties")
 
