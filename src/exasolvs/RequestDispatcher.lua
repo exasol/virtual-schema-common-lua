@@ -29,6 +29,18 @@ function RequestDispatcher.create(adapter, properties_reader)
 end
 
 ---
+-- Inject the adapter that the dispatcher should dispatch requests to.
+--
+-- @param adapter adapter that receives the dispatched requests
+--
+-- @return this module for fluent programming
+--
+function RequestDispatcher.create(adapter)
+    local dispatcher = RequestDispatcher:new({adapter = adapter})
+    return dispatcher
+end
+
+---
 -- Create a new <code>RequestDispatcher</code>.
 --
 -- @return dispatcher instance
@@ -100,7 +112,6 @@ function RequestDispatcher:_init_logging(properties)
     end
 end
 
--- https://github.com/exasol/virtual-schema-common-lua/issues/9
 local function xpcall_workaround(callback, error_handler, ...)
     local probe <const> = "PROBE:error"
     local _, actual = pcall(function() error(probe, 0) end)
