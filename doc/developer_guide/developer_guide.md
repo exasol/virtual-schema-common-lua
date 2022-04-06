@@ -105,8 +105,12 @@ First, you need to install a plug-in that handles Lua code. We recommend the [Em
    ```bash
    busted
    ```
-8. Go to `File` &rarr; `Project structure` &rarr; `Modules` (`[CTRL] +[ALT] + [SHIFT] + [S]`).
-9. Make sure `Lua` is selected as "Module SDK" in tab "Dependencies"
+7. Open `File` &rarr; `Project structure` &rarr; `Modules` (`[CTRL] +[ALT] + [SHIFT] + [S]`).
+   1. In tab "Sources"
+      1. Mark folder `src` as sources folder
+      2. Mark folder `spec` as test sources folder
+   2. In tab "Dependencies"
+      1. Select `Lua`  as "Module SDK"
   
 Now you can right-click any unit-test class and `Run...` (`[CTRL] + [SHIFT] + [F10]`).
 

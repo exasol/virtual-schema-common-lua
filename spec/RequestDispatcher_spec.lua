@@ -1,3 +1,4 @@
+package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 local log_mock = mock(require("remotelog"), true)
 package.preload["remotelog"] = function () return log_mock end

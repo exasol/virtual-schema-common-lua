@@ -1,3 +1,4 @@
+package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 require("assertions.assertions")
 local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")

@@ -1,3 +1,4 @@
+package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 local text = require("text")
 
