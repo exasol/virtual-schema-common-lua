@@ -12,6 +12,15 @@ Note that `virtual-schame-common-lua` has dependencies to `cjson` and `luasocket
  
 * #1: Migrated from `row-level-security-lua`
 
+## Documentation
+
+* #5: Updated developer guide with LuaRocks and EmmyLua tips
+
+## Refactoring
+
+* #7: Added missing abstract methods in `AbstractVirtualSchemaAdapter`
+* #9: Added Workaround for (x)pcall problem in core database
+
 ## Dependency Updates
 
 ### Compile Dependency Updates

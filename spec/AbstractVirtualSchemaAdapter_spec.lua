@@ -1,5 +1,5 @@
 require("busted.runner")()
-require("spec.assertions.assertions")
+require("assertions.assertions")
 local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")
 local AdapterProperties = require("exasolvs.AdapterProperties")
 

@@ -1,7 +1,7 @@
 require("busted.runner")()
 local log_mock = mock(require("remotelog"), true)
 package.preload["remotelog"] = function () return log_mock end
-require("spec.assertions.assertions")
+require("assertions.assertions")
 local RequestDispatcher = require("exasolvs.RequestDispatcher")
 local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")
 

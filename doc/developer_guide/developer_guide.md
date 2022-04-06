@@ -45,7 +45,7 @@ The `luacov` and `luacov-coveralls` libraries take care of measuring and reporti
 To run unit tests from terminal, you first need to install Lua:
 
 ```bash
-sudo apt install lua5.1
+sudo apt install lua5.4
 ```
 
 The tests reside in the `spec` directory. You can run all tests by calling `busted` from the project root.
@@ -87,24 +87,28 @@ Since the model contains all important information, here just a very short summa
 
 ### Running the Unit Tests From Intellij IDEA
 
-First, you need to install a plug-in that handles Lua code. We recommend to use `lua` plugin by `sylvanaar`.
+First, you need to install a plug-in that handles Lua code. We recommend the [EmmyLua](https://github.com/EmmyLua/IntelliJ-EmmyLua), which is also available directly from the IntelliJ marketplace. 
 
-In the next step we add a Lua interpreter. For that go to `File` &rarr; `Project structure` &rarr; `Modules`.
-Here press `Add` button in the upper left corner and add a new Lua framework.
-You can use one of the default Lua interpreters suggested by Intellij or add your own in `SDKs` tab of the `Project structure`.
-We recommend installing and using `lua5.4`.
-
-Now add the `LUA_PATH` environment variable here too. Go to `Run` &rarr; `Edit configurations` &rarr; `Templates` &rarr; `Lua Script`.
-We assume that you have already run the tests via a terminal and you added an environment variable there. Now check it via a terminal command:
-
-```bash
-echo $LUA_PATH
-```
-
-Copy the output, in the `Environment variables` field press `Browse` &rarr; `Add`.
-Paste the lines you copied to the `Value` field and add `LUA_PATH` as a `Name`.
+1. Get the Lua path (including your local LuaRocks repository) by running:
+    ```bash
+    luarocks path --local
+    ```
+   This will output a set of `export` commands that set the right paths.
+2. Create a wrapper script for starting IntelliJ with the right Lua path and use the `export` commands you generated in the previous step
+3. Start IntelliJ from the wrapper script
+4. Open the terminal in IntelliJ (`[ALT] + [F12]`)
+5. Verify the Lua path in the integrated terminal:
+    ```bash
+    echo $LUA_PATH
+    ```
+6. Verify that the test suit runs by running busted in the integrated terminal:
+   ```bash
+   busted
+   ```
+8. Go to `File` &rarr; `Project structure` &rarr; `Modules` (`[CTRL] +[ALT] + [SHIFT] + [S]`).
+9. Make sure `Lua` is selected as "Module SDK" in tab "Dependencies"
   
-Now you can right-click any unit-test class and `Run...` or use hot keys `[CTRL] + [SHIFT] + [F10]`.
+Now you can right-click any unit-test class and `Run...` (`[CTRL] + [SHIFT] + [F10]`).
 
 ### Running the Unit Tests From Eclipse IDE
 

@@ -1,5 +1,5 @@
 require("busted.runner")()
-require("spec.assertions.renderer_assertions")
+require("assertions.renderer_assertions")
 local QueryRenderer = require("exasolvs.QueryRenderer")
 
 describe("QueryRenderer", function()
