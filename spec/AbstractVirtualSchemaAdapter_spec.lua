@@ -1,6 +1,6 @@
 require("busted.runner")()
 require("spec.assertions.assertions")
-local AbstractVirtualSchemaAdapter = require("exasolvs/AbstractVirtualSchemaAdapter")
+local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")
 local AdapterProperties = require("exasolvs.AdapterProperties")
 
 describe("Stubbed AbstractVirtualSchemaAdapter", function()
