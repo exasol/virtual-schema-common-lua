@@ -105,12 +105,7 @@ First, you need to install a plug-in that handles Lua code. We recommend the [Em
    ```bash
    busted
    ```
-7. Open `File` &rarr; `Project structure` &rarr; `Modules` (`[CTRL] +[ALT] + [SHIFT] + [S]`).
-   1. In tab "Sources"
-      1. Mark folder `src` as sources folder
-      2. Mark folder `spec` as test sources folder
-   2. In tab "Dependencies"
-      1. Select `Lua`  as "Module SDK"
+7. The project comes with an `.idea` directory and `<project-name>.iml` which contain setup information for IntelliJ
   
 Now you can right-click any unit-test class and `Run...` (`[CTRL] + [SHIFT] + [F10]`).
 

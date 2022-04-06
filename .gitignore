@@ -6,5 +6,7 @@
 Scripts
 /out/
 *.out
-.idea
-*.iml
+
+.idea/shelf/
+.idea/sonarlint/
+.idea/workspace.xml
