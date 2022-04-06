@@ -18,9 +18,12 @@ local RequestDispatcher = {
     TRUNCATE_ERRORS_AFTER = 3000
 }
 
---- Inject the adapter that the dispatcher should dispatch requests to.
+---
+-- Inject the adapter that the dispatcher should dispatch requests to.
+--
 -- @param adapter adapter that receives the dispatched requests
 -- @param properties_reader properties reader
+--
 -- @return this module for fluent programming
 --
 function RequestDispatcher.create(adapter, properties_reader)
@@ -100,15 +103,10 @@ function RequestDispatcher:_init_logging(properties)
 end
 
 -- https://github.com/exasol/virtual-schema-common-lua/issues/9
-local function does_xpcall_work_correctly()
+local function xpcall_workaround(callback, error_handler, ...)
     local probe <const> = "PROBE:error"
     local _, actual = pcall(function() error(probe, 0) end)
-    return actual == probe
-end
-
--- https://github.com/exasol/virtual-schema-common-lua/issues/9
-local function xpcall_workaround(callback, error_handler, ...)
-    if(does_xpcall_work_correctly()) then
+    if(actual == probe) then
         return xpcall(callback, error_handler, ...)
     else
         log.trace("This version of Exasol has a problem with (x)pcall. Applying workaround.")
