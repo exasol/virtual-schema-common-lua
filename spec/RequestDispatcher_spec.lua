@@ -22,10 +22,36 @@ describe("RequestDispatcher", function()
                 "Request Dispatcher requires an adapter to dispatch too")
     end)
 
-    it("dispatches get-capabilities request",function()
+    it("dispatches get-capabilities request [utest -> dsn~dispatching-get-capabilities-requests~0]",function()
         local response = dispatcher:adapter_call('{"type" : "getCapabilities"}')
         local expected = {type = "getCapabilities", capabilities = {}}
         assert.is.same_json(expected, response)
+    end)
+
+    it("dispatches create-virtual-schema request [utest -> dsn~dispatching-create-virtual-schema-requests~0]",function()
+        assert.error_contains(function() dispatcher:adapter_call('{"type" : "createVirtualSchema"}')  end,
+                "Method 'AbstractVirtualSchemaAdapter:create_virtual_schema' is abstract.")
+    end)
+
+    it("dispatches drop-virtual-schema request [utest -> dsn~dispatching-drop-virtual-schema-requests~0]",function()
+        local response = dispatcher:adapter_call('{"type" : "dropVirtualSchema"}')
+        local expected = {type = "dropVirtualSchema"}
+        assert.is.same_json(expected, response)
+    end)
+
+    it("dispatches refresh request [utest -> dsn~dispatching-refresh-requests~0]",function()
+        assert.error_contains(function() dispatcher:adapter_call('{"type" : "refresh"}')  end,
+                "Method 'AbstractVirtualSchemaAdapter:refresh' is abstract.")
+    end)
+
+    it("dispatches set-properties request [utest -> dsn~dispatching-set-properties-requests~0]",function()
+        assert.error_contains(function() dispatcher:adapter_call('{"type" : "setProperties"}')  end,
+                "Method 'AbstractVirtualSchemaAdapter:set_properties' is abstract.")
+    end)
+
+    it("dispatches set-properties request [utest -> dsn~dispatching-push-down-requests~0]",function()
+        assert.error_contains(function() dispatcher:adapter_call('{"type" : "pushdown"}')  end,
+                "Method 'AbstractVirtualSchemaAdapter:push_down' is abstract.")
     end)
 
     it("sets up remote logging", function()

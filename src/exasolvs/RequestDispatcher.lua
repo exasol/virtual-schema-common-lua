@@ -44,6 +44,12 @@ function RequestDispatcher:new(object)
     return object
 end
 
+-- [impl -> dsn~dispatching-push-down-requests~0]
+-- [impl -> dsn~dispatching-create-virtual-schema-requests~0]
+-- [impl -> dsn~dispatching-drop-virtual-schema-requests~0]
+-- [impl -> dsn~dispatching-refresh-requests~0]
+-- [impl -> dsn~dispatching-get-capabilities-requests~0]
+-- [impl -> dsn~dispatching-set-properties-requests~0]
 function RequestDispatcher:_handle_request(request, properties)
     local handlers = {
         pushdown =  self.adapter.push_down,

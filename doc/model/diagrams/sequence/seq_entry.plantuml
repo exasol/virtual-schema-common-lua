@@ -18,12 +18,19 @@ note left
     the ""AbstractVsAdapter"" class
 end note
 create RequestDispatcher
-entry -> RequestDispatcher : create
-entry -> RequestDispatcher : init(VirtualSchemaAdapter)
+entry -> RequestDispatcher : create (adapter, property reader)
+note right
+    The property reader decides which class is
+    used for parsing the properties.
+
+    Default is ""AdpaterProperties"".
+end note
+
+entry -> RequestDispatcher : init (VirtualSchemaAdapter)
 activate RequestDispatcher
 RequestDispatcher -->> entry : self-pointer
 deactivate RequestDispatcher
-entry --> RequestDispatcher : adapter_call(request : JSON stiring)
+entry --> RequestDispatcher : adapter_call (request : JSON stiring)
 activate RequestDispatcher
 ref over RequestDispatcher, VirtualSchemaAdapter : **[[seq_handle_request.svg handle request]]**
 RequestDispatcher -->> entry : response : JSON string

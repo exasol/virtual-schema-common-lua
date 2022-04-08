@@ -9,7 +9,7 @@ Participant QueryRewriter <<external>>
 Participant QueryRenderer
 
 activate RequestDispatcher
-RequestDispatcher -> VirtualSchemaAdapter : push down (request)
+RequestDispatcher -> VirtualSchemaAdapter : push down (request, properties)
 activate VirtualSchemaAdapter
 VirtualSchemaAdapter -> VirtualSchemaAdapter : extract adapter notes (request)
 activate VirtualSchemaAdapter

@@ -5,6 +5,7 @@
 -- parallelization easier, reduces complexity and saves you the trouble of cleaning up in the drop-virtual-schema
 -- request.
 -- </p>
+-- [impl -> dsn~lua-virtual-schema-adapter-abstraction~0]
 local AbstractVirtualSchemaAdapter = {}
 
 --- Create a new instance of a Virtual Schema base adapter
@@ -65,11 +66,13 @@ end
 -- This method reevaluates the metadata (structure and data types) that represents the data source.
 -- </p>
 -- @param _ virtual schema request
+-- @param _ user-defined properties
 -- @return same response as if you created a new Virtual Schema
 function AbstractVirtualSchemaAdapter:refresh(_)
     error("Method 'AbstractVirtualSchemaAdapter:refresh' is abstract.")
 end
 
+-- [impl -> dsn~excluding-capabilities~0]
 local function subtract_capabilities(original_capabilities, excluded_capabilities)
     local filtered_capabilities = {}
     for _, capability in ipairs(original_capabilities) do
@@ -112,7 +115,7 @@ end
 -- @return rewritten query to be executed by the ExaLoader (<code>IMPORT</code>), value providing query
 -- <code>SELECT ... FROM VALUES</code>, not recommended) or local Exasol query (<code>SELECT</code>).
 function AbstractVirtualSchemaAdapter:push_down(_, _)
-    error("Method 'AbstractVirtualSchemaAdapter:pushdown' is abstract.")
+    error("Method 'AbstractVirtualSchemaAdapter:push_down' is abstract.")
 end
 
 --- Drop the virtual schema.
