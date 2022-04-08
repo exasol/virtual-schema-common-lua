@@ -107,7 +107,7 @@ VSCL extracts user-defined Virtual Schema Properties from the Virtual Schema req
 
 Comment:
 
-Properties are key-value pairs that users can supply with at creation of the Virtual Schema to control the behavior of the VS. While most properties are specific to an individual Virtual Schema, their structure is uniform, so that the general decoding functions are available in VSCL.
+Properties are key-value pairs that users can supply at creation of the Virtual Schema to control the behavior of the Virtual Schema. While most properties are specific to an individual Virtual Schema, their structure is uniform, so that the general decoding functions are available in VSCL.
 
 Rationale:
 
