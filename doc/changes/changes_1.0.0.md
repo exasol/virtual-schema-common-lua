@@ -15,9 +15,11 @@ Note that `virtual-schame-common-lua` has dependencies to `cjson` and `luasocket
 ## Documentation
 
 * #5: Updated developer guide with LuaRocks and EmmyLua tips
+* #12: Traced requirements down to implementation and test
 
 ## Refactoring
 
+* #4: Added CI build
 * #7: Added missing abstract methods in `AbstractVirtualSchemaAdapter`
 * #9: Added Workaround for (x)pcall problem in core database
 
