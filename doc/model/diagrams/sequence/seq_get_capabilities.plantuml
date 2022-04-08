@@ -8,10 +8,10 @@ Participant RequestDispatcher
 Participant VirtualSchemaAdapter <<external>>
 
 activate RequestDispatcher
-RequestDispatcher -> VirtualSchemaAdapter : get capabilities (request)
+RequestDispatcher -> VirtualSchemaAdapter : get_capabilities(request, properties)
 activate VirtualSchemaAdapter
-'[dsn -> req~excluding-capabilities~1]
-VirtualSchemaAdapter -> VirtualSchemaAdapter : subtract excluded capabilities()
+' [dsn -> req~excluding-capabilities~1 >> impl, utest]
+VirtualSchemaAdapter -> VirtualSchemaAdapter : subtract_capabilities(original_capabilities, excluded_capabilities)
 activate VirtualSchemaAdapter
 deactivate VirtualSchemaAdapter
 VirtualSchemaAdapter -->> RequestDispatcher : capability[]

@@ -22,10 +22,73 @@ describe("RequestDispatcher", function()
                 "Request Dispatcher requires an adapter to dispatch too")
     end)
 
-    it("dispatches get-capabilities request",function()
+    it("converts a request from JSON format to a lua table [utest -> dsn~translating-json-request-to-lua-tables~0]",
+            function()
+                local adapter_mock = stub_adapter()
+                local recorded_request
+                adapter_mock.drop_virtual_schema = function(_, request, _)
+                    recorded_request = request
+                end
+                local dispatcher_with_adapter_mock = RequestDispatcher.create(adapter_mock)
+                dispatcher_with_adapter_mock:adapter_call('{"type" : "dropVirtualSchema"}')
+                assert.are.same({type = "dropVirtualSchema"}, recorded_request)
+            end
+    )
+
+    it("converts a response from a Lua table to JSON format [utest -> dsn~translating-lua-tables-to-json-responses~0]",
+            function()
+                local adapter_mock = stub_adapter()
+                adapter_mock.refresh = function(_, _, _)
+                    return {type = "refresh"}
+                end
+                local dispatcher_with_adapter_mock = RequestDispatcher.create(adapter_mock)
+                local response = dispatcher_with_adapter_mock:adapter_call('{"type" : "refresh"}')
+                assert.are.same('{"type":"refresh"}', response)
+            end
+    )
+
+    it("reads user-defined properties [utest -> dsn~reading-user-defined-properties~0]", function()
+        local adapter_mock = stub_adapter()
+        local recorded_properties
+        adapter_mock.create_virtual_schema = function(_, _, properties)
+            recorded_properties = properties
+        end
+        local dispatcher_with_adapter_mock = RequestDispatcher.create(adapter_mock)
+        local raw_request = '{"type" : "createVirtualSchema", "schemaMetadataInfo" : {"properties" : {"FOO" : "bar"}}}'
+        dispatcher_with_adapter_mock:adapter_call(raw_request)
+        assert.is.equal("bar", recorded_properties:get("FOO"))
+    end)
+
+    it("dispatches get-capabilities request [utest -> dsn~dispatching-get-capabilities-requests~0]",function()
         local response = dispatcher:adapter_call('{"type" : "getCapabilities"}')
         local expected = {type = "getCapabilities", capabilities = {}}
         assert.is.same_json(expected, response)
+    end)
+
+    it("dispatches create-virtual-schema request [utest -> dsn~dispatching-create-virtual-schema-requests~0]",function()
+        assert.error_contains(function() dispatcher:adapter_call('{"type" : "createVirtualSchema"}')  end,
+                "Method 'AbstractVirtualSchemaAdapter:create_virtual_schema' is abstract.")
+    end)
+
+    it("dispatches drop-virtual-schema request [utest -> dsn~dispatching-drop-virtual-schema-requests~0]",function()
+        local response = dispatcher:adapter_call('{"type" : "dropVirtualSchema"}')
+        local expected = {type = "dropVirtualSchema"}
+        assert.is.same_json(expected, response)
+    end)
+
+    it("dispatches refresh request [utest -> dsn~dispatching-refresh-requests~0]",function()
+        assert.error_contains(function() dispatcher:adapter_call('{"type" : "refresh"}')  end,
+                "Method 'AbstractVirtualSchemaAdapter:refresh' is abstract.")
+    end)
+
+    it("dispatches set-properties request [utest -> dsn~dispatching-set-properties-requests~0]",function()
+        assert.error_contains(function() dispatcher:adapter_call('{"type" : "setProperties"}')  end,
+                "Method 'AbstractVirtualSchemaAdapter:set_properties' is abstract.")
+    end)
+
+    it("dispatches set-properties request [utest -> dsn~dispatching-push-down-requests~0]",function()
+        assert.error_contains(function() dispatcher:adapter_call('{"type" : "pushdown"}')  end,
+                "Method 'AbstractVirtualSchemaAdapter:push_down' is abstract.")
     end)
 
     it("sets up remote logging", function()

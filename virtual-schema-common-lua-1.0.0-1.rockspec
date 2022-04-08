@@ -1,11 +1,13 @@
 rockspec_format = "3.0"
 
+local tag = "1.0.0"
+
 package = "virtual-schema-common-lua"
-version = "0.1.0-1"
+version = tag .. "-1"
 
 source = {
     url = 'git://github.com/exasol/virtual-schema-common-lua',
-    tag = "0.1.0"
+    tag = tag
 }
 
 description = {

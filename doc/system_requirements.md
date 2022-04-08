@@ -100,14 +100,29 @@ Covers:
 
 Needs: dsn
 
+#### reading-User-Defined Properties
+`req~reading-user-defined-properties~1`
+
+VSCL extracts user-defined Virtual Schema Properties from the Virtual Schema request.
+
+Comment:
+
+Properties are key-value pairs that users can supply at creation of the Virtual Schema to control the behavior of the Virtual Schema. While most properties are specific to an individual Virtual Schema, their structure is uniform, so that the general decoding functions are available in VSCL.
+
+Rationale:
+
+Properties let users change the settings of a Virtual Schema.
+
+Needs: dsn
+
 #### Request Dispatching
 
 The bare Virtual Schema API expects an adapter to handle all incoming request with one central callback function. This is not very convenient for Software developers.
 
 VSCL examines the content of an incoming request and dispatches it to a dedicated adapter callback function defined in the Lua Virtual Schema Lua Adapter interface.
 
-##### Dispatching Create Schema Requests
-`req~dispatching-create-schema-requests~1`
+##### Dispatching Create-Virtual-Schema Requests
+`req~dispatching-create-virtual-schema-requests~1`
 
 VSCL dispatches request to create a Virtual Schema to the Virtual Schema adapter.
 
@@ -117,8 +132,8 @@ Covers:
 
 Needs: dsn
 
-##### Dispatching Drop Schema Requests
-`req~dispatching-drop-schema-requests~1`
+##### Dispatching Drop-Virtual-Schema Requests
+`req~dispatching-drop-virtual-schema-requests~1`
 
 VSCL dispatches request to drop a Virtual Schema to the Virtual Schema adapter.
 
@@ -128,8 +143,8 @@ Covers:
 
 Needs: dsn
 
-##### Dispatching Adapter Capabilities Requests
-`req~dispatching-adapter-capabilities-requests~1`
+##### Dispatching Get-Capabilities Requests
+`req~dispatching-get-capabilities-requests~1`
 
 VSCL dispatches request to list all supported capabilities of the Virtual Schema to the Virtual Schema adapter.
 
@@ -139,7 +154,7 @@ Covers:
 
 Needs: dsn
 
-##### Dispatching Set Properties Requests
+##### Dispatching Set-Properties Requests
 `req~dispatching-set-properties-requests~1`
 
 VSCL dispatches request to change the Virtual Schema properties to the Virtual Schema adapter.

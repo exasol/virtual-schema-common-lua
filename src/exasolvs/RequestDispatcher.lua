@@ -44,6 +44,12 @@ function RequestDispatcher:new(object)
     return object
 end
 
+-- [impl -> dsn~dispatching-push-down-requests~0]
+-- [impl -> dsn~dispatching-create-virtual-schema-requests~0]
+-- [impl -> dsn~dispatching-drop-virtual-schema-requests~0]
+-- [impl -> dsn~dispatching-refresh-requests~0]
+-- [impl -> dsn~dispatching-get-capabilities-requests~0]
+-- [impl -> dsn~dispatching-set-properties-requests~0]
 function RequestDispatcher:_handle_request(request, properties)
     local handlers = {
         pushdown =  self.adapter.push_down,
@@ -56,9 +62,7 @@ function RequestDispatcher:_handle_request(request, properties)
     log.info('Received "%s" request.', request.type)
     local handler = handlers[request.type]
     if(handler ~= nil) then
-        local response = cjson.encode(handler(self.adapter, request, properties))
-        log.debug("Response:\n" .. response)
-        return response
+        return handler(self.adapter, request, properties)
     else
         exaerror.create("F-RQD-1", "Unknown Virtual Schema request type {{request_type}} received.",
             {request_type = request.type})
@@ -86,6 +90,7 @@ local function handle_error(message)
     return message
 end
 
+-- [impl -> dsn~reading-user-defined-properties~0]
 function RequestDispatcher:_extract_properties(request)
     local raw_properties = (request.schemaMetadataInfo or {}).properties or {}
     return self.properties_reader.create(raw_properties)
@@ -124,6 +129,8 @@ end
 --
 -- @return JSON-encoded adapter response
 --
+-- [impl -> dsn~translating-json-request-to-lua-tables~0]
+-- [impl -> dsn~translating-lua-tables-to-json-responses~0]
 function RequestDispatcher:adapter_call(request_as_json)
     local request = cjson.decode(request_as_json)
     local properties = self:_extract_properties(request)
@@ -131,8 +138,10 @@ function RequestDispatcher:adapter_call(request_as_json)
     log.debug("Raw request:\n%s", request_as_json)
     local ok, result = xpcall_workaround(RequestDispatcher._handle_request, handle_error, self, request, properties)
     if ok then
+        local response = cjson.encode(result)
+        log.debug("Response:\n" .. response)
         log.disconnect()
-        return result
+        return response
     else
         log.disconnect()
         error(result)
