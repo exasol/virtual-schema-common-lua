@@ -7,7 +7,7 @@ Participant RequestDispatcher
 Participant VirtualSchemaAdapter <<external>>
 
 activate RequestDispatcher
-RequestDispatcher -> VirtualSchemaAdapter : drop virtual schema (request, properties)
+RequestDispatcher -> VirtualSchemaAdapter : drop_virtual_schema(request, properties)
 activate VirtualSchemaAdapter
 VirtualSchemaAdapter -->> RequestDispatcher
 deactivate VirtualSchemaAdapter 

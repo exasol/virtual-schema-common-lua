@@ -8,12 +8,19 @@ participant log <<external>>
 
 activate RequestDispatcher
 
-alt DEBUG_ADDRESS property set
-    '[dsn -> req~remote-logging~1]
-    RequestDispatcher -> RequestDispatcher : extract host and port (properties)
-    activate RequestDispatcher
-    deactivate RequestDispatcher
-    RequestDispatcher -> log : connect (host, port)
+RequestDispatcher -> log : set_client_name(adapter_name_and_version)
+activate log
+deactivate log
+
+alt log level set
+    RequestDispatcher -> log : set_log_level(level)
+    activate log
+    deactivate log
+end
+
+'[dsn -> req~remote-logging~1]
+alt log host set
+    RequestDispatcher -> log : connect(host, port)
     activate log
     deactivate log
 else
