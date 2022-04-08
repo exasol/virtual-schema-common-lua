@@ -10,7 +10,7 @@ participant log <<external>>
 participant cjson <<external>>
 activate entry
 
-' [dsn -> req~translating-json-request-to-lua-tables~1]
+' [dsn -> req~translating-json-request-to-lua-tables~1 >> impl, utest]
 entry --> RequestDispatcher : adapter_call (request : JSON string)
 activate RequestDispatcher
 
@@ -19,7 +19,7 @@ activate cjson
 cjson -->> RequestDispatcher : request : table
 deactivate cjson
 
-' [dsn ->  req~reading-user-defined-properties~1]
+' [dsn ->  req~reading-user-defined-properties~1 >> impl, utest]
 create AdapterProperties
 RequestDispatcher -> AdapterProperties : create(request)
 activate AdapterProperties
@@ -71,7 +71,7 @@ RequestDispatcher -> log : disconnect ()
 
 alt success
     
-    ' [dsn -> req~translating-lua-tables-to-json-responses~1]
+    ' [dsn -> req~translating-lua-tables-to-json-responses~1 >> impl, utest]
     RequestDispatcher -->> entry : response : JSON string
 else error
     <<-- RequestDispatcher : throw (error)

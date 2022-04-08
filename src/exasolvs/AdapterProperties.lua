@@ -11,7 +11,7 @@ local DEBUG_ADDRESS_PROPERTY <const> = "DEBUG_ADDRESS"
 local DEFAULT_LOG_PORT <const> = 3000
 
 --- Factory method for adapter properties
--- @param raw_properties comma-separated list of property names
+-- @param raw_properties properties as key-value pairs
 -- @return adapter properties object
 function AdapterProperties.create(raw_properties)
     return AdapterProperties:new({raw_properties = raw_properties})
