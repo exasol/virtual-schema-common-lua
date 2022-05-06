@@ -106,8 +106,6 @@ function AbstractQueryAppender:_append_data_type(data_type)
         self:_append_decimal(data_type)
     elseif type == "VARCHAR" or type == "CHAR" then
         self:_append_character_type(data_type)
-    elseif type == "DOUBLE" or type == "DATE" or type == "BOOLEAN" then
-        -- empty on purpose
     elseif type == "TIMESTAMP" then
         self:_append_timestamp(data_type)
     elseif type == "GEOMETRY" then
@@ -116,6 +114,8 @@ function AbstractQueryAppender:_append_data_type(data_type)
         self:_append_interval(data_type)
     elseif type == "HASHTYPE" then
         self:_append_hashtype(data_type)
+    elseif type == "DOUBLE" or type == "DATE" or type == "BOOLEAN" then
+        return
     else
         error('E-VS-QR-4: Unable to render unknown data type "' .. type .. '".')
     end

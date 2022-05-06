@@ -25,7 +25,8 @@ end
 --- Append a scalar function to an SQL query.
 -- @param scalar_function function to append
 function ScalarFunctionAppender:append_scalar_function(scalar_function)
-    local implementation = ScalarFunctionAppender["_" .. string.lower(scalar_function.name)]
+    local function_name = string.lower(scalar_function.name)
+    local implementation = ScalarFunctionAppender["_" .. function_name]
     if implementation ~= nil then
         implementation(self, scalar_function)
     else
