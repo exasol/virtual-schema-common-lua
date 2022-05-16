@@ -22,7 +22,7 @@ function Query:new(object)
 end
 
 --- Append a single token.
--- While the same can be achieved with calling <code>appendAll</code> with a single parameter, this method is faster.
+-- While the same can be achieved with calling <code>append_all</code> with a single parameter, this method is faster.
 -- @param token token to append
 function Query:append(token)
     self.tokens[#self.tokens + 1] = token
@@ -30,7 +30,7 @@ end
 
 --- Append all tokens.
 -- @param ... tokens to append
-function Query:appendAll(...)
+function Query:append_all(...)
     for _, token in ipairs(table.pack(...)) do
         self.tokens[#self.tokens + 1] = token
     end

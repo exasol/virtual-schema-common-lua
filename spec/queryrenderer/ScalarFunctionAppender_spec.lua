@@ -152,7 +152,6 @@ describe("ScalarFunctionRenderer", function()
         ))
     end)
 
-    -- Date / time functions
     describe("supports date / time function", function()
         describe("parameterless function", function()
             for _, name in pairs({
@@ -286,10 +285,8 @@ describe("ScalarFunctionRenderer", function()
                         literal.timestamp('1981-07-03 12:05:06')))
     end)
 
-    -- Geospacial functions
-    -- Will be implemented with https://github.com/exasol/virtual-schema-common-lua/issues/21
+    -- Geospacial functions will be implemented with https://github.com/exasol/virtual-schema-common-lua/issues/21
 
-    -- Bitwise functions
     describe("supports bitwise functions", function()
         describe("with a single argument", function()
             it_asserts("BIT_NOT(1)", run_function("BIT_NOT", 1))

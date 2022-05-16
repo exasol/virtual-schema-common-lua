@@ -12,7 +12,7 @@ describe("Query", function()
 
     it("appends a series of tokens", function()
         local query = Query:new({tokens = {"before"}})
-        query:appendAll("foo", "bar", "baz")
+        query:append_all("foo", "bar", "baz")
         assert.are.same({"before", "foo", "bar", "baz"}, query.tokens)
     end)
 

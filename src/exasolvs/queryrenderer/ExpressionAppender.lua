@@ -13,6 +13,15 @@ local OPERATORS <const> = {
     predicate_and = "AND", predicate_or = "OR", predicate_not = "NOT"
 }
 
+local function get_predicate_operator(predicate_type)
+    local operator = OPERATORS[predicate_type]
+    if(operator ~= nil) then
+        return operator
+    else
+        error("Cannot determine operator for unknown predicate type: " .. predicate_type)
+    end
+end
+
 --- Create a new instance of an <code>ExpressionRenderer</code>
 -- @param out_query query that the rendered tokens should be appended too
 -- @return expression renderer
@@ -43,7 +52,7 @@ end
 
 function ExpressionAppender:_append_unary_predicate(predicate)
     self:_append("(")
-    self:_append(OPERATORS[predicate.type])
+    self:_append(get_predicate_operator(predicate.type))
     self:_append(" ")
     self:append_expression(predicate.expression)
     self:_append(")")
@@ -53,7 +62,7 @@ function ExpressionAppender:_append_binary_predicate(predicate)
     self:_append("(")
     self:append_expression(predicate.left)
     self:_append(" ")
-    self:_append(OPERATORS[predicate.type])
+    self:_append(get_predicate_operator(predicate.type))
     self:_append(" ")
     self:append_expression(predicate.right)
     self:_append(")")
@@ -65,7 +74,7 @@ function ExpressionAppender:_append_iterated_predicate(predicate)
     for i = 1, #expressions do
         if i > 1 then
             self:_append(" ")
-            self:_append(OPERATORS[predicate.type])
+            self:_append(get_predicate_operator(predicate.type))
             self:_append(" ")
         end
         self:append_expression(expressions[i])

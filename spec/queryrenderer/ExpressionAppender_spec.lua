@@ -1,6 +1,7 @@
 package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 require("assertions.appender_assertions")
+local Query = require("exasolvs.Query")
 local literal = require("queryrenderer.literal_constructors")
 local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
 
@@ -44,7 +45,8 @@ describe("ExpressionRenderer", function()
         end)
 
         it("timestamp", function()
-            assert_expression_yields(literal.timestamp("12:30:24.007"), "TIMESTAMP '12:30:24.007'")
+            assert_expression_yields(literal.timestamp("2022-12-31 12:30:24.007"),
+                    "TIMESTAMP '2022-12-31 12:30:24.007'")
         end)
     end)
 
@@ -123,5 +125,12 @@ describe("ExpressionRenderer", function()
         assert.has_error(function() ExpressionAppender:new() end,
                 "Expression renderer requires a query object that it can append to.")
 
+    end)
+
+    it("raises an error if an unknown predicate type is used", function()
+        local out_query = Query:new()
+        local appender = ExpressionAppender:new(out_query)
+        assert.has_error(function() appender:_append_unary_predicate({type = "illegal type"}) end,
+                "Cannot determine operator for unknown predicate type: illegal type")
     end)
 end)

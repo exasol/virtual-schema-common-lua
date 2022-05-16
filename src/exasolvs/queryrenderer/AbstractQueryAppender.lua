@@ -28,7 +28,7 @@ function AbstractQueryAppender:_comma(index)
     end
 end
 
-function AbstractQueryAppender:_append_decimal(data_type)
+function AbstractQueryAppender:_append_decimal_type_details(data_type)
     self:_append("(")
     self:_append(data_type.precision)
     self:_append(",")
@@ -103,7 +103,7 @@ function AbstractQueryAppender:_append_data_type(data_type)
     local type = data_type.type
     self:_append(type)
     if type == "DECIMAL" then
-        self:_append_decimal(data_type)
+        self:_append_decimal_type_details(data_type)
     elseif type == "VARCHAR" or type == "CHAR" then
         self:_append_character_type(data_type)
     elseif type == "TIMESTAMP" then
