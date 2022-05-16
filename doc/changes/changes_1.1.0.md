@@ -6,6 +6,10 @@ Code name: Broader SQL coverage
 
 In this release we improved the coverage of the SQL rendering and refactored the renderer to be modular.
 
+New SQL rendering features:
+
+* `LIMIT`
+
 ## Features / Enhancements
 
 ## Documentation

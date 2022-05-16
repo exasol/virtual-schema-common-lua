@@ -237,6 +237,30 @@ describe("SelectAppender", function()
         end
     end)
 
+    describe("renders a LIMIT clause", function()
+        it("without OFFSET", function()
+            local original_query = {
+                type = "select",
+                from = {
+                    type = "table", name = "T1"
+                },
+                limit = {numElements = 10}
+            }
+            assert_yields('SELECT * FROM "T1" LIMIT 10', original_query)
+        end)
+
+        it("with OFFSET", function()
+            local original_query = {
+                type = "select",
+                from = {
+                    type = "table", name = "T2"
+                },
+                limit = {numElements = 20, offset = 8}
+            }
+            assert_yields('SELECT * FROM "T2" LIMIT 20 OFFSET 8', original_query)
+        end)
+    end)
+
     it("raises an error if the WHERE clause type is unknown", function()
         local original_query = {
             type = "select",

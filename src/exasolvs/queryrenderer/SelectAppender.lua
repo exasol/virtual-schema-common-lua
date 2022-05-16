@@ -100,6 +100,17 @@ function SelectAppender:_append_filter(filter)
     end
 end
 
+function SelectAppender:_append_limit(limit)
+    if limit then
+        self:_append(" LIMIT ")
+        self:_append(limit.numElements)
+        if limit.offset then
+            self:_append(" OFFSET ")
+            self:_append(limit.offset)
+        end
+    end
+end
+
 --- Append a sub-select statement.
 -- This method is public to allow recursive queries (e.g. embedded into an `EXISTS` clause in an expression.
 -- @param sub_query query appended
@@ -116,6 +127,7 @@ function SelectAppender:append_select(sub_query)
     self:_append_select_list(sub_query.selectList)
     self:_append_from(sub_query.from)
     self:_append_filter(sub_query.filter)
+    self:_append_limit(sub_query.limit)
 end
 
 -- Alias for the main entry point allows uniform appender invocation
