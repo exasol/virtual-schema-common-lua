@@ -126,7 +126,7 @@ describe("SelectAppender", function()
     it("renders a unary NOT filter", function()
         local original_query = {
             type = "select",
-            selectList = {{type = "column", name ="NAME", tableName = "MONTHS"}},
+            selectList = {{type = "column", name = "NAME", tableName = "MONTHS"}},
             from = {type = "table", name = "MONTHS"},
             filter = {
                 type = "predicate_not",
@@ -264,7 +264,7 @@ describe("SelectAppender", function()
         assert_select_error("unknown join type", original_query)
     end)
 
-    it("raises and error if the predicate type is unknown", function()
+    it("raises an error if the predicate type is unknown", function()
         local original_query = {
             type = "select",
             selectList = {

@@ -7,7 +7,7 @@ local SelectAppender = {}
 SelectAppender.__index = SelectAppender
 setmetatable(SelectAppender, {__index = AbstractQueryRenderer})
 
-local JOIN_TYPES = {inner = "INNER", left_outer = "LEFT OUTER", right_outer = "RIGHT OUTER", full_outer = "FULL OUTER"}
+local JOIN_TYPES<const> = {inner = "INNER", left_outer = "LEFT OUTER", right_outer = "RIGHT OUTER", full_outer = "FULL OUTER"}
 
 --- Get a map of supported JOIN type to the join keyword.
 -- @return join type (key) mapped to SQL join keyword
@@ -16,7 +16,7 @@ function SelectAppender.get_join_types()
 end
 
 --- Create a new query renderer.
--- @param original_query query structure as provided through the Virtual Schema API
+-- @param out_query query structure as provided through the Virtual Schema API
 -- @return query renderer instance
 function SelectAppender:new(out_query)
     local instance = setmetatable({}, self)
@@ -102,7 +102,6 @@ end
 --- Append a sub-select statement.
 -- This method is public to allow recursive queries (e.g. embedded into an `EXISTS` clause in an expression.
 -- @param sub_query query appended
-
 function SelectAppender:append_sub_select(sub_query)
     self:_append("(")
     self:append_select(sub_query)
