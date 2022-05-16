@@ -7,7 +7,8 @@ local SelectAppender = {}
 SelectAppender.__index = SelectAppender
 setmetatable(SelectAppender, {__index = AbstractQueryRenderer})
 
-local JOIN_TYPES<const> = {inner = "INNER", left_outer = "LEFT OUTER", right_outer = "RIGHT OUTER", full_outer = "FULL OUTER"}
+local JOIN_TYPES<const> = {inner = "INNER", left_outer = "LEFT OUTER", right_outer = "RIGHT OUTER",
+                           full_outer = "FULL OUTER"}
 
 --- Get a map of supported JOIN type to the join keyword.
 -- @return join type (key) mapped to SQL join keyword
