@@ -374,7 +374,7 @@ describe("ScalarFunctionRenderer", function()
                     argument_2 = '$.a',
                     empty_behavior = {
                         type = "DEFAULT",
-                        expression = literal.string('*** error ***')
+                        expression = literal.string('*** empty ***')
                     },
                     error_behavior = {
                         type = "DEFAULT",
@@ -382,7 +382,7 @@ describe("ScalarFunctionRenderer", function()
                     },
                     data_type = { size = 1000, type = "VARCHAR", characterSet = "UTF8" },
                     expected = [[JSON_VALUE('{"a": 1}', '$.a' RETURNING VARCHAR(1000) UTF8 ]] ..
-                            "DEFAULT '*** error ***' ON EMPTY DEFAULT '*** error ***' ON ERROR)"
+                            "DEFAULT '*** empty ***' ON EMPTY DEFAULT '*** error ***' ON ERROR)"
                 },
                 {
                     argument_1 = '{"a": 1}',
