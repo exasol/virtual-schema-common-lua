@@ -140,6 +140,10 @@ function ExpressionAppender:append_expression(expression)
     elseif (type == "literal_timestamp") or (type == "literal_timestamputc") then
         self:_append("TIMESTAMP ")
         self:_append_quoted_literal_expression(expression)
+    elseif type == "literal_interval" then
+        self:_append("INTERVAL ")
+        self:_append_quoted_literal_expression(expression)
+        self:_append_interval(expression.dataType)
     elseif text.starts_with(type, "function_scalar") then
         require("exasolvs.queryrenderer.ScalarFunctionAppender"):new(self.out_query):append_scalar_function(expression)
     elseif text.starts_with(type, "predicate_") then

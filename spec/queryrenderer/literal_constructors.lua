@@ -28,4 +28,20 @@ function literal_constructors.timestamp(value)
     return {type = "literal_timestamp", value = value}
 end
 
+function literal_constructors.interval_ym(value, precision)
+    return {
+        type = "literal_interval",
+        value = value,
+        dataType = {type = "INTERVAL", fromTo = "YEAR TO MONTH", precision = precision}
+    }
+end
+
+function literal_constructors.interval_ds(value, precision, fraction)
+    return {
+        type = "literal_interval",
+        value = value,
+        dataType = {type = "INTERVAL", fromTo = "DAY TO SECONDS", precision = precision, fraction = fraction}
+    }
+end
+
 return literal_constructors

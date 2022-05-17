@@ -309,7 +309,15 @@ describe("ScalarFunctionRenderer", function()
     -- Conversion functions
     describe("supports conversion function", function()
         it_asserts("CAST(347 AS VARCHAR(3))",
-                run_complex_function("CAST", {dataType = {type = "VARCHAR", size = 3}}, 347, "VARCHAR"))
+                run_complex_function("CAST", {dataType = {type = "VARCHAR", size = 3}}, 347), "number to VARCHAR")
+
+        it_asserts("CAST(INTERVAL '+1-02' YEAR TO MONTH AS VARCHAR(7))",
+                run_complex_function("CAST",
+                        {dataType = {type = "VARCHAR", size = 7}},
+                        {value = "+1-02", type = "literal_interval",
+                         dataType = {type = "INTERVAL", fromTo = "YEAR TO MONTH"},
+                        }
+                ), "interval to VARCHAR")
     end)
 
     -- Other functions
