@@ -9,6 +9,7 @@ In this release we improved the coverage of the SQL rendering and refactored the
 New SQL rendering features:
 
 * `LIMIT`
+* `ORDER BY`
 
 ## Features / Enhancements
 
