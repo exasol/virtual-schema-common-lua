@@ -48,6 +48,21 @@ describe("ExpressionRenderer", function()
             assert_expression_yields(literal.timestamp("2022-12-31 12:30:24.007"),
                     "TIMESTAMP '2022-12-31 12:30:24.007'")
         end)
+
+        it("interval YM with precision", function()
+            assert_expression_yields(literal.interval_ym("+14-05", 5),
+            "INTERVAL '+14-05' YEAR(5) TO MONTH")
+        end)
+
+        it("interval YM without precision", function()
+            assert_expression_yields(literal.interval_ym("+14-05"),
+            "INTERVAL '+14-05' YEAR TO MONTH")
+        end)
+
+        it("interval DS with precision and fraction", function()
+            assert_expression_yields(literal.interval_ds("-123 01:02:03.456", 4, 3),
+            "INTERVAL '-123 01:02:03.456' DAY(4) TO SECOND(3)")
+        end)
     end)
 
     describe("renders an embedded scalar function:", function()

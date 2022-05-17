@@ -10,6 +10,7 @@ New SQL rendering features:
 
 * `LIMIT`
 * `ORDER BY`
+* Interval types
 
 ## Features / Enhancements
 
