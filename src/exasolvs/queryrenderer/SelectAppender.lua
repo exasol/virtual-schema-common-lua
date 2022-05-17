@@ -100,6 +100,23 @@ function SelectAppender:_append_filter(filter)
     end
 end
 
+function SelectAppender:_append_order_by(order)
+    if order then
+        self:_append(" ORDER BY ")
+        for i, criteria in ipairs(order) do
+            self:_comma(i)
+            require("exasolvs.queryrenderer.ExpressionAppender"):new(self.out_query)
+                    :append_expression(criteria.expression)
+            if criteria.isAscending ~= nil then
+                self:_append(criteria.isAscending and " ASC" or " DESC")
+            end
+            if criteria.nullsLast ~= nil then
+                self:_append(criteria.nullsLast and " NULLS LAST" or " NULLS FIRST")
+            end
+        end
+    end
+end
+
 function SelectAppender:_append_limit(limit)
     if limit then
         self:_append(" LIMIT ")
@@ -127,6 +144,7 @@ function SelectAppender:append_select(sub_query)
     self:_append_select_list(sub_query.selectList)
     self:_append_from(sub_query.from)
     self:_append_filter(sub_query.filter)
+    self:_append_order_by(sub_query.orderBy)
     self:_append_limit(sub_query.limit)
 end
 

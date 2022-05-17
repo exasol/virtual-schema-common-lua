@@ -261,6 +261,84 @@ describe("SelectAppender", function()
         end)
     end)
 
+    describe("renders an ORDER BY clause", function()
+        local unsorted_query = {
+            type = "select",
+            selectList = {{type = "column", name = "NAME", tableName = "USERS"}},
+            from = {type = "table", name = "USERS"},
+        }
+        local variants = {
+            {
+                order = {
+                    {type = "order_by_element", expression = {type =  "column", name = "ID", tableName = "USERS"}}
+                },
+                expected = 'ORDER BY "USERS"."ID"'
+            },
+            {
+                order = {
+                    {
+                        type = "order_by_element",
+                        expression = {type = "column", name = "NUMBER", tableName = "USERS"},
+                        isAscending = true
+                    }
+                },
+                expected = 'ORDER BY "USERS"."NUMBER" ASC'
+            },
+            {
+                order = {
+                    {
+                        type = "order_by_element",
+                        expression = {type = "column", name = "NUMBER", tableName = "USERS"},
+                        isAscending = false
+                    }
+                },
+                expected = 'ORDER BY "USERS"."NUMBER" DESC'
+            },
+            {
+                order = {
+                    {
+                        type = "order_by_element",
+                        expression = {type = "column", name = "NUMBER", tableName = "USERS"},
+                        nullsLast = true
+                    }
+                },
+                expected = 'ORDER BY "USERS"."NUMBER" NULLS LAST'
+            },
+            {
+                order = {
+                    {
+                        type = "order_by_element",
+                        expression = {type = "column", name = "NUMBER", tableName = "USERS"},
+                        nullsLast = false
+                    }
+                },
+                expected = 'ORDER BY "USERS"."NUMBER" NULLS FIRST'
+            },
+            {
+                order = {
+                    {
+                        type = "order_by_element",
+                        expression = {type = "column", name = "ID", tableName = "USERS"},
+                    },
+                    {
+                        type = "order_by_element",
+                        expression = {type = "column", name = "NUMBER", tableName = "USERS"},
+                        nullsLast = false,
+                        isAscending = true
+                    }
+                },
+                expected = 'ORDER BY "USERS"."ID", "USERS"."NUMBER" ASC NULLS FIRST'
+            },
+        }
+        for _, variant in ipairs(variants) do
+            it(variant.expected, function()
+                local original_query = unsorted_query
+                original_query.orderBy = variant.order
+                assert_yields('SELECT "USERS"."NAME" FROM "USERS" ' .. variant.expected, original_query)
+            end)
+        end
+    end)
+
     it("raises an error if the WHERE clause type is unknown", function()
         local original_query = {
             type = "select",
