@@ -63,6 +63,11 @@ describe("ExpressionRenderer", function()
             assert_expression_yields(literal.interval_ds("-123 01:02:03.456", 4, 3),
             "INTERVAL '-123 01:02:03.456' DAY(4) TO SECOND(3)")
         end)
+
+        it("interval DS without precision and fraction", function()
+            assert_expression_yields(literal.interval_ds("-234 12:23:34.001"),
+            "INTERVAL '-234 12:23:34.001' DAY TO SECOND")
+        end)
     end)
 
     describe("renders an embedded scalar function:", function()
