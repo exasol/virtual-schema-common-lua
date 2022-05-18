@@ -325,10 +325,10 @@ describe("ScalarFunctionRenderer", function()
                 run_function("ST_NUMINTERIORRINGS", geo.polygon({1, 2, 2, 3, 3, 4, 1, 2})))
 
         it_asserts("ST_GEOMETRYN('GEOMETRYCOLLECTION (POINT (1 2), LINESTRING (0 0, 0 10))', 2)",
-                run_function("ST_GEOMETRYN", geo.collection(geo.point(1, 2), geo. linestring(0, 0, 0, 10)) , 2))
+                run_function("ST_GEOMETRYN", geo.collection(geo.point(1, 2), geo.linestring(0, 0, 0, 10)), 2))
 
         it_asserts("ST_NUMGEOMETRIES('GEOMETRYCOLLECTION (POINT (1 2), LINESTRING (0 0, 0 10))')",
-                run_function("ST_NUMGEOMETRIES", geo.collection(geo.point(1, 2), geo. linestring(0, 0, 0, 10))))
+                run_function("ST_NUMGEOMETRIES", geo.collection(geo.point(1, 2), geo.linestring(0, 0, 0, 10))))
 
         it_asserts("ST_BOUNDARY('LINESTRING (0 1, 1 1)')",
                 run_function("ST_BOUNDARY", geo.linestring(0, 1, 1, 1)))
