@@ -1,6 +1,7 @@
 package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 local literal = require("queryrenderer.literal_constructors")
+local geo = require("queryrenderer.geo_constructors")
 local Query = require("exasolvs.Query")
 local ScalarFunctionAppender = require("exasolvs.queryrenderer.ScalarFunctionAppender")
 
@@ -285,7 +286,121 @@ describe("ScalarFunctionRenderer", function()
                         literal.timestamp('1981-07-03 12:05:06')))
     end)
 
-    -- Geospacial functions will be implemented with https://github.com/exasol/virtual-schema-common-lua/issues/21
+    describe("supports geospacial functions", function()
+        it_asserts("ST_X('POINT (1 2)')", run_function("ST_X", geo.point(1, 2)))
+
+        it_asserts("ST_Y('POINT (1 2)')", run_function("ST_Y", geo.point(1, 2)))
+
+        it_asserts("ST_ENDPOINT('LINESTRING (0 0, 0 1, 1 1)')",
+                run_function("ST_ENDPOINT", geo.linestring(0, 0, 0, 1, 1, 1)))
+
+        it_asserts("ST_ISCLOSED('LINESTRING (0 0, 0 1, 1 1)', 'LINESTRING (2 3, 3 4)')",
+                run_function("ST_ISCLOSED", geo.linestring(0, 0, 0, 1, 1, 1), geo.linestring(2, 3, 3, 4)))
+
+        it_asserts("ST_ISRING('LINESTRING (0 0, 0 1, 1 1)')",
+                run_function("ST_ISRING", geo.linestring(0, 0, 0, 1, 1, 1)))
+
+        it_asserts("ST_LENGTH('LINESTRING (0 0, 0 1)', 'LINESTRING (2 3, 3 4)')",
+                run_function("ST_LENGTH", geo.linestring(0, 0, 0, 1), geo.linestring(2, 3, 3, 4)))
+
+        it_asserts("ST_NUMPOINTS('LINESTRING (1 2, 3 4)')",
+                run_function("ST_NUMPOINTS", geo.linestring(1, 2, 3, 4)))
+
+        it_asserts("ST_POINTN('LINESTRING (0 5, 10 20)', 2)",
+                run_function("ST_POINTN", geo.linestring(0, 5, 10, 20), 2))
+
+        it_asserts("ST_STARTPOINT('LINESTRING (0 0, 0 1, 1 1)')",
+                run_function("ST_STARTPOINT", geo.linestring(0, 0, 0, 1, 1, 1)))
+
+        it_asserts("ST_AREA('POLYGON ((0 0, 0 4, 4 4, 4 0, 0 0), (1 1, 1 2, 2 2, 2 1, 1 1))')",
+                run_function("ST_AREA", geo.polygon({0, 0, 0, 4, 4, 4, 4, 0, 0, 0}, {1, 1, 1, 2, 2, 2, 2, 1, 1, 1})))
+
+        it_asserts("ST_EXTERIORRING('POLYGON ((1 2, 2 3, 3 4, 1 2))')",
+                run_function("ST_EXTERIORRING", geo.polygon({1, 2, 2, 3, 3, 4, 1, 2})))
+
+        it_asserts("ST_INTERIORRINGN('POLYGON ((1 2, 2 3, 3 4, 1 2))', 1)",
+                run_function("ST_INTERIORRINGN", geo.polygon({1, 2, 2, 3, 3, 4, 1, 2}), 1))
+
+        it_asserts("ST_NUMINTERIORRINGS('POLYGON ((1 2, 2 3, 3 4, 1 2))')",
+                run_function("ST_NUMINTERIORRINGS", geo.polygon({1, 2, 2, 3, 3, 4, 1, 2})))
+
+        it_asserts("ST_GEOMETRYN('GEOMETRYCOLLECTION (POINT (1 2), LINESTRING (0 0, 0 10))', 2)",
+                run_function("ST_GEOMETRYN", geo.collection(geo.point(1, 2), geo. linestring(0, 0, 0, 10)) , 2))
+
+        it_asserts("ST_NUMGEOMETRIES('GEOMETRYCOLLECTION (POINT (1 2), LINESTRING (0 0, 0 10))')",
+                run_function("ST_NUMGEOMETRIES", geo.collection(geo.point(1, 2), geo. linestring(0, 0, 0, 10))))
+
+        it_asserts("ST_BOUNDARY('LINESTRING (0 1, 1 1)')",
+                run_function("ST_BOUNDARY", geo.linestring(0, 1, 1, 1)))
+
+        it_asserts("ST_BUFFER('POINT (0 1)', 3)",
+                run_function("ST_BUFFER", geo.point(0, 1), 3))
+
+        it_asserts("ST_CENTROID('POLYGON ((0 0, 0 2, 2 2, 2 0, 0 0))')",
+                run_function("ST_CENTROID", geo.polygon({0, 0, 0, 2, 2, 2, 2, 0, 0, 0})))
+
+        it_asserts("ST_CONTAINS('POLYGON ((0 0, 2 4, 4 0, 0 0))', 'POINT (2 2)')",
+                run_function("ST_CONTAINS", geo.polygon({0, 0, 2, 4, 4, 0, 0, 0}), geo.point(2, 2)))
+
+        it_asserts("ST_CONVEXHULL('POLYGON ((0 0, 2 4, 4 0, 0 0))')",
+                run_function("ST_CONVEXHULL", geo.polygon({0, 0, 2, 4, 4, 0, 0, 0})))
+
+        it_asserts("ST_CROSSES('LINESTRING (0 0, 4 4)', 'LINESTRING (0 4, 4 0)')",
+                run_function("ST_CROSSES", geo.linestring(0, 0, 4, 4), geo.linestring(0, 4, 4, 0)))
+
+        it_asserts("ST_DIFFERENCE('LINESTRING (0 0, 2 0)', 'LINESTRING (1 0, 2 0)')",
+                run_function("ST_DIFFERENCE", geo.linestring(0, 0, 2, 0), geo.linestring(1, 0, 2, 0)))
+
+        it_asserts("ST_DIMENSION('POINT (0 0)')", run_function("ST_DIMENSION", geo.point(0, 0)))
+
+        it_asserts("ST_DISJOINT('POINT (0 0)', 'POINT (1 1)')",
+                run_function("ST_DISJOINT", geo.point(0, 0), geo.point(1, 1)))
+
+        it_asserts("ST_DISTANCE('LINESTRING (0 0, 1 0)', 'LINESTRING (0 1, 1 2)')",
+                run_function("ST_DISTANCE", geo.linestring(0, 0, 1, 0), geo.linestring(0, 1, 1, 2)))
+
+        it_asserts("ST_ENVELOPE('POINT (6 6)')", run_function("ST_ENVELOPE", geo.point(6, 6)))
+
+        it_asserts("ST_EQUALS('POINT (0 0)', 'POINT (1 1)')",
+                run_function("ST_EQUALS", geo.point(0, 0), geo.point(1, 1)))
+
+        it_asserts("ST_FORCE2D('POINT (0 0 0)')", run_function("ST_FORCE2D", 'POINT (0 0 0)'))
+
+        it_asserts("ST_GEOMETRYTYPE('POINT (7 7)')", run_function("ST_GEOMETRYTYPE", geo.point(7, 7)))
+
+        it_asserts("ST_INTERSECTION('POLYGON ((0 0, 4 0, 4 4, 0 4, 0 0))', 'POLYGON ((2 0, 6 0, 6 4, 2 4, 2 0))')",
+                run_function("ST_INTERSECTION", geo.polygon({0, 0, 4, 0, 4, 4, 0, 4, 0, 0}),
+                        geo.polygon({2, 0, 6, 0, 6, 4, 2, 4, 2, 0})))
+
+        it_asserts("ST_INTERSECTS('POLYGON ((0 0, 4 0, 4 4, 0 4, 0 0))', 'LINESTRING (2 -1, 2 5)')",
+                run_function("ST_INTERSECTS", geo.polygon({0, 0, 4, 0, 4, 4, 0, 4, 0, 0}),
+                        geo.linestring(2, -1, 2, 5)))
+
+        it_asserts("ST_ISEMPTY('GEOMETRYCOLLECTION EMPTY')", run_function("ST_ISEMPTY", 'GEOMETRYCOLLECTION EMPTY'))
+
+        it_asserts("ST_ISSIMPLE('LINESTRING (1 1, 2 2)')", run_function("ST_ISSIMPLE", geo.linestring(1, 1, 2, 2)))
+
+        it_asserts("ST_OVERLAPS('POLYGON ((0 0, 2 2, 4 0, 0 0))', 'POLYGON ((2 0, 4 2, 6 0, 2 0))')",
+                run_function("ST_OVERLAPS", geo.polygon({0, 0, 2, 2, 4, 0, 0, 0}),
+                        geo.polygon({2, 0, 4, 2, 6, 0, 2, 0})))
+
+        it_asserts("ST_SETSRID('POINT (1 2)', 4513)", run_function("ST_SETSRID", geo.point(1, 2), 4513))
+
+        it_asserts("ST_SYMDIFFERENCE('LINESTRING (3 0, 1 0)', 'LINESTRING (2 0, 0 0)')",
+                run_function("ST_SYMDIFFERENCE", geo.linestring(3, 0, 1, 0), geo.linestring(2, 0, 0, 0)))
+
+        it_asserts("ST_TOUCHES('POLYGON ((0 0, 1 1, 2 0, 0 0))', 'LINESTRING (-1 -1, 2 2)')",
+                run_function("ST_TOUCHES", geo.polygon({0, 0, 1, 1, 2, 0, 0, 0}), geo.linestring(-1, -1, 2, 2)))
+
+        it_asserts("ST_TRANSFORM('POINT (4000 5000)', 4513)", run_function("ST_TRANSFORM", geo.point(4000, 5000), 4513))
+
+        it_asserts("ST_UNION('POLYGON ((0 0, 3 0, 3 1, 1 0, 0 0))', 'POLYGON ((1 0, 1 2, 2 2, 2 0, 1 0))')",
+                run_function("ST_UNION", geo.polygon({0, 0, 3, 0, 3, 1, 1, 0, 0, 0}),
+                        geo.polygon({1, 0, 1, 2, 2, 2, 2, 0, 1, 0})))
+
+        it_asserts("ST_WITHIN('POINT (1 1)', 'POLYGON ((0 0, 2 0, 2 2, 0 2, 0 0))')",
+                run_function("ST_WITHIN", geo.point(1, 1), geo.polygon({0, 0, 2, 0, 2, 2, 0, 2, 0, 0})))
+    end)
 
     describe("supports bitwise functions", function()
         describe("with a single argument", function()
@@ -306,7 +421,6 @@ describe("ScalarFunctionRenderer", function()
         end)
     end)
 
-    -- Conversion functions
     describe("supports conversion function", function()
         it_asserts("CAST(347 AS VARCHAR(3))",
                 run_complex_function("CAST", {dataType = {type = "VARCHAR", size = 3}}, 347), "number to VARCHAR")
@@ -320,7 +434,6 @@ describe("ScalarFunctionRenderer", function()
                 ), "interval to VARCHAR")
     end)
 
-    -- Other functions
     describe("supports other functions", function()
         describe("parameterless function", function()
             for _, name in pairs({

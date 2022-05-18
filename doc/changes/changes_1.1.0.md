@@ -11,6 +11,7 @@ New SQL rendering features:
 * `LIMIT`
 * `ORDER BY`
 * Interval types
+* All scalar functions (except `LISTAGG`)
 
 ## Features / Enhancements
 
