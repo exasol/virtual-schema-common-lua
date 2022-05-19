@@ -148,9 +148,20 @@ describe("ExpressionRenderer", function()
     end)
 
     it("raises an error if an unknown predicate type is used", function()
-        local out_query = Query:new()
-        local appender = ExpressionAppender:new(out_query)
-        assert.has_error(function() appender:_append_unary_predicate({type = "illegal type"}) end,
-                "Cannot determine operator for unknown predicate type: illegal type")
+        local appender = ExpressionAppender:new(Query:new())
+        assert.error_matches(function() appender:_append_unary_predicate({type = "illegal predicate type"}) end,
+                "Cannot determine operator for unknown predicate type 'illegal predicate type'.", 1, true)
+    end)
+
+    it("raises an error if the expression type is unknown", function()
+        local appender = ExpressionAppender:new(Query:new())
+        assert.error_matches(function() appender:append_expression({type = "illegal expression type"}) end,
+                "Unable to render unknown SQL expression type 'illegal expression type'.", 1, true)
+    end)
+
+    it("raises an error if the data type is unknown", function()
+        local appender = ExpressionAppender:new(Query:new())
+        assert.error_matches(function() appender:_append_data_type({type = "illegal datatype"}) end,
+                "Unable to render unknown data type 'illegal datatype'.")
     end)
 end)

@@ -360,10 +360,10 @@ describe("SelectAppender", function()
             },
             from = {
                 type = "join",
-                join_type = "illegal"
+                join_type = "join_type_illegal"
             }
         }
-        assert_select_error("unknown join type", original_query)
+        assert_select_error("unknown join type 'join_type_illegal'", original_query)
     end)
 
     it("raises an error if the predicate type is unknown", function()
@@ -373,17 +373,17 @@ describe("SelectAppender", function()
                 {type = "predicate_illegal"}
             }
         }
-        assert_select_error("unknown SQL predicate type", original_query)
+        assert_select_error("unknown SQL predicate type 'predicate_illegal'", original_query)
     end)
 
     it("raises an error if the expression type is unknown", function()
         local original_query = {
             type = "select",
             selectList = {
-                {type = "illegal"}
+                {type = "illegal expression type"}
             },
         }
-        assert_select_error("unknown SQL expression type", original_query)
+        assert_select_error("unknown SQL expression type 'illegal expression type'", original_query)
     end)
 
     it("raises an error if the data type is unknown", function()

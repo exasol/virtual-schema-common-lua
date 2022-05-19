@@ -1,3 +1,5 @@
+local exaerror = require("exaerror")
+
 --- This class implements an abstract base adapter with common behavior for some of the request callback functions.
 -- @type AbstractVirtualSchemaAdapter
 -- <p>
@@ -18,16 +20,22 @@ function AbstractVirtualSchemaAdapter:new(object)
     return object
 end
 
+local function raise_abstract_method_call_error(method_name)
+    exaerror.create("E-VSCL-8", "Attempted to call the abstract method AbstractVirtualSchemaAdapter:{{method|u}}.",
+            {method = {value = method_name, description = "abstract method that was called"}}
+    ):add_ticket_mitigation():raise()
+end
+
 --- Get the adapter name.
 -- @return adapter name
 function AbstractVirtualSchemaAdapter:get_name()
-    error("Method 'AbstractVirtualSchemaAdapter:get_name' is abstract.")
+    raise_abstract_method_call_error("get_name")
 end
 
 --- Get the adapter version.
 -- @return version of the adapter
 function AbstractVirtualSchemaAdapter:get_version()
-    error("Method 'AbstractVirtualSchemaAdapter:get_version' is abstract.")
+    raise_abstract_method_call_error("get_version")
 end
 
 --- Define the list of all capabilities this adapter supports.
@@ -37,7 +45,7 @@ end
 -- </p>
 -- @return list of all capabilities of this adapter
 function AbstractVirtualSchemaAdapter:_define_capabilities()
-    error("Method 'AbstractVirtualSchemaAdapter:_define_capabilites' is abstract.")
+    raise_abstract_method_call_error("_define_capabilities")
 end
 
 --- Create the Virtual Schema.
@@ -48,7 +56,7 @@ end
 -- @param _ user-defined properties
 -- @return metadata representing the structure and datatypes of the data source from Exasol's point of view
 function AbstractVirtualSchemaAdapter:create_virtual_schema(_, _)
-    error("Method 'AbstractVirtualSchemaAdapter:create_virtual_schema' is abstract.")
+    raise_abstract_method_call_error("create_virtual_schema")
 end
 --- Set new adapter properties.
 -- <p>
@@ -58,7 +66,7 @@ end
 -- @param _ user-defined properties
 -- @return same response as if you created a new Virtual Schema
 function AbstractVirtualSchemaAdapter:set_properties(_, _)
-    error("Method 'AbstractVirtualSchemaAdapter:set_properties' is abstract.")
+    raise_abstract_method_call_error("set_properties'")
 end
 
 --- Refresh the Virtual Schema.
@@ -69,7 +77,7 @@ end
 -- @param _ user-defined properties
 -- @return same response as if you created a new Virtual Schema
 function AbstractVirtualSchemaAdapter:refresh(_)
-    error("Method 'AbstractVirtualSchemaAdapter:refresh' is abstract.")
+    raise_abstract_method_call_error("refresh")
 end
 
 -- [impl -> dsn~excluding-capabilities~0]
@@ -115,7 +123,7 @@ end
 -- @return rewritten query to be executed by the ExaLoader (<code>IMPORT</code>), value providing query
 -- <code>SELECT ... FROM VALUES</code>, not recommended) or local Exasol query (<code>SELECT</code>).
 function AbstractVirtualSchemaAdapter:push_down(_, _)
-    error("Method 'AbstractVirtualSchemaAdapter:push_down' is abstract.")
+    raise_abstract_method_call_error("push_down")
 end
 
 --- Drop the virtual schema.

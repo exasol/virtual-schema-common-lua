@@ -1,5 +1,6 @@
 local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
 local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
+local exaerror = require("exaerror")
 
 --- Appender for scalar functions in an SQL statement.
 -- @classmod ScalarFunctionAppender
@@ -30,7 +31,9 @@ function ScalarFunctionAppender:append_scalar_function(scalar_function)
     if implementation ~= nil then
         implementation(self, scalar_function)
     else
-        error('E-VS-QR-3: Unable to render unsupported scalar function type "' .. function_name .. '".')
+        exaerror.creata("E-VSCL-3", "Unable to render unsupported scalar function type {{type}}.",
+                {value = function_name, description = "name of the SQL function that is not yet supported"}
+        ):add_ticket_mitigation():raise()
     end
 end
 

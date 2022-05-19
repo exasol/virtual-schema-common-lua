@@ -107,18 +107,6 @@ function RequestDispatcher:_init_logging(properties)
     end
 end
 
--- https://github.com/exasol/virtual-schema-common-lua/issues/9
-local function xpcall_workaround(callback, error_handler, ...)
-    local probe <const> = "PROBE:error"
-    local _, actual = pcall(function() error(probe, 0) end)
-    if(actual == probe) then
-        return xpcall(callback, error_handler, ...)
-    else
-        log.trace("This version of Exasol has a problem with (x)pcall. Applying workaround.")
-        return true, callback(...)
-    end
-end
-
 ---
 -- RLS adapter entry point.
 -- <p>
@@ -136,7 +124,7 @@ function RequestDispatcher:adapter_call(request_as_json)
     local properties = self:_extract_properties(request)
     self:_init_logging(properties)
     log.debug("Raw request:\n%s", request_as_json)
-    local ok, result = xpcall_workaround(RequestDispatcher._handle_request, handle_error, self, request, properties)
+    local ok, result = xpcall(RequestDispatcher._handle_request, handle_error, self, request, properties)
     if ok then
         local response = cjson.encode(result)
         log.debug("Response:\n" .. response)
