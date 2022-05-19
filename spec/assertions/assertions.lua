@@ -21,7 +21,7 @@ end
 
 local function abstract_method(_, arguments)
     local callback <const> = arguments[1]
-    return assert.error_matches(callback, "Method '.*' is abstract.")
+    return assert.error_matches(callback, "Attempted to call the abstract method .*")
 end
 
 say:set("assertion.same_json.positive", "Expected %s\nto be a JSON encoded structure that matches: %s")

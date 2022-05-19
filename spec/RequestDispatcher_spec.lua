@@ -67,7 +67,7 @@ describe("RequestDispatcher", function()
 
     it("dispatches create-virtual-schema request [utest -> dsn~dispatching-create-virtual-schema-requests~0]",function()
         assert.error_contains(function() dispatcher:adapter_call('{"type" : "createVirtualSchema"}')  end,
-                "Method 'AbstractVirtualSchemaAdapter:create_virtual_schema' is abstract.")
+                "Attempted to call the abstract method AbstractVirtualSchemaAdapter:create_virtual_schema.")
     end)
 
     it("dispatches drop-virtual-schema request [utest -> dsn~dispatching-drop-virtual-schema-requests~0]",function()
@@ -78,17 +78,17 @@ describe("RequestDispatcher", function()
 
     it("dispatches refresh request [utest -> dsn~dispatching-refresh-requests~0]",function()
         assert.error_contains(function() dispatcher:adapter_call('{"type" : "refresh"}')  end,
-                "Method 'AbstractVirtualSchemaAdapter:refresh' is abstract.")
+                "Attempted to call the abstract method AbstractVirtualSchemaAdapter:refresh")
     end)
 
     it("dispatches set-properties request [utest -> dsn~dispatching-set-properties-requests~0]",function()
         assert.error_contains(function() dispatcher:adapter_call('{"type" : "setProperties"}')  end,
-                "Method 'AbstractVirtualSchemaAdapter:set_properties' is abstract.")
+                "Attempted to call the abstract method AbstractVirtualSchemaAdapter:set_properties")
     end)
 
     it("dispatches set-properties request [utest -> dsn~dispatching-push-down-requests~0]",function()
         assert.error_contains(function() dispatcher:adapter_call('{"type" : "pushdown"}')  end,
-                "Method 'AbstractVirtualSchemaAdapter:push_down' is abstract.")
+                "Attempted to call the abstract method AbstractVirtualSchemaAdapter:push_down")
     end)
 
     it("sets up remote logging", function()

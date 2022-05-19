@@ -1,4 +1,5 @@
 local text = require("text")
+local exaerror = require("exaerror")
 local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppender")
 local SelectAppender = {}
 
@@ -66,7 +67,9 @@ function SelectAppender:_append_join(join)
         self:_append(' ON ')
         self:_append_expression(join.condition)
     else
-        error('E-VS-QR-6: Unable to render unknown join type "' .. join.join_type .. '".')
+        exaerror.create("E-VSCL-6", "Unable to render unknown join type {{type}}.",
+                {type = {value = join.join_type, description = "type of join that was not recognized"}}
+        ):add_ticket_mitigation():raise()
     end
 end
 
@@ -79,7 +82,9 @@ function SelectAppender:_append_from(from)
         elseif type == "join" then
             self:_append_join(from)
         else
-            error('E-VS-QR-5: Unable to render unknown SQL FROM clause type "' .. type .. '".')
+            exaerror.create("E-VSCL-5", "Unable to render unknown SQL FROM clause type {{type}}.",
+                    {type = {value = type, description = "type of the FROM clause that was not recognized"}}
+            ):add_ticket_mitigation():raise()
         end
     end
 end

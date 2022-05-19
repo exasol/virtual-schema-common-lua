@@ -13,6 +13,8 @@ New SQL rendering features:
 * Interval types
 * All scalar functions (except `LISTAGG`)
 
+We also now use uniform error reporting with the `exaerror` module.
+
 ## Features / Enhancements
 
 ## Documentation
