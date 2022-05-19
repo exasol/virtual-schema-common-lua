@@ -57,7 +57,7 @@ describe("ScalarFunctionRenderer", function()
         describe("with a single argument", function()
             for _, name in ipairs({
                 "ABS", "ACOS", "ASIN", "ATAN", "ATAN2", "CEIL", "COS", "COSH", "COT", "DEGREES", "EXP", "FLOOR", "LN",
-                "LOG", "MIN_SCALE", "RADIANS", "ROUND", "SIGN", "SIN", "SINH", "SQRT", "SUB", "TAN", "TANH"
+                "LOG", "MIN_SCALE", "RADIANS", "ROUND", "SIGN", "SIN", "SINH", "SQRT", "TAN", "TANH"
             }) do
                 it_asserts(name .. "(30)", run_function(name, 30))
             end
@@ -69,7 +69,7 @@ describe("ScalarFunctionRenderer", function()
             it_asserts("1 + 2", run_function("ADD", 1, 2))
             it_asserts("DIV(7, 3)", run_function("DIV", 7, 3))
             it_asserts("7.0 / 3.0", run_function("FLOAT_DIV", 7.0, 3.0))
-            it_asserts("42 - 47.11", run_function("MINUS", 42, 47.11))
+            it_asserts("42 - 47.11", run_function("SUB", 42, 47.11))
             it_asserts("MOD(13, 5)", run_function("MOD", 13, 5))
             it_asserts("21 * 167.6", run_function("MULT", 21, 167.6))
             it_asserts("POWER(4, 9)", run_function("POWER", 4, 9))

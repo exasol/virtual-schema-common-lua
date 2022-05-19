@@ -103,9 +103,6 @@ ScalarFunctionAppender._log = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._min_scale = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._mod = ScalarFunctionAppender._append_simple_function
 
-function ScalarFunctionAppender:_minus(f)
-    self:_append_arithmetic_function(f.arguments[1], "-", f.arguments[2])
-end
 
 function ScalarFunctionAppender:_mult(f)
     self:_append_arithmetic_function(f.arguments[1], "*", f.arguments[2])
@@ -125,7 +122,11 @@ ScalarFunctionAppender._sign = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._sin = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._sinh = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._sqrt = ScalarFunctionAppender._append_simple_function
-ScalarFunctionAppender._sub = ScalarFunctionAppender._append_simple_function
+
+function ScalarFunctionAppender:_sub(f)
+    self:_append_arithmetic_function(f.arguments[1], "-", f.arguments[2])
+end
+
 ScalarFunctionAppender._tan = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._tanh = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._to_char = ScalarFunctionAppender._append_simple_function
