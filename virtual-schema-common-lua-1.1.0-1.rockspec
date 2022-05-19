@@ -43,7 +43,12 @@ build = {
     modules = {
         ["exasolvs.AdapterProperties"] = "src/exasolvs/AdapterProperties.lua",
         ["exasolvs.AbstractVirtualSchemaAdapter"] = "src/exasolvs/AbstractVirtualSchemaAdapter.lua",
+        ["exasolvs.Query"] = "src/exasolvs/Query.lua",
         ["exasolvs.QueryRenderer"] = "src/exasolvs/QueryRenderer.lua",
+        ["exasolvs.queryrenderer.AbstractQueryAppender"] = "src/exasolvs/queryrenderer/AbstractQueryAppender.lua",
+        ["exasolvs.queryrenderer.ExpressionAppender"] = "src/exasolvs/queryrenderer/ExpressionAppender.lua",
+        ["exasolvs.queryrenderer.ScalarFunctionAppender"] = "src/exasolvs/queryrenderer/ScalarFunctionAppender.lua",
+        ["exasolvs.queryrenderer.SelectAppender"] = "src/exasolvs/queryrenderer/SelectAppender.lua",
         ["exasolvs.RequestDispatcher"] = "src/exasolvs/RequestDispatcher.lua",
         ["text"] = "src/text.lua"
     },
