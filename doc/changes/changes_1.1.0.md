@@ -1,10 +1,10 @@
-# virtual-schema-common-lua, released 2022-05-??
+# virtual-schema-common-lua, released 2022-05-20
  
 Code name: Broader SQL coverage
  
 ## Summary
 
-In this release we improved the coverage of the SQL rendering and refactored the renderer to be modular.
+Release 1.1.0 of `virtual-schema-common-lua` brings improved the coverage of the SQL rendering and refactored the renderer to be modular.
 
 New SQL rendering features:
 
