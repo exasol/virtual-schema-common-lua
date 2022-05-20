@@ -151,11 +151,11 @@ ScalarFunctionAppender._lower = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._lpad = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._ltrim = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._octet_length = ScalarFunctionAppender._append_simple_function
-ScalarFunctionAppender._reverse = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._regexp_instr = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._regexp_substr = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._repeat = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._replace = ScalarFunctionAppender._append_simple_function
+ScalarFunctionAppender._reverse = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._right = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._rpad = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._rtrim = ScalarFunctionAppender._append_simple_function
@@ -183,7 +183,6 @@ ScalarFunctionAppender._date_trunc = ScalarFunctionAppender._append_simple_funct
 ScalarFunctionAppender._day = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._days_between = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._dbtimezone = ScalarFunctionAppender._append_parameterless_function
-ScalarFunctionAppender._from_posix_time = ScalarFunctionAppender._append_simple_function
 
 function ScalarFunctionAppender:_extract(f)
     local to_extract = string.upper(f.toExtract)
@@ -194,6 +193,7 @@ function ScalarFunctionAppender:_extract(f)
     self:_append(")")
 end
 
+ScalarFunctionAppender._from_posix_time = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._hour = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._hours_between = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._localtimestamp = ScalarFunctionAppender._append_parameterless_function
@@ -204,18 +204,18 @@ ScalarFunctionAppender._months_between = ScalarFunctionAppender._append_simple_f
 ScalarFunctionAppender._numtodsinterval = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._numtoyminterval = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._posix_time = ScalarFunctionAppender._append_simple_function
-ScalarFunctionAppender._seconds = ScalarFunctionAppender._append_simple_function
+ScalarFunctionAppender._second = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._seconds_between = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._sessiontimezone = ScalarFunctionAppender._append_parameterless_function
+ScalarFunctionAppender._sysdate = ScalarFunctionAppender._append_parameterless_function
+ScalarFunctionAppender._systimestamp = ScalarFunctionAppender._append_parameterless_function
 ScalarFunctionAppender._to_date = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._to_dsinterval = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._to_timestamp = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._to_yminterval = ScalarFunctionAppender._append_simple_function
-ScalarFunctionAppender._sysdate = ScalarFunctionAppender._append_parameterless_function
-ScalarFunctionAppender._systimestamp = ScalarFunctionAppender._append_parameterless_function
+ScalarFunctionAppender._week = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._year = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._years_between = ScalarFunctionAppender._append_simple_function
-ScalarFunctionAppender._week = ScalarFunctionAppender._append_simple_function
 
 -- Geospatial functions
 -- Point functions
@@ -360,9 +360,9 @@ end
 
 ScalarFunctionAppender._least = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._nullifzero = ScalarFunctionAppender._append_simple_function
+ScalarFunctionAppender._session_parameter = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._sys_guid = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._typeof = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._zeroifnull = ScalarFunctionAppender._append_simple_function
-ScalarFunctionAppender._session_parameter = ScalarFunctionAppender._append_simple_function
 
 return ScalarFunctionAppender

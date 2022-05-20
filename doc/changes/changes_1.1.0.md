@@ -17,7 +17,15 @@ We also now use uniform error reporting with the `exaerror` module.
 
 ## Features / Enhancements
 
-## Documentation
+#15: Render `Limit`
+#16: Render `ORDER BY`
+#22: Render interval types
+#24: Use `exaerror`
+
+## Bugfixes
+
+#30: Add missing query renderer modules to rockspec
+
 
 ## Refactoring
 

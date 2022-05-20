@@ -260,8 +260,8 @@ describe("ScalarFunctionRenderer", function()
 
         it_asserts("POSIX_TIME('1970-01-01 00:00:01')", run_function("POSIX_TIME", "1970-01-01 00:00:01"))
 
-        it_asserts("SECONDS(TIMESTAMP '1901-03-03 04:05:06')",
-                run_function("SECONDS", literal.timestamp('1901-03-03 04:05:06')))
+        it_asserts("SECOND(TIMESTAMP '1901-03-03 04:05:06')",
+                run_function("SECOND", literal.timestamp('1901-03-03 04:05:06')))
 
         it_asserts("SECONDS_BETWEEN(TIMESTAMP '1901-03-03 04:05:06', TIMESTAMP '1901-07-03 12:05:06')",
                 run_function("SECONDS_BETWEEN", literal.timestamp('1901-03-03 04:05:06'),
