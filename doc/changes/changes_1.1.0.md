@@ -1,4 +1,4 @@
-# virtual-schema-common-lua, released 2022-05-20
+# virtual-schema-common-lua 1.1.0, released 2022-05-20
  
 Code name: Broader SQL coverage
  

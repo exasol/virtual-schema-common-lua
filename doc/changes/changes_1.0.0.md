@@ -1,4 +1,4 @@
-# virtual-schema-common-lua, released 2022-04-08
+# virtual-schema-common-lua 1.0.0, released 2022-04-08
  
 Code name: Initial release
  
