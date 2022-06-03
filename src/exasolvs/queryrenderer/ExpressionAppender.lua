@@ -8,7 +8,6 @@ local ExpressionAppender = {}
 ExpressionAppender.__index = ExpressionAppender
 setmetatable(ExpressionAppender, {__index = AbstractQueryAppender})
 
-
 local OPERATORS <const> = {
     predicate_equal = "=", predicate_notequal = "<>", predicate_less = "<", predicate_greater = ">",
     predicate_and = "AND", predicate_or = "OR", predicate_not = "NOT"
@@ -49,7 +48,7 @@ end
 
 function ExpressionAppender:_append_exists(sub_select)
     self:_append("EXISTS(")
-    require("exasolvs.queryrenderer.SelectAppender"):new(self.out_query):append_select(sub_select.query)
+    require("exasolvs.queryrenderer.SelectAppender"):new(self._out_query):append_select(sub_select.query)
     self:_append(")")
 end
 
@@ -150,11 +149,11 @@ function ExpressionAppender:append_expression(expression)
         self:_append_quoted_literal_expression(expression)
         self:_append_interval(expression.dataType)
     elseif text.starts_with(type, "function_scalar") then
-        require("exasolvs.queryrenderer.ScalarFunctionAppender"):new(self.out_query):append_scalar_function(expression)
+        require("exasolvs.queryrenderer.ScalarFunctionAppender"):new(self._out_query):append_scalar_function(expression)
     elseif text.starts_with(type, "predicate_") then
         self:append_predicate(expression)
     elseif type == "sub_select" then
-        require("exasolvs.queryrenderer.SelectAppender"):new(self.out_query):append_sub_select(expression)
+        require("exasolvs.queryrenderer.SelectAppender"):new(self._out_query):append_sub_select(expression)
     else
         exaerror.create("E-VSCL-1", "Unable to render unknown SQL expression type {{type}}.",
             {type = {value = expression.type, description = "expression type provided"}}

@@ -2,37 +2,33 @@ local text = require("text")
 local exaerror = require("exaerror")
 
 --- This class abstracts access to the user-defined properties of the Virtual Schema.
--- @type AdapterProperties
+-- @classmod AdapterProperties
 local AdapterProperties = {}
+AdapterProperties.__index = AdapterProperties
 
 local EXCLUDED_CAPABILITIES_PROPERTY <const> = "EXCLUDED_CAPABILITIES"
 local LOG_LEVEL_PROPERTY <const> = "LOG_LEVEL"
 local DEBUG_ADDRESS_PROPERTY <const> = "DEBUG_ADDRESS"
 local DEFAULT_LOG_PORT <const> = 3000
 
---- Factory method for adapter properties
--- @param raw_properties properties as key-value pairs
--- @return adapter properties object
-function AdapterProperties.create(raw_properties)
-    return AdapterProperties:new({raw_properties = raw_properties})
-end
-
 --- Create a new instance of adapter properties.
--- @param object pre-initialized object
+-- @param raw_properties properties as key-value pairs
 -- @return new instance
-function AdapterProperties:new (object)
-    object = object or {raw_properties = {}}
-    self.__index = self
-    setmetatable(object, self)
-    return object
+function AdapterProperties:new (raw_properties)
+    local instance = setmetatable({}, self)
+    instance:_init(raw_properties)
+    return instance
 end
 
+function AdapterProperties:_init(raw_properties)
+    self._raw_properties = raw_properties
+end
 
 --- Get the value of a property.
 -- @param property_name name of the property to get
 -- @return property value
 function AdapterProperties:get(property_name)
-    return self.raw_properties[property_name]
+    return self._raw_properties[property_name]
 end
 
 --- Check if the property is set.

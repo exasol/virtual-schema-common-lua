@@ -41,7 +41,7 @@ end
 ScalarFunctionAppender.append = ScalarFunctionAppender.append_scalar_function
 
 function ScalarFunctionAppender:_append_expression(expression)
-    local expression_renderer = ExpressionAppender:new(self.out_query)
+    local expression_renderer = ExpressionAppender:new(self._out_query)
     expression_renderer:append_expression(expression)
 end
 

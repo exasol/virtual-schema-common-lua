@@ -1,7 +1,7 @@
 local exaerror = require("exaerror")
 
 --- This class implements an abstract base adapter with common behavior for some of the request callback functions.
--- @type AbstractVirtualSchemaAdapter
+-- @classmod AbstractVirtualSchemaAdapter
 -- <p>
 -- When you derive a concrete adapter from this base class, we recommend keeping it stateless. This makes
 -- parallelization easier, reduces complexity and saves you the trouble of cleaning up in the drop-virtual-schema
@@ -10,14 +10,8 @@ local exaerror = require("exaerror")
 -- [impl -> dsn~lua-virtual-schema-adapter-abstraction~0]
 local AbstractVirtualSchemaAdapter = {}
 
---- Create a new instance of a Virtual Schema base adapter
--- @param object pre-initialized object
--- @return adapter instance
-function AbstractVirtualSchemaAdapter:new(object)
-    object = object or {}
-    self.__index = self
-    setmetatable(object, self)
-    return object
+function AbstractVirtualSchemaAdapter:_init()
+    -- Intentionally empty
 end
 
 local function raise_abstract_method_call_error(method_name)

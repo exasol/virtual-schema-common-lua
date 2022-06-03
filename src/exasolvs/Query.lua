@@ -2,50 +2,46 @@
 -- @classmod Query
 
 local Query = {}
+Query.__index = Query
 
 --- Create a new instance of a <code>Query</code>.
--- @param tokens tokens the query consists of
--- @return new instance
-function Query.create(tokens)
-    return Query:new({tokens = tokens})
+-- @param tokens list of tokens that make up the query
+-- @return query object
+function Query:new(tokens)
+    local instance = setmetatable({}, self)
+    instance:_init(tokens)
+    return instance
 end
 
---- Create a new instance of a <code>Query</code>.
--- @param object pre-initialized instance
--- @return query object
-function Query:new(object)
-    object = object or {}
-    object.tokens = object.tokens or {}
-    self.__index = self
-    setmetatable(object, self)
-    return object
+function Query:_init(tokens)
+    self._tokens = tokens or {}
 end
 
 --- Append a single token.
 -- While the same can be achieved with calling <code>append_all</code> with a single parameter, this method is faster.
 -- @param token token to append
 function Query:append(token)
-    self.tokens[#self.tokens + 1] = token
+    self._tokens[#self._tokens + 1] = token
 end
 
 --- Append all tokens.
 -- @param ... tokens to append
 function Query:append_all(...)
     for _, token in ipairs(table.pack(...)) do
-        self.tokens[#self.tokens + 1] = token
+        self._tokens[#self._tokens + 1] = token
     end
 end
 
 --- Get the tokens this query consists of
 -- @return tokens
 function Query:get_tokens()
-    return self.tokens
+    return self._tokens
 end
 
 --- Return the whole query as string.
 -- @return query as string
 function Query:to_string()
-    return table.concat(self.tokens)
+    return table.concat(self._tokens)
 end
 
 return Query
