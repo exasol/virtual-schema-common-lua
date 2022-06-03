@@ -4,7 +4,7 @@
 local Query = {}
 Query.__index = Query
 
---- Create a new instance of a <code>Query</code>.
+--- Create a new instance of a `Query`.
 -- @param tokens list of tokens that make up the query
 -- @return query object
 function Query:new(tokens)
@@ -18,7 +18,7 @@ function Query:_init(tokens)
 end
 
 --- Append a single token.
--- While the same can be achieved with calling <code>append_all</code> with a single parameter, this method is faster.
+-- While the same can be achieved with calling `append_all` with a single parameter, this method is faster.
 -- @param token token to append
 function Query:append(token)
     self._tokens[#self._tokens + 1] = token

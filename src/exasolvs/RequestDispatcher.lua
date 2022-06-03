@@ -11,7 +11,7 @@ local RequestDispatcher = {}
 RequestDispatcher.__index = RequestDispatcher
 local TRUNCATE_ERRORS_AFTER <const> = 3000
 
---- Create a new <code>RequestDispatcher</code>.
+--- Create a new `RequestDispatcher`.
 -- @param adapter adapter that receives the dispatched requests
 -- @param properties_reader properties reader
 -- @return dispatcher instance

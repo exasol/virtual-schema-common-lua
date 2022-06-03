@@ -34,7 +34,7 @@ end
 
 --- Define the list of all capabilities this adapter supports.
 -- <p>
--- Override this method in derived adapter class. Note that this differs from <code>get_capabilities</code> because
+-- Override this method in derived adapter class. Note that this differs from `get_capabilities` because
 -- the later takes exclusions defined by the user into consideration.
 -- </p>
 -- @return list of all capabilities of this adapter
@@ -92,11 +92,9 @@ local function subtract_capabilities(original_capabilities, excluded_capabilitie
 end
 
 --- Get the adapter capabilities.
--- <p>
--- The basic <code>get_capabilities</code> handler in this classe will out-of-the-box fit all derived adapters with the
+-- The basic `get_capabilities` handler in this class will out-of-the-box fit all derived adapters with the
 -- rare exception of those that decide on capabilities at runtime depending on for example the version number of the
 -- remote data source.
--- </p>
 -- @param _ virtual schema request
 -- @param properties user-defined properties
 -- @return list of non-excluded adapter capabilities
@@ -114,8 +112,8 @@ end
 --- Push a query down to the data source
 -- @param _ virtual schema request
 -- @param _ user-defined properties
--- @return rewritten query to be executed by the ExaLoader (<code>IMPORT</code>), value providing query
--- <code>SELECT ... FROM VALUES</code>, not recommended) or local Exasol query (<code>SELECT</code>).
+-- @return rewritten query to be executed by the ExaLoader (`IMPORT`), value providing query
+-- `SELECT ... FROM VALUES`, not recommended) or local Exasol query (`SELECT`).
 function AbstractVirtualSchemaAdapter:push_down(_, _)
     raise_abstract_method_call_error("push_down")
 end

@@ -33,14 +33,14 @@ end
 
 --- Check if the property is set.
 -- @param property_name name of the property to check
--- @return <code>true</code> if the property is set (i.e. not <code>nil</code>)
+-- @return `true` if the property is set (i.e. not `nil`)
 function AdapterProperties:is_property_set(property_name)
     return self:get(property_name) ~= nil
 end
 
 --- Check if the property has a non-empty value.
 -- @param property_name name of the property to check
--- @return <code>true</code> if the property has a non-empty value (i.e. not <code>nil</code> or an empty string)
+-- @return `true` if the property has a non-empty value (i.e. not `nil` or an empty string)
 function AdapterProperties:has_value(property_name)
     local value = self:get(property_name)
     return value ~= nil and value ~= ""
@@ -48,7 +48,7 @@ end
 
 --- Check if the property value is empty.
 -- @param property_name name of the property to check
--- @return <code>true</code> if the property's value is empty (i.e. the property is set to an empty string)
+-- @return `true` if the property's value is empty (i.e. the property is set to an empty string)
 function AdapterProperties:is_empty(property_name)
     return self:get(property_name) == ""
 end
@@ -116,7 +116,7 @@ function AdapterProperties:get_log_level()
 end
 
 --- Check if the log level is set
--- @return <code>true</code> if the log level is set
+-- @return `true` if the log level is set
 function AdapterProperties:has_log_level()
     return self:has_value(LOG_LEVEL_PROPERTY)
 end
@@ -128,7 +128,7 @@ function AdapterProperties:get_excluded_capabilities()
 end
 
 --- Check if excluded capabilities are set
--- @return <code>true</code> if the excluded capabilities are set
+-- @return `true` if the excluded capabilities are set
 function AdapterProperties:has_excluded_capabilities()
     return self:has_value(EXCLUDED_CAPABILITIES_PROPERTY)
 end
@@ -152,7 +152,7 @@ function AdapterProperties:get_debug_address()
 end
 
 --- Check if log address set
--- @return <code>true</code> if the log address is set
+-- @return `true` if the log address is set
 function AdapterProperties:has_debug_address()
     return self:has_value(DEBUG_ADDRESS_PROPERTY)
 end

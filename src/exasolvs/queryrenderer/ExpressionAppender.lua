@@ -15,7 +15,7 @@ local OPERATORS <const> = {
 
 local function get_predicate_operator(predicate_type)
     local operator = OPERATORS[predicate_type]
-    if(operator ~= nil) then
+    if operator ~= nil then
         return operator
     else
         exaerror.create("E-VSCL-7", "Cannot determine operator for unknown predicate type {{type}}.",
@@ -24,7 +24,7 @@ local function get_predicate_operator(predicate_type)
     end
 end
 
---- Create a new instance of an <code>ExpressionRenderer</code>
+--- Create a new instance of an `ExpressionRenderer`.
 -- @param out_query query that the rendered tokens should be appended too
 -- @return expression renderer
 function ExpressionAppender:new(out_query)
