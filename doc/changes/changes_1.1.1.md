@@ -1,4 +1,4 @@
-# virtual-schema-common-lua 1.1.0, released 2022-06-03
+# virtual-schema-common-lua 1.1.0, released 2022-06-07
  
 Code name: Apply new Lua style guide
  

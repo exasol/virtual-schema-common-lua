@@ -6,17 +6,15 @@ local AdapterProperties = require("exasolvs.AdapterProperties")
 local adapter_stub = require("adapter_stub")
 
 describe("Stubbed AbstractVirtualSchemaAdapter", function()
-
-
     it("reports all supported capabilities", function()
-        local properties = AdapterProperties:new()
+        local properties = AdapterProperties:new({})
         local stub = adapter_stub.create({_define_capabilities = function () return {"cap1", "cap2"} end})
         assert.are.same(stub:get_capabilities(nil, properties),
                 {type = "getCapabilities", capabilities={"cap1", "cap2"}})
     end)
 
     it("reports all capabilities except the ones the user excluded [utest -> dsn~excluding-capabilities~0]", function()
-        local properties = AdapterProperties.create({EXCLUDED_CAPABILITIES = "cap1, cap3"})
+        local properties = AdapterProperties:new({EXCLUDED_CAPABILITIES = "cap1, cap3"})
         local stub = adapter_stub.create(
                 {_define_capabilities = function () return {"cap1", "cap2", "cap3", "cap4"} end})
         assert.are.same(stub:get_capabilities(nil, properties),

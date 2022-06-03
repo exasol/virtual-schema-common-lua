@@ -23,8 +23,8 @@ function RequestDispatcher:new(adapter, properties_reader)
 end
 
 function RequestDispatcher:_init(adapter, properties_reader)
-    self.adapter = adapter
-    self.properties_reader = properties_reader or require("exasolvs.AdapterProperties")
+    self._adapter = adapter
+    self._properties_reader = properties_reader or require("exasolvs.AdapterProperties")
 end
 
 -- [impl -> dsn~dispatching-push-down-requests~0]
@@ -35,17 +35,17 @@ end
 -- [impl -> dsn~dispatching-set-properties-requests~0]
 function RequestDispatcher:_handle_request(request, properties)
     local handlers = {
-        pushdown =  self.adapter.push_down,
-        createVirtualSchema = self.adapter.create_virtual_schema,
-        dropVirtualSchema = self.adapter.drop_virtual_schema,
-        refresh = self.adapter.refresh,
-        getCapabilities = self.adapter.get_capabilities,
-        setProperties = self.adapter.set_properties
+        pushdown =  self._adapter.push_down,
+        createVirtualSchema = self._adapter.create_virtual_schema,
+        dropVirtualSchema = self._adapter.drop_virtual_schema,
+        refresh = self._adapter.refresh,
+        getCapabilities = self._adapter.get_capabilities,
+        setProperties = self._adapter.set_properties
     }
     log.info('Received "%s" request.', request.type)
     local handler = handlers[request.type]
     if(handler ~= nil) then
-        return handler(self.adapter, request, properties)
+        return handler(self._adapter, request, properties)
     else
         exaerror.create("F-RQD-1", "Unknown Virtual Schema request type {{request_type}} received.",
             {request_type = request.type})
@@ -76,11 +76,11 @@ end
 -- [impl -> dsn~reading-user-defined-properties~0]
 function RequestDispatcher:_extract_properties(request)
     local raw_properties = (request.schemaMetadataInfo or {}).properties or {}
-    return self.properties_reader:new(raw_properties)
+    return self._properties_reader:new(raw_properties)
 end
 
 function RequestDispatcher:_init_logging(properties)
-    log.set_client_name(self.adapter:get_name() .. " " .. self.adapter:get_version())
+    log.set_client_name(self._adapter:get_name() .. " " .. self._adapter:get_version())
     if properties:has_log_level() then
         log.set_level(string.upper(properties:get_log_level()))
     end
