@@ -14,7 +14,7 @@ local DEFAULT_LOG_PORT <const> = 3000
 --- Create a new instance of adapter properties.
 -- @param raw_properties properties as key-value pairs
 -- @return new instance
-function AdapterProperties:new (raw_properties)
+function AdapterProperties:new(raw_properties)
     local instance = setmetatable({}, self)
     instance:_init(raw_properties)
     return instance
@@ -151,7 +151,7 @@ function AdapterProperties:get_debug_address()
     end
 end
 
---- Check if log address set
+--- Check if log address is set
 -- @return `true` if the log address is set
 function AdapterProperties:has_debug_address()
     return self:has_value(DEBUG_ADDRESS_PROPERTY)

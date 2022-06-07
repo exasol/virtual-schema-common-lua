@@ -38,7 +38,7 @@ describe("adapter_properties", function()
             it(variant, function()
                 local host, port = AdapterProperties:new({DEBUG_ADDRESS = input}):get_debug_address()
                 assert.are.equals(expected_host, host, "host")
-                assert.are.equals(expected_port, port, port)
+                assert.are.equals(expected_port, port, "port")
             end)
         end
     end)

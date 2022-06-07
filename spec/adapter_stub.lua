@@ -1,7 +1,7 @@
 local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")
 
---- This module creates a stub that to test an `AbstractVirtualSchemaAdapter`.
--- Configure the behavior by injecting methods via the prototype
+--- This module creates a stub to test an `AbstractVirtualSchemaAdapter`.
+-- Configure the behavior by injecting methods via the prototype.
 local adapter_stub = {}
 
 function adapter_stub.create(prototype)

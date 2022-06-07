@@ -30,8 +30,10 @@ function ScalarFunctionAppender:append_scalar_function(scalar_function)
     if implementation ~= nil then
         implementation(self, scalar_function)
     else
-        exaerror.create("E-VSCL-3", "Unable to render unsupported scalar function type {{type}}.",
-                {value = function_name, description = "name of the SQL function that is not yet supported"}
+        exaerror.create("E-VSCL-3", "Unable to render unsupported scalar function type {{function_name}}.",
+                {function_name =
+                    {value = function_name, description = "name of the SQL function that is not yet supported"}
+                }
         ):add_ticket_mitigation():raise()
     end
 end
