@@ -544,4 +544,11 @@ describe("ScalarFunctionRenderer", function()
                 run_function("SESSION_PARAMETER", {type = "function_scalar", name = "CURRENT_SESSION"},
                         'NLS_TIMESTAMP_FORMAT'))
     end)
+
+    it("raises an error if you try to append a non-existent scalar function", function()
+        local renderer = ScalarFunctionAppender:new(Query:new())
+        local non_existent_scalar_function = {name = "NON_EXISTENT"}
+        assert.error_matches(function() renderer:append(non_existent_scalar_function) end,
+                "Unable to render unsupported scalar function type 'non_existent'")
+    end)
 end)

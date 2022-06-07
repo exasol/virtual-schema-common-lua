@@ -1,10 +1,10 @@
 local text = require("text")
 local exaerror = require("exaerror")
 local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppender")
-local SelectAppender = {}
 
 --- Appender that can add top-level elements of a `SELECT` statement (or sub-select).
 -- @classmod SubQueryAppender
+local SelectAppender = {}
 SelectAppender.__index = SelectAppender
 setmetatable(SelectAppender, {__index = AbstractQueryRenderer})
 
@@ -92,16 +92,16 @@ end
 function SelectAppender:_append_expression(expression)
     local type = expression.type
     if text.starts_with(type, "function_scalar") then
-        require("exasolvs.queryrenderer.ScalarFunctionAppender"):new(self.out_query):append_scalar_function(expression)
+        require("exasolvs.queryrenderer.ScalarFunctionAppender"):new(self._out_query):append_scalar_function(expression)
     else
-        require("exasolvs.queryrenderer.ExpressionAppender"):new(self.out_query):append_expression(expression)
+        require("exasolvs.queryrenderer.ExpressionAppender"):new(self._out_query):append_expression(expression)
     end
 end
 
 function SelectAppender:_append_filter(filter)
     if filter then
         self:_append(" WHERE ")
-        require("exasolvs.queryrenderer.ExpressionAppender"):new(self.out_query):append_predicate(filter)
+        require("exasolvs.queryrenderer.ExpressionAppender"):new(self._out_query):append_predicate(filter)
     end
 end
 
@@ -110,7 +110,7 @@ function SelectAppender:_append_order_by(order)
         self:_append(" ORDER BY ")
         for i, criteria in ipairs(order) do
             self:_comma(i)
-            require("exasolvs.queryrenderer.ExpressionAppender"):new(self.out_query)
+            require("exasolvs.queryrenderer.ExpressionAppender"):new(self._out_query)
                     :append_expression(criteria.expression)
             if criteria.isAscending ~= nil then
                 self:_append(criteria.isAscending and " ASC" or " DESC")

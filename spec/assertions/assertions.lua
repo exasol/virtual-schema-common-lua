@@ -3,7 +3,7 @@ local say = require("say")
 local cjson = require("cjson")
 
 ---
--- @module Custom assertions based on the assertions in the <code>busted<code> framework
+-- @module Custom assertions based on the assertions in the `busted` framework
 --
 local M = {}
 

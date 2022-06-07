@@ -5,16 +5,17 @@ package.preload["remotelog"] = function () return log_mock end
 require("assertions.assertions")
 local RequestDispatcher = require("exasolvs.RequestDispatcher")
 local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")
+local adapater_stub = require("adapter_stub")
 
 local function stub_adapter()
-    return AbstractVirtualSchemaAdapter:new({
+    return adapater_stub.create({
         get_name = function () return "Adapter Stub" end,
         get_version = function () return "0.0.0" end,
         _define_capabilities = function () return {} end
     })
 end
 
-local dispatcher = RequestDispatcher.create(stub_adapter())
+local dispatcher = RequestDispatcher:new(stub_adapter())
 
 describe("RequestDispatcher", function()
     it("asserts that a virtual schema adapter is present", function()
@@ -29,7 +30,7 @@ describe("RequestDispatcher", function()
                 adapter_mock.drop_virtual_schema = function(_, request, _)
                     recorded_request = request
                 end
-                local dispatcher_with_adapter_mock = RequestDispatcher.create(adapter_mock)
+                local dispatcher_with_adapter_mock = RequestDispatcher:new(adapter_mock)
                 dispatcher_with_adapter_mock:adapter_call('{"type" : "dropVirtualSchema"}')
                 assert.are.same({type = "dropVirtualSchema"}, recorded_request)
             end
@@ -41,7 +42,7 @@ describe("RequestDispatcher", function()
                 adapter_mock.refresh = function(_, _, _)
                     return {type = "refresh"}
                 end
-                local dispatcher_with_adapter_mock = RequestDispatcher.create(adapter_mock)
+                local dispatcher_with_adapter_mock = RequestDispatcher:new(adapter_mock)
                 local response = dispatcher_with_adapter_mock:adapter_call('{"type" : "refresh"}')
                 assert.are.same('{"type":"refresh"}', response)
             end
@@ -53,7 +54,7 @@ describe("RequestDispatcher", function()
         adapter_mock.create_virtual_schema = function(_, _, properties)
             recorded_properties = properties
         end
-        local dispatcher_with_adapter_mock = RequestDispatcher.create(adapter_mock)
+        local dispatcher_with_adapter_mock = RequestDispatcher:new(adapter_mock)
         local raw_request = '{"type" : "createVirtualSchema", "schemaMetadataInfo" : {"properties" : {"FOO" : "bar"}}}'
         dispatcher_with_adapter_mock:adapter_call(raw_request)
         assert.is.equal("bar", recorded_properties:get("FOO"))

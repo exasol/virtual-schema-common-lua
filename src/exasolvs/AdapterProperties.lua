@@ -2,49 +2,45 @@ local text = require("text")
 local exaerror = require("exaerror")
 
 --- This class abstracts access to the user-defined properties of the Virtual Schema.
--- @type AdapterProperties
+-- @classmod AdapterProperties
 local AdapterProperties = {}
+AdapterProperties.__index = AdapterProperties
 
 local EXCLUDED_CAPABILITIES_PROPERTY <const> = "EXCLUDED_CAPABILITIES"
 local LOG_LEVEL_PROPERTY <const> = "LOG_LEVEL"
 local DEBUG_ADDRESS_PROPERTY <const> = "DEBUG_ADDRESS"
 local DEFAULT_LOG_PORT <const> = 3000
 
---- Factory method for adapter properties
--- @param raw_properties properties as key-value pairs
--- @return adapter properties object
-function AdapterProperties.create(raw_properties)
-    return AdapterProperties:new({raw_properties = raw_properties})
-end
-
 --- Create a new instance of adapter properties.
--- @param object pre-initialized object
+-- @param raw_properties properties as key-value pairs
 -- @return new instance
-function AdapterProperties:new (object)
-    object = object or {raw_properties = {}}
-    self.__index = self
-    setmetatable(object, self)
-    return object
+function AdapterProperties:new(raw_properties)
+    local instance = setmetatable({}, self)
+    instance:_init(raw_properties)
+    return instance
 end
 
+function AdapterProperties:_init(raw_properties)
+    self._raw_properties = raw_properties
+end
 
 --- Get the value of a property.
 -- @param property_name name of the property to get
 -- @return property value
 function AdapterProperties:get(property_name)
-    return self.raw_properties[property_name]
+    return self._raw_properties[property_name]
 end
 
 --- Check if the property is set.
 -- @param property_name name of the property to check
--- @return <code>true</code> if the property is set (i.e. not <code>nil</code>)
+-- @return `true` if the property is set (i.e. not `nil`)
 function AdapterProperties:is_property_set(property_name)
     return self:get(property_name) ~= nil
 end
 
 --- Check if the property has a non-empty value.
 -- @param property_name name of the property to check
--- @return <code>true</code> if the property has a non-empty value (i.e. not <code>nil</code> or an empty string)
+-- @return `true` if the property has a non-empty value (i.e. not `nil` or an empty string)
 function AdapterProperties:has_value(property_name)
     local value = self:get(property_name)
     return value ~= nil and value ~= ""
@@ -52,7 +48,7 @@ end
 
 --- Check if the property value is empty.
 -- @param property_name name of the property to check
--- @return <code>true</code> if the property's value is empty (i.e. the property is set to an empty string)
+-- @return `true` if the property's value is empty (i.e. the property is set to an empty string)
 function AdapterProperties:is_empty(property_name)
     return self:get(property_name) == ""
 end
@@ -120,7 +116,7 @@ function AdapterProperties:get_log_level()
 end
 
 --- Check if the log level is set
--- @return <code>true</code> if the log level is set
+-- @return `true` if the log level is set
 function AdapterProperties:has_log_level()
     return self:has_value(LOG_LEVEL_PROPERTY)
 end
@@ -132,7 +128,7 @@ function AdapterProperties:get_excluded_capabilities()
 end
 
 --- Check if excluded capabilities are set
--- @return <code>true</code> if the excluded capabilities are set
+-- @return `true` if the excluded capabilities are set
 function AdapterProperties:has_excluded_capabilities()
     return self:has_value(EXCLUDED_CAPABILITIES_PROPERTY)
 end
@@ -155,8 +151,8 @@ function AdapterProperties:get_debug_address()
     end
 end
 
---- Check if log address set
--- @return <code>true</code> if the log address is set
+--- Check if log address is set
+-- @return `true` if the log address is set
 function AdapterProperties:has_debug_address()
     return self:has_value(DEBUG_ADDRESS_PROPERTY)
 end

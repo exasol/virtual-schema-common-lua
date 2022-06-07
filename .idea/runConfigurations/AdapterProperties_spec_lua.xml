@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="AdapterProperties_spec.lua" type="lua.app" factoryName="Lua Application">
+    <option name="program" value="/usr/bin/lua" />
+    <option name="file" value="spec/AdapterProperties_spec.lua" />
+    <option name="workingDir" value="$PROJECT_DIR$" />
+    <option name="debuggerType" value="2" />
+    <option name="params" value="" />
+    <option name="charset" value="UTF-8" />
+    <option name="showConsole" value="true" />
+    <method v="2" />
+  </configuration>
+</component>

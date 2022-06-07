@@ -21,7 +21,7 @@ describe("adapter_properties", function()
             }
             for _, test in ipairs(tests) do
                 it(test.expected, function()
-                    local properties = AdapterProperties.create(test.properties)
+                    local properties = AdapterProperties:new(test.properties)
                     assert.error_matches(function () properties:validate() end,  test.expected, 1, true)
                 end)
             end
@@ -36,51 +36,51 @@ describe("adapter_properties", function()
         for _, parameter in ipairs(parameters) do
             local input, expected_host, expected_port, variant = table.unpack(parameter)
             it(variant, function()
-                local host, port = AdapterProperties.create({DEBUG_ADDRESS = input}):get_debug_address()
-                assert.is.equal(expected_host, host, "host")
-                assert.is.equal(expected_port, port, port)
+                local host, port = AdapterProperties:new({DEBUG_ADDRESS = input}):get_debug_address()
+                assert.are.equals(expected_host, host, "host")
+                assert.are.equals(expected_port, port, "port")
             end)
         end
     end)
 
     it("gets the LOG_LEVEL property", function()
-        assert.are.same("DEBUG", AdapterProperties.create({LOG_LEVEL = "DEBUG"}):get_log_level())
+        assert.are.same("DEBUG", AdapterProperties:new({LOG_LEVEL = "DEBUG"}):get_log_level())
     end)
 
     it("gets the EXCLUDED_CAPABILITIES property", function()
         assert.are.same({"a", "b", "c"},
-                AdapterProperties.create({EXCLUDED_CAPABILITIES = "a,b, c"}):get_excluded_capabilities())
+                AdapterProperties:new({EXCLUDED_CAPABILITIES = "a,b, c"}):get_excluded_capabilities())
     end)
 
     it("checks if a property is present", function()
-        assert.is_true(AdapterProperties.create({FOO = "bar"}):is_property_set("FOO"))
+        assert.is_true(AdapterProperties:new({FOO = "bar"}):is_property_set("FOO"))
     end)
 
     it("checks if a property is not present", function()
-        assert.is_false(AdapterProperties.create({FOO = "bar"}):is_property_set("BAR"))
+        assert.is_false(AdapterProperties:new({FOO = "bar"}):is_property_set("BAR"))
     end)
 
     it("checks if a property is empty", function()
-        assert.is_true(AdapterProperties.create({foo = ""}):is_empty("foo"))
+        assert.is_true(AdapterProperties:new({foo = ""}):is_empty("foo"))
     end)
 
     it("checks if a property is not declared empty when nil", function()
-        assert.is_false(AdapterProperties.create({foo = nil}):is_empty("foo"))
+        assert.is_false(AdapterProperties:new({foo = nil}):is_empty("foo"))
     end)
 
     it("checks if a property is not empty", function()
-        assert.is_false(AdapterProperties.create({foo = "content"}):is_empty("foo"))
+        assert.is_false(AdapterProperties:new({foo = "content"}):is_empty("foo"))
     end)
 
     it("says that the property has a value", function()
-        assert.is_true(AdapterProperties.create({a = "b"}):has_value("a"))
+        assert.is_true(AdapterProperties:new({a = "b"}):has_value("a"))
     end)
 
     it("says that the property has a value no value when empty", function()
-        assert.is_false(AdapterProperties.create({a = ""}):has_value("a"))
+        assert.is_false(AdapterProperties:new({a = ""}):has_value("a"))
     end)
 
     it("says that the property has a value no value when nil", function()
-        assert.is_false(AdapterProperties.create({a = nil}):has_value("a"))
+        assert.is_false(AdapterProperties:new({a = nil}):has_value("a"))
     end)
 end)

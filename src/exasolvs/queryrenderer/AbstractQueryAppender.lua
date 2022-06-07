@@ -4,22 +4,21 @@ local exaerror = require("exaerror")
 -- It takes care of handling the temporary storage of the query to be constructed.
 -- @classmod AbstractQueryRenderer
 local AbstractQueryAppender = {}
-AbstractQueryAppender.__index = AbstractQueryAppender
 
 function AbstractQueryAppender:_init(out_query)
-    self.out_query = out_query
+    self._out_query = out_query
 end
 
 --- Append a token to the query.
 -- @param token token to append
 function AbstractQueryAppender:_append(token)
-    self.out_query:append(token)
+    self._out_query:append(token)
 end
 
 --- Append a list of tokens to the query.
 -- @param ... tokens to append
 function AbstractQueryAppender:_append_all(...)
-    self.out_query:append_all(...)
+    self._out_query:append_all(...)
 end
 
 --- Append a comma in a comma-separated list where needed.

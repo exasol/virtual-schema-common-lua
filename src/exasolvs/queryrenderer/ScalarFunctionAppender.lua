@@ -12,8 +12,7 @@ setmetatable(ScalarFunctionAppender, {__index = AbstractQueryAppender})
 -- @param out_query query to which the function will be appended
 -- @return renderer for scalar functions
 function ScalarFunctionAppender:new(out_query)
-    assert(out_query ~= nil,
-            "Renderer for scalar function requires a query object that it can append to.")
+    assert(out_query ~= nil, "Renderer for scalar function requires a query object that it can append to.")
     local instance = setmetatable({}, self)
     instance:_init(out_query)
     return instance
@@ -31,8 +30,10 @@ function ScalarFunctionAppender:append_scalar_function(scalar_function)
     if implementation ~= nil then
         implementation(self, scalar_function)
     else
-        exaerror.creata("E-VSCL-3", "Unable to render unsupported scalar function type {{type}}.",
-                {value = function_name, description = "name of the SQL function that is not yet supported"}
+        exaerror.create("E-VSCL-3", "Unable to render unsupported scalar function type {{function_name}}.",
+                {function_name =
+                    {value = function_name, description = "name of the SQL function that is not yet supported"}
+                }
         ):add_ticket_mitigation():raise()
     end
 end
@@ -41,7 +42,7 @@ end
 ScalarFunctionAppender.append = ScalarFunctionAppender.append_scalar_function
 
 function ScalarFunctionAppender:_append_expression(expression)
-    local expression_renderer = ExpressionAppender:new(self.out_query)
+    local expression_renderer = ExpressionAppender:new(self._out_query)
     expression_renderer:append_expression(expression)
 end
 
