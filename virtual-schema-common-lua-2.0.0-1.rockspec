@@ -1,6 +1,6 @@
 rockspec_format = "3.0"
 
-local tag = "1.1.0"
+local tag = "2.0.0"
 
 package = "virtual-schema-common-lua"
 version = tag .. "-1"
