@@ -1,6 +1,6 @@
 rockspec_format = "3.0"
 
-local tag = "2.0.0"
+local tag = "2.0.1"
 
 package = "virtual-schema-common-lua"
 version = tag .. "-1"
@@ -22,7 +22,7 @@ description = {
 
 dependencies = {
     "lua >= 5.4, < 5.5",
-    "exaerror >= 1.2.2",
+    "exaerror >= 2.0.0",
     "lua-cjson = 2.1.0", -- pinned to prevent "undefined symbol: lua_objlen" in 2.1.0.6 (https://github.com/mpx/lua-cjson/issues/56)
     "remotelog >= 1.1.1"
 }

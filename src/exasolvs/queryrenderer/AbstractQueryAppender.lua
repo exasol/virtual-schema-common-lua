@@ -1,4 +1,4 @@
-local exaerror = require("exaerror")
+local ExaError = require("ExaError")
 
 --- This class is the abstract base class of all query renderers.
 -- It takes care of handling the temporary storage of the query to be constructed.
@@ -118,9 +118,9 @@ function AbstractQueryAppender:_append_data_type(data_type)
     elseif type == "DOUBLE" or type == "DATE" or type == "BOOLEAN" then
         return
     else
-        exaerror.create("E-VSCL-4", "Unable to render unknown data type {{type}}.",
+        ExaError:new("E-VSCL-4", "Unable to render unknown data type {{type}}.",
                 {type = {value = type, description = "data type that was not recognized"}}
-        ):add_ticket_mitigation():raise()
+        )       :add_ticket_mitigation():raise()
     end
 end
 

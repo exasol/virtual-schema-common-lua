@@ -1,4 +1,4 @@
-local exaerror = require("exaerror")
+local ExaError = require("ExaError")
 
 --- This class implements an abstract base adapter with common behavior for some of the request callback functions.
 -- @classmod AbstractVirtualSchemaAdapter
@@ -15,7 +15,7 @@ function AbstractVirtualSchemaAdapter:_init()
 end
 
 local function raise_abstract_method_call_error(method_name)
-    exaerror.create("E-VSCL-8", "Attempted to call the abstract method AbstractVirtualSchemaAdapter:{{method|u}}.",
+    ExaError:new("E-VSCL-8", "Attempted to call the abstract method AbstractVirtualSchemaAdapter:{{method|u}}.",
             {method = {value = method_name, description = "abstract method that was called"}}
     ):add_ticket_mitigation():raise()
 end

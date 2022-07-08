@@ -1,5 +1,5 @@
 local text = require("text")
-local exaerror = require("exaerror")
+local ExaError = require("ExaError")
 local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppender")
 
 --- Appender that can add top-level elements of a `SELECT` statement (or sub-select).
@@ -67,7 +67,7 @@ function SelectAppender:_append_join(join)
         self:_append(' ON ')
         self:_append_expression(join.condition)
     else
-        exaerror.create("E-VSCL-6", "Unable to render unknown join type {{type}}.",
+        ExaError:new("E-VSCL-6", "Unable to render unknown join type {{type}}.",
                 {type = {value = join.join_type, description = "type of join that was not recognized"}}
         ):add_ticket_mitigation():raise()
     end
@@ -82,7 +82,7 @@ function SelectAppender:_append_from(from)
         elseif type == "join" then
             self:_append_join(from)
         else
-            exaerror.create("E-VSCL-5", "Unable to render unknown SQL FROM clause type {{type}}.",
+            ExaError:new("E-VSCL-5", "Unable to render unknown SQL FROM clause type {{type}}.",
                     {type = {value = type, description = "type of the FROM clause that was not recognized"}}
             ):add_ticket_mitigation():raise()
         end
