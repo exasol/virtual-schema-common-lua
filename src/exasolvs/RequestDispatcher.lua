@@ -1,6 +1,6 @@
 local log = require("remotelog")
 local cjson = require("cjson")
-local exaerror = require("exaerror")
+local ExaError = require("ExaError")
 
 --- This class dispatches Virtual Schema requests to a Virtual Schema adapter.
 -- It is independent of the use case of the VS adapter and offers functionality that each Virtual Schema needs, like
@@ -47,7 +47,7 @@ function RequestDispatcher:_handle_request(request, properties)
     if(handler ~= nil) then
         return handler(self._adapter, request, properties)
     else
-        exaerror.create("F-RQD-1", "Unknown Virtual Schema request type {{request_type}} received.",
+        ExaError:new("F-RQD-1", "Unknown Virtual Schema request type {{request_type}} received.",
             {request_type = request.type})
             :add_ticket_mitigation()
             :raise(0)

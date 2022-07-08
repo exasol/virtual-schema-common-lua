@@ -1,5 +1,5 @@
 local text = require("text")
-local exaerror = require("exaerror")
+local ExaError = require("ExaError")
 
 --- This class abstracts access to the user-defined properties of the Virtual Schema.
 -- @classmod AdapterProperties
@@ -57,7 +57,7 @@ function AdapterProperties:_validate_debug_address()
     if self:has_value(DEBUG_ADDRESS_PROPERTY) then
         local address = self:get(DEBUG_ADDRESS_PROPERTY)
         if not string.match(address, "^.-:[0-9]+$") then
-            exaerror.create("F-VSCL-PROP-3", "Expected log address in " .. DEBUG_ADDRESS_PROPERTY
+            ExaError:new("F-VSCL-PROP-3", "Expected log address in " .. DEBUG_ADDRESS_PROPERTY
                     .. " to look like '<ip>|<host>[:<port>]', but got {{address}} instead"
                     , {address = address})
                     :add_mitigations("Provide an valid IP address or host name")
@@ -81,7 +81,7 @@ function AdapterProperties:_validate_log_level()
             end
         end
         if not found then
-            exaerror.create("F-VSCL-PROP-2", "Unknown log level {{level}} in " .. LOG_LEVEL_PROPERTY .. " property",
+            ExaError:new("F-VSCL-PROP-2", "Unknown log level {{level}} in " .. LOG_LEVEL_PROPERTY .. " property",
                     {level = level})
                     :add_mitigations("Pick one of: " .. table.concat(allowed_levels, ", "))
                     :raise()
@@ -93,7 +93,7 @@ function AdapterProperties:_validate_excluded_capabilities()
     if self:has_value(EXCLUDED_CAPABILITIES_PROPERTY) then
         local value = self:get(EXCLUDED_CAPABILITIES_PROPERTY)
         if not string.match(value, "^[ A-Za-z0-9_,]*$") then
-            exaerror.create("F-VSCL-PROP-1", "Invalid character(s) in " .. EXCLUDED_CAPABILITIES_PROPERTY
+            ExaError:new("F-VSCL-PROP-1", "Invalid character(s) in " .. EXCLUDED_CAPABILITIES_PROPERTY
                     .. " property: {{value}}", {value = value})
                     :add_mitigations("Use only the following characters: ASCII letter, digit, underscore, comma, space")
                     :raise()

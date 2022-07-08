@@ -1,6 +1,6 @@
 local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
 local text = require("text")
-local exaerror = require("exaerror")
+local ExaError = require("ExaError")
 
 --- Appender for value expressions in a SQL query.
 -- @classmod ExpressionAppender
@@ -18,7 +18,7 @@ local function get_predicate_operator(predicate_type)
     if operator ~= nil then
         return operator
     else
-        exaerror.create("E-VSCL-7", "Cannot determine operator for unknown predicate type {{type}}.",
+        ExaError:new("E-VSCL-7", "Cannot determine operator for unknown predicate type {{type}}.",
                 {type = {value = predicate_type, description = "predicate type that was not recognized"}}
         ):add_ticket_mitigation():raise()
     end
@@ -112,7 +112,7 @@ function ExpressionAppender:append_predicate(predicate)
     elseif type == "exists" then
         self:_append_exists(predicate)
     else
-        exaerror.create("E-VSCL-2", "Unable to render unknown SQL predicate type {{type}}.",
+        ExaError:new("E-VSCL-2", "Unable to render unknown SQL predicate type {{type}}.",
                 {type = {value = predicate.type, description = "predicate type that was not recognized"}}
         ):add_ticket_mitigation():raise()
     end
@@ -155,7 +155,7 @@ function ExpressionAppender:append_expression(expression)
     elseif type == "sub_select" then
         require("exasolvs.queryrenderer.SelectAppender"):new(self._out_query):append_sub_select(expression)
     else
-        exaerror.create("E-VSCL-1", "Unable to render unknown SQL expression type {{type}}.",
+        ExaError:new("E-VSCL-1", "Unable to render unknown SQL expression type {{type}}.",
             {type = {value = expression.type, description = "expression type provided"}}
         ):add_ticket_mitigation():raise()
     end
