@@ -120,7 +120,7 @@ function AbstractQueryAppender:_append_data_type(data_type)
     else
         ExaError:new("E-VSCL-4", "Unable to render unknown data type {{type}}.",
                 {type = {value = type, description = "data type that was not recognized"}}
-        )       :add_ticket_mitigation():raise()
+        ):add_ticket_mitigation():raise()
     end
 end
 
