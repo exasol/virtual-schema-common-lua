@@ -1,4 +1,4 @@
-# virtual-schema-common-lua 2.0.1, released 2022-07-08
+# virtual-schema-common-lua 2.0.1, released 2022-07-14
  
 Code name: Update to `exaerror` 2.0.0
  
