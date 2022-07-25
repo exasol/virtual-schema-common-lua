@@ -2,7 +2,7 @@ package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 local AdapterProperties = require("exasolvs.AdapterProperties")
 
-describe("adapter_properties", function()
+describe("AdapterProperties", function()
     describe("validates property rule:", function()
             local tests = {
                 {
@@ -82,5 +82,31 @@ describe("adapter_properties", function()
 
     it("says that the property has a value no value when nil", function()
         assert.is_false(AdapterProperties:new({a = nil}):has_value("a"))
+    end)
+
+    describe("merges old properties with new ones:", function()
+        local tests = {
+            add_new = {{a = 1, b = 2}, {c = 3}, {a = 1, b = 2, c = 3}},
+            unset = {{a = 1, b = 2}, {b = AdapterProperties.null}, {a = 1}},
+            overwrite = {{a = 1, b = 2}, {b = 4}, {a = 1, b = 4}},
+            only_new = {{}, {c = 3, d = 4}, {c = 3, d = 4}},
+            only_new_and_unset = {{}, {c = 3, d = 4, e = AdapterProperties.null}, {c = 3, d = 4}},
+            only_old = {{a = 1, b = 2}, {}, {a = 1, b = 2}},
+            new_and_nil = {{a = 1, b = 2}, {c = 3, d = nil}, {a = 1, b = 2, c = 3}},
+            old_and_nil = {{a = 1, b = 2, x = nil}, {c = 3}, {a = 1, b = 2, c = 3}}
+        }
+        for description, test in pairs(tests) do
+            local old, new, merged = table.unpack(test)
+            local old_properties = AdapterProperties:new(old)
+            local new_properties = AdapterProperties:new(new)
+            it(description, function()
+                assert.are.same(AdapterProperties:new(merged), old_properties:merge(new_properties))
+            end)
+        end
+    end)
+
+    it("can produce a string representation", function()
+        local properties = AdapterProperties:new({a = 1, c = 3, b = 2})
+        assert.are.equals("(a = 1, b = 2, c = 3)", tostring(properties))
     end)
 end)

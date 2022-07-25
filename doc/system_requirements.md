@@ -100,7 +100,7 @@ Covers:
 
 Needs: dsn
 
-#### reading-User-Defined Properties
+#### Reading User-defined Properties
 `req~reading-user-defined-properties~1`
 
 VSCL extracts user-defined Virtual Schema Properties from the Virtual Schema request.
@@ -114,6 +114,20 @@ Rationale:
 Properties let users change the settings of a Virtual Schema.
 
 Needs: dsn
+
+#### Merging User-defined Properties
+`req~merging-user-defined-properties~1`
+
+VSCL supports merging a set of changed properties into a set of existing properties:
+
+1. If there is no match for a old property in the set of new properties, the old value remains unchanged in the merge product
+2. If a new property has a new non-null value, the property in the merge product has the new value
+3. If there is no match for a new property in the set of old properties, the new property is added to the merge product
+4. If a new property contains a null value, that property does not appear in the merge product
+
+Rationale:
+
+In the [`SET PROPERTIES` request](#dispatching-set-properties-requests), the Virtual Schema API provides both current and new (added / modified / unset) properties. To avoid code duplication, VSCL supports merging the new properties with the current ones. 
 
 #### Request Dispatching
 
@@ -157,7 +171,7 @@ Needs: dsn
 ##### Dispatching Set-Properties Requests
 `req~dispatching-set-properties-requests~1`
 
-VSCL dispatches request to change the Virtual Schema properties to the Virtual Schema adapter.
+VSCL dispatches request to change the Virtual Schema properties to the Virtual Schema adapter with old and new properties as parameters.
 
 Covers:
 

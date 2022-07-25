@@ -4,18 +4,18 @@ local log_mock = mock(require("remotelog"), true)
 package.preload["remotelog"] = function () return log_mock end
 require("assertions.assertions")
 local RequestDispatcher = require("exasolvs.RequestDispatcher")
-local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")
+local AdapterProperties = require("exasolvs.AdapterProperties")
 local adapater_stub = require("adapter_stub")
 
 local function stub_adapter()
     return adapater_stub.create({
         get_name = function () return "Adapter Stub" end,
         get_version = function () return "0.0.0" end,
-        _define_capabilities = function () return {} end
+        _define_capabilities = function () return {} end,
     })
 end
 
-local dispatcher = RequestDispatcher:new(stub_adapter())
+local dispatcher = RequestDispatcher:new(stub_adapter(), AdapterProperties)
 
 describe("RequestDispatcher", function()
     it("asserts that a virtual schema adapter is present", function()
@@ -30,7 +30,7 @@ describe("RequestDispatcher", function()
                 adapter_mock.drop_virtual_schema = function(_, request, _)
                     recorded_request = request
                 end
-                local dispatcher_with_adapter_mock = RequestDispatcher:new(adapter_mock)
+                local dispatcher_with_adapter_mock = RequestDispatcher:new(adapter_mock, AdapterProperties)
                 dispatcher_with_adapter_mock:adapter_call('{"type" : "dropVirtualSchema"}')
                 assert.are.same({type = "dropVirtualSchema"}, recorded_request)
             end
@@ -42,7 +42,7 @@ describe("RequestDispatcher", function()
                 adapter_mock.refresh = function(_, _, _)
                     return {type = "refresh"}
                 end
-                local dispatcher_with_adapter_mock = RequestDispatcher:new(adapter_mock)
+                local dispatcher_with_adapter_mock = RequestDispatcher:new(adapter_mock, AdapterProperties)
                 local response = dispatcher_with_adapter_mock:adapter_call('{"type" : "refresh"}')
                 assert.are.same('{"type":"refresh"}', response)
             end
@@ -54,10 +54,30 @@ describe("RequestDispatcher", function()
         adapter_mock.create_virtual_schema = function(_, _, properties)
             recorded_properties = properties
         end
-        local dispatcher_with_adapter_mock = RequestDispatcher:new(adapter_mock)
+        local dispatcher_with_adapter_mock = RequestDispatcher:new(adapter_mock, AdapterProperties)
         local raw_request = '{"type" : "createVirtualSchema", "schemaMetadataInfo" : {"properties" : {"FOO" : "bar"}}}'
         dispatcher_with_adapter_mock:adapter_call(raw_request)
         assert.is.equal("bar", recorded_properties:get("FOO"))
+    end)
+
+    it("dispatches property setting [utest -> dsn~dispatching-set-properties-requests~0]", function()
+        local adapter_mock = stub_adapter()
+        local recorded_old_properties, recorded_new_properties
+        adapter_mock.set_properties = function(_, _, old_properties, new_properties)
+            recorded_old_properties = old_properties
+            recorded_new_properties = new_properties
+        end
+        local dispatcher_with_adapter_mock = RequestDispatcher:new(adapter_mock, AdapterProperties)
+        local raw_request = [[{
+            "type" : "setProperties",
+            "properties" : {"new1" : "nv1", "new2" : "nv2"},
+            "schemaMetadataInfo" : {
+                "properties" : {"old1" : "ov1", "old2" : "ov2"}
+             }
+        }]]
+        dispatcher_with_adapter_mock:adapter_call(raw_request)
+        assert.are.same(AdapterProperties:new({old1 = "ov1", old2 = "ov2"}), recorded_old_properties)
+        assert.are.same(AdapterProperties:new({new1 = "nv1", new2 = "nv2"}), recorded_new_properties)
     end)
 
     it("dispatches get-capabilities request [utest -> dsn~dispatching-get-capabilities-requests~0]",function()
@@ -115,15 +135,5 @@ describe("RequestDispatcher", function()
 Mitigations:
 
 * This is an internal software error. Please report it via the project's ticket tracker.]])
-    end)
-
-    it("works around the (x)pcall problem in https://github.com/exasol/virtual-schema-common-lua/issues/9", function()
-        local original_pcall = _G.pcall
-        local recorded_message
-        local record_message = function (message)  recorded_message = message end
-        _G.pcall = function() return false, "not what you expect" end
-        xpcall(call_with_illegal_request_type, record_message)
-        _G.pcall= original_pcall
-        assert.match("Unknown Virtual Schema request", recorded_message, 1, true)
     end)
 end)

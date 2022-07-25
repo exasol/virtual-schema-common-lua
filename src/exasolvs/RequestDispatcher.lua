@@ -25,6 +25,8 @@ end
 function RequestDispatcher:_init(adapter, properties_reader)
     self._adapter = adapter
     self._properties_reader = properties_reader or require("exasolvs.AdapterProperties")
+    -- Replace the `cjson` null object to decouple the adapter properties from the `cjson` library.
+    cjson.null = properties_reader.null
 end
 
 -- [impl -> dsn~dispatching-push-down-requests~0]
@@ -45,7 +47,12 @@ function RequestDispatcher:_handle_request(request, properties)
     log.info('Received "%s" request.', request.type)
     local handler = handlers[request.type]
     if(handler ~= nil) then
-        return handler(self._adapter, request, properties)
+        if request.type == "setProperties" then
+            local new_properties = self:_extract_new_properties(request)
+            return handler(self._adapter, request, properties, new_properties)
+        else
+            return handler(self._adapter, request, properties)
+        end
     else
         ExaError:new("F-RQD-1", "Unknown Virtual Schema request type {{request_type}} received.",
             {request_type = request.type})
@@ -76,6 +83,12 @@ end
 -- [impl -> dsn~reading-user-defined-properties~0]
 function RequestDispatcher:_extract_properties(request)
     local raw_properties = (request.schemaMetadataInfo or {}).properties or {}
+    return self._properties_reader:new(raw_properties)
+end
+
+-- The "set properties" request contains the new properties in the `properties` element directly under the root element.
+function RequestDispatcher:_extract_new_properties(request)
+    local raw_properties = request.properties or {}
     return self._properties_reader:new(raw_properties)
 end
 

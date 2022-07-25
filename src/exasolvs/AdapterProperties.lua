@@ -3,7 +3,7 @@ local ExaError = require("ExaError")
 
 --- This class abstracts access to the user-defined properties of the Virtual Schema.
 -- @classmod AdapterProperties
-local AdapterProperties = {}
+local AdapterProperties = {null = {}}
 AdapterProperties.__index = AdapterProperties
 
 local EXCLUDED_CAPABILITIES_PROPERTY <const> = "EXCLUDED_CAPABILITIES"
@@ -22,6 +22,12 @@ end
 
 function AdapterProperties:_init(raw_properties)
     self._raw_properties = raw_properties
+end
+
+--- Get the class of the object
+-- return class
+function AdapterProperties:class()
+    return AdapterProperties
 end
 
 --- Get the value of a property.
@@ -155,6 +161,48 @@ end
 -- @return `true` if the log address is set
 function AdapterProperties:has_debug_address()
     return self:has_value(DEBUG_ADDRESS_PROPERTY)
+end
+
+--- Merge new properties into a set of existing ones
+-- @param new_properties set of new properties to merge into the existing ones
+-- @return merge product
+function AdapterProperties:merge(new_properties)
+    local merged_list = {}
+    for key, value in pairs(new_properties._raw_properties) do
+        if (value ~= nil) and (value ~= AdapterProperties.null) then
+            merged_list[key] = value
+        end
+    end
+    for key, value in pairs(self._raw_properties) do
+        if new_properties._raw_properties[key] == nil then
+            merged_list[key] = value
+        end
+    end
+    local merged_properties = self:class():new(merged_list)
+    return merged_properties
+end
+
+--- Create a string representation
+-- @return string representation
+function AdapterProperties:__tostring()
+    local keys = {}
+    local i = 0
+    for key, _ in pairs(self._raw_properties) do
+        i = i + 1
+        keys[i] = key
+    end
+    table.sort(keys)
+    local str = {"("}
+    for _, key in ipairs(keys) do
+        if(#str > 1 ) then
+            str[#str + 1] = ", "
+        end
+        str[#str + 1] = key
+        str[#str + 1] = " = "
+        str[#str + 1] = self._raw_properties[key]
+    end
+    str[#str + 1] = ")"
+    return table.concat(str)
 end
 
 return AdapterProperties
