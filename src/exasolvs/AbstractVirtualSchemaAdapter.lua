@@ -2,11 +2,11 @@ local ExaError = require("ExaError")
 
 --- This class implements an abstract base adapter with common behavior for some of the request callback functions.
 -- @classmod AbstractVirtualSchemaAdapter
--- <p>
+--
 -- When you derive a concrete adapter from this base class, we recommend keeping it stateless. This makes
 -- parallelization easier, reduces complexity and saves you the trouble of cleaning up in the drop-virtual-schema
 -- request.
--- </p>
+--
 -- [impl -> dsn~lua-virtual-schema-adapter-abstraction~0]
 local AbstractVirtualSchemaAdapter = {}
 
@@ -33,19 +33,15 @@ function AbstractVirtualSchemaAdapter:get_version()
 end
 
 --- Define the list of all capabilities this adapter supports.
--- <p>
 -- Override this method in derived adapter class. Note that this differs from `get_capabilities` because
 -- the later takes exclusions defined by the user into consideration.
--- </p>
 -- @return list of all capabilities of this adapter
 function AbstractVirtualSchemaAdapter:_define_capabilities()
     raise_abstract_method_call_error("_define_capabilities")
 end
 
 --- Create the Virtual Schema.
--- <p>
 -- Create the virtual schema and provide the corresponding metadata.
--- </p>
 -- @param _ virtual schema request
 -- @param _ user-defined properties
 -- @return metadata representing the structure and datatypes of the data source from Exasol's point of view
@@ -53,20 +49,21 @@ function AbstractVirtualSchemaAdapter:create_virtual_schema(_, _)
     raise_abstract_method_call_error("create_virtual_schema")
 end
 --- Set new adapter properties.
--- <p>
--- Changing the properties will in most cases result in the Virtual Schema metadata to be reevaluated.
--- </p>
+-- This request provides two sets of user-defined properties. The old ones (i.e. the ones that where set before this
+-- request) and the properties that the user changed.
+-- A new property with a key that is not present in the old set of properties means the user added a new property.
+-- New properties with existing keys override or unset existing properties. An unset property contains the special
+-- value `AdapterProperties.null`.
 -- @param _ virtual schema request
--- @param _ user-defined properties
+-- @param _ old user-defined properties
+-- @param _ new user-defined properties
 -- @return same response as if you created a new Virtual Schema
-function AbstractVirtualSchemaAdapter:set_properties(_, _)
+function AbstractVirtualSchemaAdapter:set_properties(_, _, _)
     raise_abstract_method_call_error("set_properties'")
 end
 
 --- Refresh the Virtual Schema.
--- <p>
 -- This method reevaluates the metadata (structure and data types) that represents the data source.
--- </p>
 -- @param _ virtual schema request
 -- @param _ user-defined properties
 -- @return same response as if you created a new Virtual Schema
@@ -119,9 +116,7 @@ function AbstractVirtualSchemaAdapter:push_down(_, _)
 end
 
 --- Drop the virtual schema.
--- <p>
 -- Override this method to implement clean-up if the adapter is not stateless.
--- </p>
 -- @param _ virtual schema request (not used)
 -- @param _ user-defined properties
 -- @return response confirming the request (otherwise empty)

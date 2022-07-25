@@ -7,7 +7,7 @@ Participant RequestDispatcher
 Participant VirtualSchemaAdapter
 
 activate RequestDispatcher
-RequestDispatcher -> VirtualSchemaAdapter : set_properties(request)
+RequestDispatcher -> VirtualSchemaAdapter : set_properties(request, old properties, new properties)
 activate VirtualSchemaAdapter
 VirtualSchemaAdapter -->> RequestDispatcher
 deactivate VirtualSchemaAdapter
