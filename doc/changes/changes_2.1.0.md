@@ -1,4 +1,4 @@
-# virtual-schema-common-lua 2.1.0, released 2022-07-20
+# virtual-schema-common-lua 2.1.0, released 2022-07-25
  
 Code name: Merging properties
  
