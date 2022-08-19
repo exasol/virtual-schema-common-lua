@@ -8,7 +8,7 @@ local ScalarFunctionAppender = {}
 ScalarFunctionAppender.__index = ScalarFunctionAppender
 setmetatable(ScalarFunctionAppender, {__index = AbstractQueryAppender})
 
---- Create a new instance of a `ScalarFunctionRenderer`.
+--- Create a new instance of a `ScalarFunctionAppender`.
 -- @param out_query query to which the function will be appended
 -- @return renderer for scalar functions
 function ScalarFunctionAppender:new(out_query)
