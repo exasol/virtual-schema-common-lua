@@ -149,7 +149,9 @@ function ExpressionAppender:append_expression(expression)
         self:_append_quoted_literal_expression(expression)
         self:_append_interval(expression.dataType)
     elseif text.starts_with(type, "function_scalar") then
-        require("exasolvs.queryrenderer.ScalarFunctionAppender"):new(self._out_query):append_scalar_function(expression)
+        require("exasolvs.queryrenderer.ScalarFunctionAppender"):new(self._out_query):append(expression)
+    elseif text.starts_with(type, "function_aggregate") then
+        require("exasolvs.queryrenderer.AggregateFunctionAppender"):new(self._out_query):append(expression)
     elseif text.starts_with(type, "predicate_") then
         self:append_predicate(expression)
     elseif type == "sub_select" then
