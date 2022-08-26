@@ -5,29 +5,8 @@ local geo = require("queryrenderer.geo_constructors")
 local Query = require("exasolvs.Query")
 local ScalarFunctionAppender = require("exasolvs.queryrenderer.ScalarFunctionAppender")
 
-function it_asserts(expected, actual, explanation)
+local function it_asserts(expected, actual, explanation)
     it(explanation or expected, function() assert.are.equals(expected, actual) end)
-end
-
-local function wrap_literals(...)
-    local wrapped_arguments = {}
-    for _, argument in ipairs({...}) do
-        local argument_type = type(argument)
-        if argument_type == "number" then
-            if math.type(argument) == "integer" then
-                table.insert(wrapped_arguments, literal.exactnumeric(argument))
-            elseif math.type(argument) == "float" then
-                table.insert(wrapped_arguments, literal.double(argument))
-            else
-                error("Unrecognized number format of function argument value: " .. argument)
-            end
-        elseif argument_type == "string" then
-            table.insert(wrapped_arguments, literal.string(argument))
-        else
-            table.insert(wrapped_arguments, argument)
-        end
-    end
-    return wrapped_arguments
 end
 
 local function run_complex_function(name, extra_attributes, ...)
@@ -35,7 +14,7 @@ local function run_complex_function(name, extra_attributes, ...)
     local renderer = ScalarFunctionAppender:new(out_query)
     local scalar_function = renderer["_" .. string.lower(name)]
     assert(scalar_function ~= nil, "Scalar function " .. name .. " must be present in renderer")
-    local wrapped_arguments = wrap_literals(...)
+    local wrapped_arguments = literal.wrap_literals(...)
     local attributes = {name = name, arguments = wrapped_arguments}
     for key, value in pairs(extra_attributes) do
         attributes[key] = value

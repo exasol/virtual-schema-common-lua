@@ -22,7 +22,7 @@ To use this library at runtime you need Lua 5.4 or later.
 
 | Dependency                                        | License    |
 |---------------------------------------------------|------------|
-| [busted](http://olivinelabs.com/busted/)          | [MIT][mit] |
+| [busted](https://lunarmodules.github.io/busted/)  | [MIT][mit] |
 | [luacheck](https://github.com/mpeterv/luacheck)   | [MIT][mit] |
 | [luacov](https://github.com/keplerproject/luacov) | [MIT][mit] |
 
