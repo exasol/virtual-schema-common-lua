@@ -9,7 +9,7 @@ jobs:
       fail-fast: true
       matrix:
         lua_version: [ 5.4 ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
