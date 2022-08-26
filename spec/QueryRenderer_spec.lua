@@ -24,7 +24,7 @@ describe("QueryRenderer", function()
                             type = "column",
                             name = "C1",
                             columnNr = 2,
-                            tableName ="T2"
+                            tableName = "T2"
                         }
                     }
                 }

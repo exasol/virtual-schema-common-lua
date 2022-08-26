@@ -4,7 +4,7 @@ local literal = require("queryrenderer.literal_constructors")
 local Query = require("exasolvs.Query")
 local AggregateFunctionAppender = require("exasolvs.queryrenderer.AggregateFunctionAppender")
 
-function it_asserts(expected, actual, explanation)
+local function it_asserts(expected, actual, explanation)
     it(explanation or expected, function() assert.are.equals(expected, actual) end)
 end
 

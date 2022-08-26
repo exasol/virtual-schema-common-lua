@@ -5,7 +5,7 @@ local geo = require("queryrenderer.geo_constructors")
 local Query = require("exasolvs.Query")
 local ScalarFunctionAppender = require("exasolvs.queryrenderer.ScalarFunctionAppender")
 
-function it_asserts(expected, actual, explanation)
+local function it_asserts(expected, actual, explanation)
     it(explanation or expected, function() assert.are.equals(expected, actual) end)
 end
 
