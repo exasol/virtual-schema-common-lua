@@ -67,7 +67,7 @@ function AggregateFunctionAppender:_append_distinct_function(f)
 end
 
 function AggregateFunctionAppender:_append_simple_function(f)
-    assert(not f.distinct)
+    assert(not f.distinct, "Aggregate function '" .. (f.name or "unknown") .. "' must not have a DISTINCT modifier.")
     self:_append(string.upper(f.name))
     self:_append_function_argument_list(false, f.arguments)
 end

@@ -127,6 +127,6 @@ So to recapitulate: while basic aggregate functions are supported, the `OVER` cl
 
 ### Read the Documentation on Functions
 
-Sometimes limitations come in the form of SQL pharses that Exasol ignores. Take [`RESPECT NULLS` in `FIRTST_VALUE`](https://docs.exasol.com/db/latest/sql_references/functions/alphabeticallistfunctions/first_value.htm) for example. The Exasol core database simply ignores it, so there is also no push-down.
+Sometimes limitations come in the form of SQL pharses that Exasol ignores. Take [`RESPECT NULLS` in `FIRST_VALUE`](https://docs.exasol.com/db/latest/sql_references/functions/alphabeticallistfunctions/first_value.htm) for example. The Exasol core database simply ignores it, so there is also no push-down.
 
 So if you are unsure about the behavior of a certain function, please check [Exasol's online user guide](https://docs.exasol.com/db/latest/sql_references/functions/built-in_functions.htm).

@@ -88,4 +88,10 @@ describe("AggregateFunctionRenderer", function()
                         ),
                 "ANY")
     end
+
+    it("asserts functions that are not allowed to have a DISTINCT modifier", function()
+        local renderer = AggregateFunctionAppender:new(Query:new())
+        assert.has_error(function() renderer:append({name = "MEDIAN", distinct = "true"}) end,
+                "Aggregate function 'MEDIAN' must not have a DISTINCT modifier.")
+    end)
 end)
