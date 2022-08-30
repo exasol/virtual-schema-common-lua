@@ -112,3 +112,21 @@ Now you can right-click any unit-test class and `Run...` (`[CTRL] + [SHIFT] + [F
 ### Running the Unit Tests From Eclipse IDE
 
 We usually recommend you install the [Lua Development Tools (LDT)](https://www.eclipse.org/ldt/). Unfortunately Lua 5.4 is not supported and the project does not receive any updates anymore.
+
+## Virtual Schema Limitations
+
+Developers writing Virtual Schema adapters should know about the limitations of Virtual Schemas.
+
+### No Push-down for Analytic Functions
+
+[Analytic functions](https://docs.exasol.com/db/latest/sql_references/functions/analyticfunctions.htm) are aggregate functions that have an `OVER` clause. Since they are connected, this also applies to the `PARTIION`, `WINDOW FRAME` and partition `ORDER` clauses.  
+
+Exasol does not support pushing analytic functions to the source database. This would be too complex and is very seldom useful in the situations were Virtual Schemas are needed. Virtual Schemas mainly exist to explore a remote data source through Exasol. Often as preparation for later data export directly through the ExaLoader.
+
+So to recapitulate: while basic aggregate functions are supported, the `OVER` clause is not.
+
+### Read the Documentation on Functions
+
+Sometimes limitations come in the form of SQL pharses that Exasol ignores. Take [`RESPECT NULLS` in `FIRST_VALUE`](https://docs.exasol.com/db/latest/sql_references/functions/alphabeticallistfunctions/first_value.htm) for example. The Exasol core database simply ignores it, so there is also no push-down.
+
+So if you are unsure about the behavior of a certain function, please check [Exasol's online user guide](https://docs.exasol.com/db/latest/sql_references/functions/built-in_functions.htm).

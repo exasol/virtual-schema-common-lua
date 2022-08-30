@@ -36,6 +36,8 @@ describe("AggregateFunctionRenderer", function()
                     {type = "column", name =  "customer_id", tableName = "customers"}),
             "APPROXIMATE_COUNT_DISTINCT")
 
+    it_asserts("COUNT(*)", run_function("COUNT"), "COUNT(*)")
+
     for _, grouping_alias in ipairs({"GROUPING", "GROUPING_ID"}) do
         it_asserts(grouping_alias .. '("sales"."yr", "sales"."mon")',
                 run_function(grouping_alias,
@@ -43,4 +45,53 @@ describe("AggregateFunctionRenderer", function()
                         {type = "column", name =  "mon", tableName = "sales"}),
                 grouping_alias)
     end
+
+    for _, single_parameter_functions_without_distinct in ipairs({
+        "FIRST_VALUE", "LAST_VALUE", "MEDIAN"
+    }) do
+        local expression = {
+            type = "predicate_less",
+            left = {type = "column", name = "age", tableName = "visitors"},
+            right = literal.exactnumeric(30)
+        }
+        it_asserts(single_parameter_functions_without_distinct .. '(("visitors"."age" < 30))',
+                run_function(single_parameter_functions_without_distinct, expression),
+                single_parameter_functions_without_distinct)
+    end
+
+
+    for _, function_supporting_distinct in ipairs({
+        "ANY", "COUNT", "EVERY", "MAX", "SOME", "MIN", "MUL", "STDDEV", "STDDEV_POP", "STDDEV_SAMP", "SUM", "VAR_POP",
+        "VAR_SAMP", "VARIANCE"
+    }) do
+        local expression = {
+            type = "predicate_less",
+            left = {type = "column", name = "age", tableName = "visitors"},
+            right = literal.exactnumeric(30)
+        }
+        it_asserts(function_supporting_distinct .. '(("visitors"."age" < 30))',
+                run_function(function_supporting_distinct, expression),
+                function_supporting_distinct)
+        it_asserts(function_supporting_distinct .. '(DISTINCT ("visitors"."age" < 30))',
+                run_complex_function(function_supporting_distinct, {distinct = true}, expression),
+                function_supporting_distinct)
+    end
+
+    for _, double_parameter_function in ipairs({
+        "CORR", "COVAR_POP", "COVAR_SAMP", "REGR_AVGX", "REGR_AVGY", "REGR_COUNT", "REGR_INTERCEPT", "REGR_R2",
+        "REGR_SLOPE", "REGR_SXX", "REGR_SXY", "REGR_SYY"
+    }) do
+        it_asserts(double_parameter_function .. '("employees"."age", "employees"."current_salary")',
+                run_function(double_parameter_function,
+                            {type = "column", name = "age", tableName = "employees"},
+                            {type = "column", name = "current_salary", tableName = "employees"}
+                        ),
+                "ANY")
+    end
+
+    it("asserts functions that are not allowed to have a DISTINCT modifier", function()
+        local renderer = AggregateFunctionAppender:new(Query:new())
+        assert.has_error(function() renderer:append({name = "MEDIAN", distinct = "true"}) end,
+                "Aggregate function 'MEDIAN' must not have a DISTINCT modifier.")
+    end)
 end)

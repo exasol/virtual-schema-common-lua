@@ -46,8 +46,11 @@ function AggregateFunctionAppender:_append_expression(expression)
     expression_renderer:append_expression(expression)
 end
 
-function AggregateFunctionAppender:_append_function_argument_list(arguments)
+function AggregateFunctionAppender:_append_function_argument_list(distinct, arguments)
     self:_append("(")
+    if distinct then
+        self:_append("DISTINCT ")
+    end
     if (arguments) then
         for i = 1, #arguments do
             self:_comma(i)
@@ -57,13 +60,57 @@ function AggregateFunctionAppender:_append_function_argument_list(arguments)
     self:_append(")")
 end
 
-function AggregateFunctionAppender:_append_simple_function(f)
+function AggregateFunctionAppender:_append_distinct_function(f)
     self:_append(string.upper(f.name))
-    self:_append_function_argument_list(f.arguments)
+    local distinct = f.distinct or false
+    self:_append_function_argument_list(distinct, f.arguments)
 end
 
+function AggregateFunctionAppender:_append_simple_function(f)
+    assert(not f.distinct, "Aggregate function '" .. (f.name or "unknown") .. "' must not have a DISTINCT modifier.")
+    self:_append(string.upper(f.name))
+    self:_append_function_argument_list(false, f.arguments)
+end
+
+AggregateFunctionAppender._any = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._approximate_count_distinct = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._corr = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._covar_pop = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._covar_samp = AggregateFunctionAppender._append_simple_function
+
+function AggregateFunctionAppender:_count(f)
+    if(f.arguments == nil or next(f.arguments) == nil) then
+        return self:_append("COUNT(*)")
+    else
+        return self:_append_distinct_function(f)
+    end
+end
+
+AggregateFunctionAppender._every = AggregateFunctionAppender._append_distinct_function
+AggregateFunctionAppender._first_value = AggregateFunctionAppender._append_simple_function
 AggregateFunctionAppender._grouping = AggregateFunctionAppender._append_simple_function
 AggregateFunctionAppender._grouping_id = AggregateFunctionAppender._grouping
+AggregateFunctionAppender._last_value = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._max = AggregateFunctionAppender._append_distinct_function
+AggregateFunctionAppender._median = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._min = AggregateFunctionAppender._append_distinct_function
+AggregateFunctionAppender._mul = AggregateFunctionAppender._append_distinct_function
+AggregateFunctionAppender._regr_avgx = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._regr_avgy = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._regr_count = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._regr_intercept = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._regr_r2 = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._regr_slope = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._regr_sxx = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._regr_sxy = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._regr_syy = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._stddev = AggregateFunctionAppender._append_distinct_function
+AggregateFunctionAppender._stddev_pop = AggregateFunctionAppender._append_distinct_function
+AggregateFunctionAppender._stddev_samp = AggregateFunctionAppender._append_distinct_function
+AggregateFunctionAppender._sum = AggregateFunctionAppender._append_distinct_function
+AggregateFunctionAppender._some = AggregateFunctionAppender._any
+AggregateFunctionAppender._var_pop = AggregateFunctionAppender._append_distinct_function
+AggregateFunctionAppender._var_samp = AggregateFunctionAppender._append_distinct_function
+AggregateFunctionAppender._variance = AggregateFunctionAppender._append_distinct_function
 
 return AggregateFunctionAppender
