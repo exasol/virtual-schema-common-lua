@@ -1,5 +1,6 @@
 local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
 local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
+local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
 local ExaError = require("ExaError")
 
 --- Appender for aggregate functions in an SQL statement.
@@ -46,17 +47,21 @@ function AggregateFunctionAppender:_append_expression(expression)
     expression_renderer:append_expression(expression)
 end
 
-function AggregateFunctionAppender:_append_function_argument_list(distinct, arguments)
-    self:_append("(")
-    if distinct then
-        self:_append("DISTINCT ")
-    end
+function AggregateFunctionAppender:_append_comma_separated_arguments(arguments)
     if (arguments) then
         for i = 1, #arguments do
             self:_comma(i)
             self:_append_expression(arguments[i])
         end
     end
+end
+
+function AggregateFunctionAppender:_append_function_argument_list(distinct, arguments)
+    self:_append("(")
+    if distinct then
+        self:_append("DISTINCT ")
+    end
+    self:_append_comma_separated_arguments(arguments)
     self:_append(")")
 end
 
@@ -88,6 +93,24 @@ end
 
 AggregateFunctionAppender._every = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._first_value = AggregateFunctionAppender._append_simple_function
+
+function AggregateFunctionAppender:_group_concat(f)
+    self:_append(string.upper(f.name))
+    self:_append("(")
+    if f.distinct then
+        self:_append("DISTINCT ")
+    end
+    self:_append_comma_separated_arguments(f.arguments)
+    if(f.orderBy) then
+        SelectAppender._append_order_by(self, f.orderBy)
+    end
+    if(f.separator) then
+        self:_append(" SEPARATOR ")
+        self:_append_string_literal(f.separator)
+    end
+    self:_append(")")
+end
+
 AggregateFunctionAppender._grouping = AggregateFunctionAppender._append_simple_function
 AggregateFunctionAppender._grouping_id = AggregateFunctionAppender._grouping
 AggregateFunctionAppender._last_value = AggregateFunctionAppender._append_simple_function

@@ -1,6 +1,7 @@
 package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 local literal = require("queryrenderer.literal_constructors")
+local reference = require("queryrenderer.reference_constructors")
 local Query = require("exasolvs.Query")
 local AggregateFunctionAppender = require("exasolvs.queryrenderer.AggregateFunctionAppender")
 
@@ -40,9 +41,7 @@ describe("AggregateFunctionRenderer", function()
 
     for _, grouping_alias in ipairs({"GROUPING", "GROUPING_ID"}) do
         it_asserts(grouping_alias .. '("sales"."yr", "sales"."mon")',
-                run_function(grouping_alias,
-                        {type = "column", name =  "yr", tableName = "sales"},
-                        {type = "column", name =  "mon", tableName = "sales"}),
+                run_function(grouping_alias, reference.column("sales", "yr"), reference.column("sales", "mon")),
                 grouping_alias)
     end
 
@@ -51,7 +50,7 @@ describe("AggregateFunctionRenderer", function()
     }) do
         local expression = {
             type = "predicate_less",
-            left = {type = "column", name = "age", tableName = "visitors"},
+            left = reference.column("visitors", "age"),
             right = literal.exactnumeric(30)
         }
         it_asserts(single_parameter_functions_without_distinct .. '(("visitors"."age" < 30))',
@@ -83,9 +82,7 @@ describe("AggregateFunctionRenderer", function()
     }) do
         it_asserts(double_parameter_function .. '("employees"."age", "employees"."current_salary")',
                 run_function(double_parameter_function,
-                            {type = "column", name = "age", tableName = "employees"},
-                            {type = "column", name = "current_salary", tableName = "employees"}
-                        ),
+                        reference.column("employees", "age"), reference.column("employees", "current_salary")),
                 "ANY")
     end
 
@@ -94,4 +91,26 @@ describe("AggregateFunctionRenderer", function()
         assert.has_error(function() renderer:append({name = "MEDIAN", distinct = "true"}) end,
                 "Aggregate function 'MEDIAN' must not have a DISTINCT modifier.")
     end)
+
+    it_asserts('GROUP_CONCAT("DEPARTMENTS"."NAME")',
+            run_function("GROUP_CONCAT", reference.column("DEPARTMENTS", "NAME")),
+            "GROUP_CONCAT with default separator")
+
+    it_asserts([[GROUP_CONCAT(DISTINCT "PATHS"."PATH" SEPARATOR ':')]],
+            run_complex_function("GROUP_CONCAT", {distinct = true, separator = ":"},
+                    reference.column("PATHS", "PATH")),
+            "GROUP_CONCAT with DISTINCT and a custom separator")
+
+    it_asserts(
+            [[GROUP_CONCAT("PATHS"."PATH" ORDER BY "PATHS"."PRIORITY" DESC, "PATHS"."PATH" NULLS LAST SEPARATOR ';')]],
+            run_complex_function("GROUP_CONCAT",
+                    {
+                        separator = ";",
+                        orderBy = {
+                            {expression = reference.column("PATHS", "PRIORITY"), isAscending = false},
+                            {expression = reference.column("PATHS", "PATH"), nullsLast = true}
+                        }
+                    },
+                    reference.column("PATHS", "PATH")),
+            "GROUP_CONCAT with DISTINCT and a custom separator")
 end)
