@@ -11,7 +11,7 @@ Known limitation:
 
 The core database does not push the `OVER` clause that make the main difference between an analytical function and a regular aggregate function to the Virtual Schema adapter. This means VS push-down supports basic aggregate functions, but no analytical functions.
 
-Also  [LISTAGG (#19)](https://github.com/exasol/virtual-schema-common-lua/issues/19) is not yet supported.
+Also [LISTAGG (#19)](https://github.com/exasol/virtual-schema-common-lua/issues/19) is not yet supported.
 
 ## Features
 

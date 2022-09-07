@@ -124,7 +124,7 @@ function AbstractQueryAppender:_append_data_type(data_type)
     end
 end
 
---- Append a string literal
+--- Append a string literal and enclose it in single quotes
 -- @param string literal
 function AbstractQueryAppender:_append_string_literal(literal)
     self:_append("'")
