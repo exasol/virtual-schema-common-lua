@@ -10,7 +10,7 @@ local M = {}
 --
 -- @param start substring
 --
--- @return <code>true</code> if text start with mentioned substring, <code>false</code> if any of the parameters is nil
+-- @return <code>true</code> if text starts with mentioned substring, <code>false</code> if any of the parameters is nil
 --         or the text does not start with the substring
 --
 function M.starts_with(text, start)

@@ -164,7 +164,7 @@ describe("SelectAppender", function()
                 original_query)
     end)
 
-    it("renders a aggregate function in a filter in the select list", function()
+    it("renders an aggregate function in a filter in the select list", function()
         local original_query = {
             type = "select",
             selectList = {

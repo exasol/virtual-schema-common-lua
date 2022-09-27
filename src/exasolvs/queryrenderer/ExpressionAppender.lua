@@ -142,7 +142,7 @@ end
 -- @param predicate predicate to append
 function ExpressionAppender:append_predicate(predicate)
     local type = string.sub(predicate.type, 11)
-    if type == "equal" or type == "notequal" or type == "greater" or type == "less"  or type == "lessequal"
+    if type == "equal" or type == "notequal" or type == "greater" or type == "less" or type == "lessequal"
         or type == "greaterequal"
     then
         self:_append_binary_predicate(predicate)
