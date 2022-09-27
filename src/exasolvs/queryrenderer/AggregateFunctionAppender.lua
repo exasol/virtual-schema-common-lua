@@ -1,5 +1,6 @@
 local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
 local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
+local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
 local ExaError = require("ExaError")
 
 --- Appender for aggregate functions in an SQL statement.
@@ -106,6 +107,24 @@ end
 
 AggregateFunctionAppender._every = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._first_value = AggregateFunctionAppender._append_simple_function
+
+function AggregateFunctionAppender:_group_concat(f)
+    self:_append(string.upper(f.name))
+    self:_append("(")
+    if f.distinct then
+        self:_append("DISTINCT ")
+    end
+    self:_append_comma_separated_arguments(f.arguments)
+    if(f.orderBy) then
+        SelectAppender._append_order_by(self, f.orderBy)
+    end
+    if(f.separator) then
+        self:_append(" SEPARATOR ")
+        self:_append_string_literal(f.separator)
+    end
+    self:_append(")")
+end
+
 AggregateFunctionAppender._grouping = AggregateFunctionAppender._append_simple_function
 AggregateFunctionAppender._grouping_id = AggregateFunctionAppender._grouping
 AggregateFunctionAppender._last_value = AggregateFunctionAppender._append_simple_function
