@@ -10,7 +10,9 @@ setmetatable(ExpressionAppender, {__index = AbstractQueryAppender})
 
 local OPERATORS <const> = {
     predicate_equal = "=", predicate_notequal = "<>", predicate_less = "<", predicate_greater = ">",
-    predicate_and = "AND", predicate_or = "OR", predicate_not = "NOT"
+    predicate_lessequal = "<=", predicate_greaterequal = ">=", predicate_between = "BETWEEN",
+    predicate_is_not_null = "IS NOT NULL", predicate_is_null = "IS NULL", predicate_like = "LIKE",
+    predicate_like_regexp = "REGEXP_LIKE", predicate_and = "AND", predicate_or = "OR", predicate_not = "NOT"
 }
 
 local function get_predicate_operator(predicate_type)
@@ -96,13 +98,62 @@ function ExpressionAppender:_append_predicate_in(predicate)
     self:_append("))")
 end
 
+function ExpressionAppender:_append_predicate_like(predicate)
+    self:_append("(")
+    self:append_expression(predicate.expression)
+    self:_append(" LIKE ")
+    self:append_expression(predicate.pattern)
+    local escape = predicate.escapeChar
+    if escape then
+        self:_append(" ESCAPE ")
+        self:append_expression(escape)
+    end
+    self:_append(")")
+end
+
+function ExpressionAppender:_append_predicate_regexp_like(predicate)
+    self:_append("(")
+    self:append_expression(predicate.expression)
+    self:_append(" REGEXP_LIKE ")
+    self:append_expression(predicate.pattern)
+    self:_append(")")
+end
+
+function ExpressionAppender:_append_postfix_predicate(predicate)
+    self:_append("(")
+    self:append_expression(predicate.expression)
+    self:_append(" ")
+    self:_append(get_predicate_operator(predicate.type))
+    self:_append(")")
+end
+
+function ExpressionAppender:_append_between(predicate)
+    self:_append("(")
+    self:append_expression(predicate.expression)
+    self:_append(" BETWEEN ")
+    self:append_expression(predicate.left)
+    self:_append(" AND ")
+    self:append_expression(predicate.right)
+    self:_append(")")
+end
+
 --- Append a predicate to a query.
 -- This method is public to allow nesting predicates in filters.
 -- @param predicate predicate to append
 function ExpressionAppender:append_predicate(predicate)
     local type = string.sub(predicate.type, 11)
-    if type == "equal" or type == "notequal" or type == "greater" or type == "less" then
+    if type == "equal" or type == "notequal" or type == "greater" or type == "less"  or type == "lessequal"
+        or type == "greaterequal"
+    then
         self:_append_binary_predicate(predicate)
+    elseif type == "like" then
+        self:_append_predicate_like(predicate)
+    elseif type == "like_regexp" then
+        self:_append_predicate_regexp_like(predicate)
+    elseif type == "is_null" or type == "is_not_null" then
+        self:_append_postfix_predicate(predicate)
+    elseif type == "between" then
+        self:_append_between(predicate)
     elseif type == "not" then
         self:_append_unary_predicate(predicate)
     elseif type == "and" or type == "or" then
@@ -159,7 +210,7 @@ function ExpressionAppender:append_expression(expression)
     else
         ExaError:new("E-VSCL-1", "Unable to render unknown SQL expression type {{type}}.",
             {type = {value = expression.type, description = "expression type provided"}}
-        ):add_ticket_mitigation():raise()
+        ):add_ticket_mitigation():raise(3)
     end
 end
 

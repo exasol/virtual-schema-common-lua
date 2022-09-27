@@ -3,6 +3,7 @@ require("busted.runner")()
 require("assertions.appender_assertions")
 local Query = require("exasolvs.Query")
 local literal = require("queryrenderer.literal_constructors")
+local reference = require("queryrenderer.reference_constructors")
 local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
 
 function assert_expression_yields (expression, expected)
@@ -11,8 +12,7 @@ end
 
 describe("ExpressionRenderer", function()
     it("renders column reference", function()
-        assert_expression_yields({type = "column", tableName = "the_table", name = "the_column"},
-                '"the_table"."the_column"')
+        assert_expression_yields(reference.column("the_table", "the_column"), '"the_table"."the_column"')
     end)
 
     describe("renders literal:", function()
@@ -113,7 +113,48 @@ describe("ExpressionRenderer", function()
                                       right = literal.exactnumeric(7)}, "(4 > 7)")
         end)
 
-        it("renders the predicate EXISTS in the where clause", function()
+        it("<=", function()
+            assert_expression_yields({type = "predicate_lessequal", left = literal.exactnumeric(4),
+                                      right = literal.exactnumeric(7)}, "(4 <= 7)")
+        end)
+
+        it(">=", function()
+            assert_expression_yields({type = "predicate_greaterequal", left = literal.exactnumeric(4),
+                                      right = literal.exactnumeric(7)}, "(4 >= 7)")
+        end)
+
+        it("LIKE", function()
+            assert_expression_yields({
+                type = "predicate_like",
+                expression = reference.column("ADDRESSES", "STREET"),
+                pattern = literal.string("Bakerst%")
+            },
+                    "(\"ADDRESSES\".\"STREET\" LIKE 'Bakerst%')"
+            )
+        end)
+
+        it("LIKE with custom escape character", function()
+            assert_expression_yields({
+                type = "predicate_like",
+                expression = reference.column("VARIABLES", "ID"),
+                pattern = literal.string("MAX~_%"),
+                escapeChar = literal.string('~')
+            },
+                    "(\"VARIABLES\".\"ID\" LIKE 'MAX~_%' ESCAPE '~')"
+            )
+        end)
+
+        it("LIKE with a regular expression", function()
+            assert_expression_yields({
+                type = "predicate_like_regexp",
+                expression = reference.column("VARIABLES", "ID"),
+                pattern = literal.string("(MIN|MAX)_[^_]+_VALUE"),
+            },
+                    "(\"VARIABLES\".\"ID\" REGEXP_LIKE '(MIN|MAX)_[^_]+_VALUE')"
+            )
+        end)
+
+        it("EXISTS in the where clause", function()
             local original_query = {
                  type = "predicate_exists",
                  query = {
@@ -121,7 +162,7 @@ describe("ExpressionRenderer", function()
                      selectList = {literal.exactnumeric(1)},
                      filter = {
                          type = "predicate_greater",
-                         left = {type = "column", tableName = "people", name = "age"},
+                         left = reference.column("people", "age"),
                          right = literal.exactnumeric(21)
                      }
                  }
@@ -129,15 +170,42 @@ describe("ExpressionRenderer", function()
             assert_expression_yields(original_query, 'EXISTS(SELECT 1 WHERE ("people"."age" > 21))')
         end)
 
-        it("predicate IN", function()
+        it("IN", function()
             local original_query = {
                 type = "predicate_in_constlist",
-                expression = {type = "column", tableName = "open", name = "weekday"},
+                expression = reference.column("open", "weekday"),
                 arguments = {
                     literal.string("Mon"), literal.string("Tue"), literal.string("Wed"), literal.string("Thu")
                 }
             }
             assert_expression_yields(original_query, [[("open"."weekday" IN ('Mon', 'Tue', 'Wed', 'Thu'))]])
+        end)
+
+        it("IS NULL", function()
+            local original_query = {
+                type = "predicate_is_null",
+                expression = reference.column("deliveries", "return_address"),
+            }
+            assert_expression_yields(original_query, [[("deliveries"."return_address" IS NULL)]])
+        end)
+
+        it("IS NOT NULL", function()
+            local original_query = {
+                type = "predicate_is_not_null",
+                expression = reference.column("deliveries", "return_address"),
+            }
+            assert_expression_yields(original_query, [[("deliveries"."return_address" IS NOT NULL)]])
+        end)
+
+        it("BETWEEN", function()
+            local original_query = {
+                type = "predicate_between",
+                expression = reference.column("temperatures", "in_avg"),
+                left = reference.column("temperatures", "out_min"),
+                right = reference.column("temperatures", "out_max")
+            }
+            assert_expression_yields(original_query,
+                    [[("temperatures"."in_avg" BETWEEN "temperatures"."out_min" AND "temperatures"."out_max")]])
         end)
     end)
 
