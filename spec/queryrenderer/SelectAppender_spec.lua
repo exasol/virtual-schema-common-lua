@@ -164,7 +164,7 @@ describe("SelectAppender", function()
                 original_query)
     end)
 
-    it("renders an aggregate function in a filter in the select list", function()
+    it("renders an aggregate function in the select list", function()
         local original_query = {
             type = "select",
             selectList = {
@@ -179,6 +179,26 @@ describe("SelectAppender", function()
             from = {type = "table", name = "PEOPLE"},
         }
         assert_yields([[SELECT COUNT("PEOPLE"."LASTNAME") FROM "PEOPLE"]],
+                original_query)
+    end)
+
+    it("renders an aggregate function in the WHERE clause", function()
+        local original_query = {
+            type = "select",
+            from = {type = "table", name = "PEOPLE"},
+            filter ={
+                type = "predicate_greater",
+                left = {
+                    type = "function_aggregate",
+                    name = "COUNT",
+                    arguments = {
+                        {type = "column", name="LASTNAME", tableName = "PEOPLE"}
+                    }
+                },
+                right = {type = "literal_exactnumeric", value = 100}
+            }
+        }
+        assert_yields([[SELECT * FROM "PEOPLE" WHERE (COUNT("PEOPLE"."LASTNAME") > 100)]],
                 original_query)
     end)
 
