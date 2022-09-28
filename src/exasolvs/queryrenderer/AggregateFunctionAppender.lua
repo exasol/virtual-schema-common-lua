@@ -47,6 +47,19 @@ function AggregateFunctionAppender:_append_expression(expression)
     expression_renderer:append_expression(expression)
 end
 
+function AggregateFunctionAppender:_append_function_argument_list(distinct, arguments)
+    self:_append("(")
+    self:_append_distinct_modifier(distinct)
+    self:_append_comma_separated_arguments(arguments)
+    self:_append(")")
+end
+
+function AggregateFunctionAppender:_append_distinct_modifier(distinct)
+    if distinct then
+        self:_append("DISTINCT ")
+    end
+end
+
 function AggregateFunctionAppender:_append_comma_separated_arguments(arguments)
     if (arguments) then
         for i = 1, #arguments do
@@ -54,15 +67,6 @@ function AggregateFunctionAppender:_append_comma_separated_arguments(arguments)
             self:_append_expression(arguments[i])
         end
     end
-end
-
-function AggregateFunctionAppender:_append_function_argument_list(distinct, arguments)
-    self:_append("(")
-    if distinct then
-        self:_append("DISTINCT ")
-    end
-    self:_append_comma_separated_arguments(arguments)
-    self:_append(")")
 end
 
 function AggregateFunctionAppender:_append_distinct_function(f)
@@ -77,17 +81,27 @@ function AggregateFunctionAppender:_append_simple_function(f)
     self:_append_function_argument_list(false, f.arguments)
 end
 
-AggregateFunctionAppender._any = AggregateFunctionAppender._append_distinct_function
+-- AggregateFunctionAppender._any is not implemented since ANY is an alias for SOME
 AggregateFunctionAppender._approximate_count_distinct = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._avg = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._corr = AggregateFunctionAppender._append_simple_function
 AggregateFunctionAppender._covar_pop = AggregateFunctionAppender._append_simple_function
 AggregateFunctionAppender._covar_samp = AggregateFunctionAppender._append_simple_function
 
 function AggregateFunctionAppender:_count(f)
+    local distinct = f.distinct or false
     if(f.arguments == nil or next(f.arguments) == nil) then
-        return self:_append("COUNT(*)")
+        self:_append("COUNT(*)")
+    elseif(#f.arguments == 1) then
+        self:_append("COUNT")
+        self:_append_function_argument_list(distinct, f.arguments)
     else
-        return self:_append_distinct_function(f)
+        self:_append("COUNT(")
+        self:_append_distinct_modifier(distinct)
+        -- Note the extra set of parenthesis that is required to count tuples!
+        self:_append("(")
+        self:_append_comma_separated_arguments(f.arguments)
+        self:_append("))")
     end
 end
 
@@ -127,11 +141,13 @@ AggregateFunctionAppender._regr_slope = AggregateFunctionAppender._append_simple
 AggregateFunctionAppender._regr_sxx = AggregateFunctionAppender._append_simple_function
 AggregateFunctionAppender._regr_sxy = AggregateFunctionAppender._append_simple_function
 AggregateFunctionAppender._regr_syy = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._st_intersection = AggregateFunctionAppender._append_simple_function
+AggregateFunctionAppender._st_union = AggregateFunctionAppender._append_simple_function
 AggregateFunctionAppender._stddev = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._stddev_pop = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._stddev_samp = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._sum = AggregateFunctionAppender._append_distinct_function
-AggregateFunctionAppender._some = AggregateFunctionAppender._any
+AggregateFunctionAppender._some = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._var_pop = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._var_samp = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._variance = AggregateFunctionAppender._append_distinct_function

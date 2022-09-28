@@ -164,6 +164,24 @@ describe("SelectAppender", function()
                 original_query)
     end)
 
+    it("renders an aggregate function in a filter in the select list", function()
+        local original_query = {
+            type = "select",
+            selectList = {
+                {
+                    type = "function_aggregate",
+                    name = "COUNT",
+                    arguments = {
+                        {type = "column", name="LASTNAME", tableName = "PEOPLE"}
+                    }
+                }
+            },
+            from = {type = "table", name = "PEOPLE"},
+        }
+        assert_yields([[SELECT COUNT("PEOPLE"."LASTNAME") FROM "PEOPLE"]],
+                original_query)
+    end)
+
     it("renders the predicate IN in the where clause", function()
         local original_query = {
             type = "select",

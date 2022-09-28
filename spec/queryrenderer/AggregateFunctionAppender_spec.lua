@@ -59,8 +59,9 @@ describe("AggregateFunctionRenderer", function()
     end
 
 
+    -- ANY is just a alias for SOME. So not tested here.
     for _, function_supporting_distinct in ipairs({
-        "ANY", "COUNT", "EVERY", "MAX", "SOME", "MIN", "MUL", "STDDEV", "STDDEV_POP", "STDDEV_SAMP", "SUM", "VAR_POP",
+        "AVG", "COUNT", "EVERY", "MAX", "SOME", "MIN", "MUL", "STDDEV", "STDDEV_POP", "STDDEV_SAMP", "SUM", "VAR_POP",
         "VAR_SAMP", "VARIANCE"
     }) do
         local expression = {
@@ -92,6 +93,39 @@ describe("AggregateFunctionRenderer", function()
                 "Aggregate function 'MEDIAN' must not have a DISTINCT modifier.")
     end)
 
+    -- Counting tuples is special in that it requires the tuple to be enclosed in an extra set of parenthesis to work.
+    describe("add extra parenthesis when counting tuples:", function()
+        it_asserts('COUNT(("employees"."age", "employees"."department"))',
+                run_function("COUNT",
+                        {type = "column", name = "age", tableName = "employees"},
+                        {type = "column", name = "department", tableName = "employees"}
+                ),
+                "COUNT tuple")
+    end)
+
+    describe("puts the extra parenthesis after the DISTINCT:", function()
+        it_asserts('COUNT(DISTINCT ("employees"."age", "employees"."department"))',
+                run_complex_function("COUNT",
+                        {distinct = true},
+                        {type = "column", name = "age", tableName = "employees"},
+                        {type = "column", name = "department", tableName = "employees"}
+                ),
+                "COUNT DISTINCT tuple")
+    end)
+
+    -- ST_UNION doubles as both an aggregate and scalar function. This depends on the number of parameters. A single
+    -- parameter leads to aggregation, two parameters turn it into a scalar function.
+    describe("accepts ST_UNION as aggregate function with a single argument:", function()
+        it_asserts('ST_UNION("map"."shape")',
+                run_function("ST_UNION", {type = "column", name = "shape", tableName = "map"}),
+                "ST_UNION (single column aggregate)")
+    end)
+
+    describe("accepts ST_INTERSECTION as aggregate function with a single argument:", function()
+        it_asserts('ST_INTERSECTION("map"."shape")',
+                run_function("ST_INTERSECTION", {type = "column", name = "shape", tableName = "map"}),
+                "ST_UNION (single column aggregate)")
+    end)
     it_asserts('GROUP_CONCAT("DEPARTMENTS"."NAME")',
             run_function("GROUP_CONCAT", reference.column("DEPARTMENTS", "NAME")),
             "GROUP_CONCAT with default separator")

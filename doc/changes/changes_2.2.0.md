@@ -18,4 +18,6 @@ Also [LISTAGG (#19)](https://github.com/exasol/virtual-schema-common-lua/issues/
 * #17: Added rendering for aggregate functions `GROUPING` and `APPROXIMATE COUNT DISTINCT`
 * #18: Added rendering aggregate functions that can have an `OVER` clause. VS does not support pushing `OVER` though.
 * #47: Removed dependency check CI build
+
+* #54: Enabled all `COUNT` variants and added more predicates
 * #50: Added rendering for `GROUP_CONCAT`

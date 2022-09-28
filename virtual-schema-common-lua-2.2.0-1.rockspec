@@ -48,6 +48,7 @@ build = {
         ["exasolvs.queryrenderer.AbstractQueryAppender"] = "src/exasolvs/queryrenderer/AbstractQueryAppender.lua",
         ["exasolvs.queryrenderer.ExpressionAppender"] = "src/exasolvs/queryrenderer/ExpressionAppender.lua",
         ["exasolvs.queryrenderer.ScalarFunctionAppender"] = "src/exasolvs/queryrenderer/ScalarFunctionAppender.lua",
+        ["exasolvs.queryrenderer.AggregateFunctionAppender"] = "src/exasolvs/queryrenderer/AggregateFunctionAppender.lua",
         ["exasolvs.queryrenderer.SelectAppender"] = "src/exasolvs/queryrenderer/SelectAppender.lua",
         ["exasolvs.RequestDispatcher"] = "src/exasolvs/RequestDispatcher.lua",
         ["text"] = "src/text.lua"

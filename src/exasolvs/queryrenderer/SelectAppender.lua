@@ -1,4 +1,3 @@
-local text = require("text")
 local ExaError = require("ExaError")
 local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppender")
 
@@ -90,12 +89,7 @@ function SelectAppender:_append_from(from)
 end
 
 function SelectAppender:_append_expression(expression)
-    local type = expression.type
-    if text.starts_with(type, "function_scalar") then
-        require("exasolvs.queryrenderer.ScalarFunctionAppender"):new(self._out_query):append_scalar_function(expression)
-    else
-        require("exasolvs.queryrenderer.ExpressionAppender"):new(self._out_query):append_expression(expression)
-    end
+    require("exasolvs.queryrenderer.ExpressionAppender"):new(self._out_query):append_expression(expression)
 end
 
 function SelectAppender:_append_filter(filter)
