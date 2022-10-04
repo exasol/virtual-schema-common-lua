@@ -377,6 +377,73 @@ describe("SelectAppender", function()
         end
     end)
 
+    it("renders a GROUP BY clause with a single grouping criteria", function()
+        local original_query = {
+            type = "select",
+            selectList = {
+                {
+                    name = "COUNT",
+                    type = "function_aggregate"
+                },
+                {
+                    name = "TYPE",
+                    tableName = "TICKETS",
+                    type = "column"
+                }
+            },
+            from = {
+                type = "table", name = "TICKETS"
+            },
+            groupBy = {
+                {
+                    name = "TYPE",
+                    tableName = "TICKETS",
+                    type = "column"
+                }
+            }
+        }
+        assert_yields('SELECT COUNT(*), "TICKETS"."TYPE" FROM "TICKETS" GROUP BY "TICKETS"."TYPE"', original_query)
+    end)
+
+    it("renders a GROUP BY clause with multiple grouping criteria", function()
+        local original_query = {
+            type = "select",
+            selectList = {
+                {
+                    name = "COUNT",
+                    type = "function_aggregate"
+                },
+                {
+                    name = "TYPE",
+                    tableName = "TICKETS",
+                    type = "column"
+                },
+                {
+                    name = "PRIORITY",
+                    tableName = "TICKETS",
+                    type = "column"
+                }
+            },
+            from = {
+                type = "table", name = "TICKETS"
+            },
+            groupBy = {
+                {
+                    name = "TYPE",
+                    tableName = "TICKETS",
+                    type = "column"
+                },
+                {
+                    name = "PRIORITY",
+                    tableName = "TICKETS",
+                    type = "column"
+                }
+            }
+        }
+        assert_yields('SELECT COUNT(*), "TICKETS"."TYPE", "TICKETS"."PRIORITY" FROM "TICKETS"'
+                .. ' GROUP BY "TICKETS"."TYPE", "TICKETS"."PRIORITY"', original_query)
+    end)
+
     it("raises an error if the WHERE clause type is unknown", function()
         local original_query = {
             type = "select",

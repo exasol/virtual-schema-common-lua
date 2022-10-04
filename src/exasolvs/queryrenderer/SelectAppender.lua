@@ -1,5 +1,6 @@
 local ExaError = require("ExaError")
 local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppender")
+local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
 
 --- Appender that can add top-level elements of a `SELECT` statement (or sub-select).
 -- @classmod SubQueryAppender
@@ -89,13 +90,23 @@ function SelectAppender:_append_from(from)
 end
 
 function SelectAppender:_append_expression(expression)
-    require("exasolvs.queryrenderer.ExpressionAppender"):new(self._out_query):append_expression(expression)
+    ExpressionAppender:new(self._out_query):append_expression(expression)
 end
 
 function SelectAppender:_append_filter(filter)
     if filter then
         self:_append(" WHERE ")
-        require("exasolvs.queryrenderer.ExpressionAppender"):new(self._out_query):append_predicate(filter)
+        ExpressionAppender:new(self._out_query):append_predicate(filter)
+    end
+end
+
+function SelectAppender:_append_group_by(group)
+    if group then
+        self:_append(" GROUP BY ")
+        for i, criteria in ipairs(group) do
+            self:_comma(i)
+            ExpressionAppender:new(self._out_query):append_expression(criteria)
+        end
     end
 end
 
@@ -104,8 +115,7 @@ function SelectAppender:_append_order_by(order)
         self:_append(" ORDER BY ")
         for i, criteria in ipairs(order) do
             self:_comma(i)
-            require("exasolvs.queryrenderer.ExpressionAppender"):new(self._out_query)
-                    :append_expression(criteria.expression)
+            ExpressionAppender:new(self._out_query):append_expression(criteria.expression)
             if criteria.isAscending ~= nil then
                 self:_append(criteria.isAscending and " ASC" or " DESC")
             end
@@ -143,6 +153,7 @@ function SelectAppender:append_select(sub_query)
     self:_append_select_list(sub_query.selectList)
     self:_append_from(sub_query.from)
     self:_append_filter(sub_query.filter)
+    self:_append_group_by(sub_query.groupBy)
     self:_append_order_by(sub_query.orderBy)
     self:_append_limit(sub_query.limit)
 end
