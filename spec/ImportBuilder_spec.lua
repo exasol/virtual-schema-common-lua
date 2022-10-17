@@ -36,12 +36,28 @@ describe("ImportBuilder", function()
     end)
 
     it("raises an error if an unknown import type is requested", function()
-        assert.has_error(function () ImportBuilder:new("illegal") end,
+        assert.has_error(function() ImportBuilder:new("illegal") end,
                 [[E-VSCL-9: Got unknown import type 'illegal' trying to create IMPORT statement.
 
 Mitigations:
 
 * Choose one of 'JDBC' or 'EXA']]
+        )
+    end)
+
+    it("raises an error if the connection is missing during build", function()
+        local builder = ImportBuilder:new():statement("SELECT 1")
+        assert.error_matches(function() builder:build() end,
+                [[E%-VSCL%-10: The name of the connection to the data source is missing ]]
+                .. "while trying to build an IMPORT statement.*"
+        )
+    end)
+
+    it("raises an error if the statement is missing during build", function()
+        local builder = ImportBuilder:new():connection("the_connection")
+        assert.error_matches(function() builder:build() end,
+                [[E%-VSCL%-11: The SQL statement that should be executed on the data source is missing ]]
+                        .. "trying to build an IMPORT statement.*"
         )
     end)
 end)

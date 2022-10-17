@@ -70,6 +70,7 @@ end
 --- Build the import statement.
 -- @return `IMPORT` statement
 function ImportBuilder:build()
+    self:_validate()
     local parts = {"IMPORT"}
     if self._column_types then
         table.insert(parts, " INTO (")
@@ -93,6 +94,19 @@ function ImportBuilder:build()
     table.insert(parts, escaped_statement)
     table.insert(parts, "'")
     return table.concat(parts)
+end
+
+function ImportBuilder:_validate()
+    if not self._connection then
+        ExaError:new("E-VSCL-10",
+                "The name of the connection to the data source is missing while trying to build an IMPORT statement.")
+                :add_ticket_mitigation():raise(2)
+    end
+    if not self._statement then
+        ExaError:new("E-VSCL-11", "The SQL statement that should be executed on the data source is missing "
+                        .. "trying to build an IMPORT statement.")
+                :add_ticket_mitigation():raise(2)
+    end
 end
 
 return ImportBuilder
