@@ -4,7 +4,9 @@ Code name: GROUP BY
  
 ## Summary
 
-Release 2.3.0 of `virtual-schema-common-lua` adds `GROUP BY` support.
+Release 2.3.0 of `virtual-schema-common-lua` can now produce `IMPORT` statements. 
+
+It also adds `GROUP BY` support.
 
 Known limitation:
 
@@ -15,3 +17,4 @@ Also [LISTAGG (#19)](https://github.com/exasol/virtual-schema-common-lua/issues/
 ## Features
 
 * #57: Added `GROUP BY` support.
+* #59: Added `IMPORT` support (required for Virtual Schemas with remote connections)
