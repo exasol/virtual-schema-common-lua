@@ -8,6 +8,14 @@ local ImportBuilder = {
 }
 ImportBuilder.__index = ImportBuilder
 
+
+local function _raise_illegal_type_error(type)
+        ExaError:new("E-VSCL-9", "Got unknown import type {{type}} trying to create IMPORT statement.",
+                {type = {value = type,
+                         description = "Type of import (e.g. via JDBC connection or special EXA connection)"}}
+        ):add_mitigations("Choose one of 'JDBC' or 'EXA'"):raise(2)
+end
+
 --- Create a new `ImportFromExaBuilder` that allows wrapping SQL queries in an `IMPORT ... FROM EXA` statement.
 -- The default type (if no type is explicitly stated) is an import from a JDBC connection, because that is what most
 -- Virtual Schemas will need.
@@ -22,13 +30,6 @@ function ImportBuilder:new(type)
     local instance = setmetatable({}, self)
     instance:_init(type)
     return instance
-end
-
-function _raise_illegal_type_error(type)
-        ExaError:new("E-VSCL-9", "Got unknown import type {{type}} trying to create IMPORT statement.",
-                {type = {value = type,
-                         description = "Type of import (e.g. via JDBC connection or special EXA connection)"}}
-        ):add_mitigations("Choose one of 'JDBC' or 'EXA'"):raise(2)
 end
 
 function ImportBuilder:_init(type)
