@@ -1,10 +1,12 @@
-# virtual-schema-common-lua 2.4.0, released 2022-10-??
+# virtual-schema-common-lua 2.4.0, released 2023-01-??
  
 Code name: Boolean Properties
  
 ## Summary
 
 Release 2.4.0 of `virtual-schema-common-lua` added the methods `isTrue` and `isFalse` for checking Virtual Schema properties.
+
+We also added support for the `IS [NOT] JSON` predicate.
 
 Known limitation:
 

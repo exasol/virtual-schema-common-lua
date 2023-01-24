@@ -207,6 +207,42 @@ describe("ExpressionRenderer", function()
             assert_expression_yields(original_query,
                     [[("temperatures"."in_avg" BETWEEN "temperatures"."out_min" AND "temperatures"."out_max")]])
         end)
+
+        for predicate_key, predicate in pairs({predicate_is_json = "IS JSON", predicate_is_not_json = "IS NOT JSON"}) do
+            describe(predicate .. ":", function()
+                it("minimal", function()
+                    local original_query = {
+                        type = predicate_key,
+                        expression = reference.column("configurations", "ui_settings"),
+                    }
+                    assert_expression_yields(original_query, [["configurations"."ui_settings" ]] .. predicate)
+                end)
+
+                for _, constraint in ipairs({"VALUE", "ARRAY", "OBJECT", "SCALAR"}) do
+                    it("with type constraint '" .. constraint .. "'", function()
+                        local original_query = {
+                            type = predicate_key,
+                            expression = reference.column("configurations", "ui_settings"),
+                            typeConstraint = constraint
+                        }
+                        assert_expression_yields(original_query,
+                                [["configurations"."ui_settings" ]] .. predicate .. " ".. constraint)
+                    end)
+                end
+
+                for _, uniqueness in ipairs({"WITH UNIQUE KEYS", "WITHOUT UNIQUE KEYS"}) do
+                    it(uniqueness, function()
+                        local original_query = {
+                            type = predicate_key,
+                            expression = literal.string("{\"enabled\" : true}"),
+                            keyUniquenessConstraint = uniqueness
+                        }
+                        assert_expression_yields(original_query,
+                                [['{"enabled" : true}' ]] .. predicate .. " " .. uniqueness)
+                    end)
+                end
+            end)
+        end
     end)
 
     it("raises an error if the output query is missing", function()
