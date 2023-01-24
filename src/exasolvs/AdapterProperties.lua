@@ -59,6 +59,20 @@ function AdapterProperties:is_empty(property_name)
     return self:get(property_name) == ""
 end
 
+--- Check if the property contains the string `true` (case-sensitive).
+-- @param property_name name of the property to check
+-- @return `true` if the property's value is the string `true`
+function AdapterProperties:is_true(property_name)
+    return self:get(property_name) == "true"
+end
+
+--- Check if the property evaluates to `false`.
+-- @param property_name name of the property to check
+-- @return `true` if the property's value is anything else than the string `true`
+function AdapterProperties:is_false(property_name)
+    return not self:is_true(property_name)
+end
+
 function AdapterProperties:_validate_debug_address()
     if self:has_value(DEBUG_ADDRESS_PROPERTY) then
         local address = self:get(DEBUG_ADDRESS_PROPERTY)
@@ -70,7 +84,7 @@ function AdapterProperties:_validate_debug_address()
                     :add_mitigations("Make sure host/ip and port number are separated by a colon")
                     :add_mitigations("Optionally add a port number (default is 3000)")
                     :add_mitigations("Don't add any whitespace characters")
-                    :raise()
+                    :raise(0)
         end
     end
 end
@@ -90,7 +104,7 @@ function AdapterProperties:_validate_log_level()
             ExaError:new("F-VSCL-PROP-2", "Unknown log level {{level}} in " .. LOG_LEVEL_PROPERTY .. " property",
                     {level = level})
                     :add_mitigations("Pick one of: " .. table.concat(allowed_levels, ", "))
-                    :raise()
+                    :raise(0)
         end
     end
 end
@@ -102,7 +116,7 @@ function AdapterProperties:_validate_excluded_capabilities()
             ExaError:new("F-VSCL-PROP-1", "Invalid character(s) in " .. EXCLUDED_CAPABILITIES_PROPERTY
                     .. " property: {{value}}", {value = value})
                     :add_mitigations("Use only the following characters: ASCII letter, digit, underscore, comma, space")
-                    :raise()
+                    :raise(0)
         end
     end
 end
@@ -113,6 +127,18 @@ function AdapterProperties:validate()
     self:_validate_debug_address()
     self:_validate_log_level()
     self:_validate_excluded_capabilities()
+end
+
+--- Validate a boolean property.
+-- Allowed values are `true`, `false` or an unset variable.
+-- @raise validation error
+function AdapterProperties:validate_boolean(property_name)
+    local value = self:get(property_name)
+    if not (value == nil or value == "true" or value == "false") then
+        ExaError:new("F-VSCL-PROP-4", "Property '" .. property_name .. "' contains an illegal value: '" .. value .. "'")
+                :add_mitigations("Either leave the property unset or choose one of 'true', 'false' (case-sensitive).")
+                :raise(0)
+    end
 end
 
 --- Get the log level
