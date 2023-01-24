@@ -22,9 +22,15 @@ describe("AdapterProperties", function()
             for _, test in ipairs(tests) do
                 it(test.expected, function()
                     local properties = AdapterProperties:new(test.properties)
-                    assert.error_matches(function () properties:validate() end,  test.expected, 1, true)
+                    assert.error_matches(function() properties:validate() end,  test.expected, 1, true)
                 end)
             end
+    end)
+
+    it("recognizes an illegal value in a boolean property", function()
+        local properties = AdapterProperties:new({switch = "tRUe"})
+        assert.error_matches(function() properties:validate_boolean("switch") end,
+                "Property 'switch' contains an illegal value: 'tRUe'", 1, true)
     end)
 
     describe("gets the DEBUG_ADDRESS property", function()
@@ -76,12 +82,34 @@ describe("AdapterProperties", function()
         assert.is_true(AdapterProperties:new({a = "b"}):has_value("a"))
     end)
 
-    it("says that the property has a value no value when empty", function()
+    it("says that the property has no value when empty", function()
         assert.is_false(AdapterProperties:new({a = ""}):has_value("a"))
     end)
 
-    it("says that the property has a value no value when nil", function()
+    it("says that the property has no value when nil", function()
         assert.is_false(AdapterProperties:new({a = nil}):has_value("a"))
+    end)
+
+    it("considers a boolean property true if the string value 'true' is set", function()
+        local properties = AdapterProperties:new({switch = "true"})
+        assert.is_true(properties:is_true("switch"))
+        assert.is_false(properties:is_false("switch"))
+    end)
+
+    describe("considers a boolean property false if the value is", function()
+        for _, value in ipairs({"false", "TRUE", "any string", ""}) do
+            it(value, function()
+                local properties = AdapterProperties:new({switch = value})
+                assert.is_false(properties:is_true("switch"))
+                assert.is_true(properties:is_false("switch"))
+            end)
+        end
+    end)
+
+    it("considers a boolean property false the property is not set", function()
+        local properties = AdapterProperties:new({})
+        assert.is_false(properties:is_true("switch"))
+        assert.is_true(properties:is_false("switch"))
     end)
 
     describe("merges old properties with new ones:", function()
