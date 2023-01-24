@@ -12,7 +12,8 @@ local OPERATORS <const> = {
     predicate_equal = "=", predicate_notequal = "<>", predicate_less = "<", predicate_greater = ">",
     predicate_lessequal = "<=", predicate_greaterequal = ">=", predicate_between = "BETWEEN",
     predicate_is_not_null = "IS NOT NULL", predicate_is_null = "IS NULL", predicate_like = "LIKE",
-    predicate_like_regexp = "REGEXP_LIKE", predicate_and = "AND", predicate_or = "OR", predicate_not = "NOT"
+    predicate_like_regexp = "REGEXP_LIKE", predicate_and = "AND", predicate_or = "OR", predicate_not = "NOT",
+    predicate_is_json = "IS JSON", predicate_is_not_json = "IS NOT JSON"
 }
 
 local function get_predicate_operator(predicate_type)
@@ -137,6 +138,27 @@ function ExpressionAppender:_append_between(predicate)
     self:_append(")")
 end
 
+function ExpressionAppender:_append_predicate_is_json(predicate)
+    self:append_expression(predicate.expression)
+    self:_append(" ")
+    self:_append(get_predicate_operator(predicate.type))
+    local typeConstraint = predicate.typeConstraint
+    if typeConstraint == "VALUE" then
+        self:_append(" VALUE")
+    elseif typeConstraint == "ARRAY" then
+        self:_append(" ARRAY")
+    elseif typeConstraint == "OBJECT" then
+        self:_append(" OBJECT")
+    elseif typeConstraint == "SCALAR" then
+        self:_append(" SCALAR")
+    end
+    local keyUniquenessConstraint = predicate.keyUniquenessConstraint
+    if (keyUniquenessConstraint == "WITH UNIQUE KEYS") or (keyUniquenessConstraint == "WITHOUT UNIQUE KEYS") then
+        self:_append(" ")
+        self:_append(keyUniquenessConstraint)
+    end
+end
+
 --- Append a predicate to a query.
 -- This method is public to allow nesting predicates in filters.
 -- @param predicate predicate to append
@@ -162,6 +184,8 @@ function ExpressionAppender:append_predicate(predicate)
         self:_append_predicate_in(predicate)
     elseif type == "exists" then
         self:_append_exists(predicate)
+    elseif type == "is_json" or type == "is_not_json" then
+        self:_append_predicate_is_json(predicate)
     else
         ExaError:new("E-VSCL-2", "Unable to render unknown SQL predicate type {{type}}.",
                 {type = {value = predicate.type, description = "predicate type that was not recognized"}}
