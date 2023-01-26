@@ -110,9 +110,12 @@ function SelectAppender:_append_group_by(group)
     end
 end
 
-function SelectAppender:_append_order_by(order)
+function SelectAppender:_append_order_by(order, in_parenthesis)
     if order then
-        self:_append(" ORDER BY ")
+        if not in_parenthesis then
+            self:_append(" ")
+        end
+        self:_append("ORDER BY ")
         for i, criteria in ipairs(order) do
             self:_comma(i)
             ExpressionAppender:new(self._out_query):append_expression(criteria.expression)

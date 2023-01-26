@@ -147,4 +147,113 @@ describe("AggregateFunctionRenderer", function()
                     },
                     reference.column("PATHS", "PATH")),
             "GROUP_CONCAT with DISTINCT and a custom separator")
+
+      it_asserts(
+              [[LISTAGG("fruits"."fruit")]],
+              run_complex_function("LISTAGG",
+                      {
+                          arguments = {reference.column("fruits", "fruit")}
+                      },
+                      "LISTAGG with arguments only"
+              )
+      )
+
+    it_asserts(
+            [[LISTAGG("fruits"."fruit", ', ')]],
+            run_complex_function("LISTAGG",
+                    {
+                        arguments = {reference.column("fruits", "fruit")},
+                        separator = literal.string(", ")
+                    },
+                    "LISTAGG with a separator"
+            )
+    )
+
+    it_asserts(
+            [[LISTAGG(DISTINCT "addresses"."zip_code")]],
+            run_complex_function("LISTAGG",
+                    {
+                        arguments = {reference.column("addresses", "zip_code")},
+                        distinct = true
+                    }
+            ),
+            "LISTAGG over distinct values"
+    )
+
+    it_asserts(
+            [[LISTAGG("capabilities"."name") ON OVERFLOW ERROR]],
+            run_complex_function("LISTAGG",
+                    {
+                        arguments = {reference.column("capabilities", "name")},
+                        overflowBehavior = {type = "ERROR"}
+                    }
+            ),
+            "LISTAGG producing error in case of overflow"
+    )
+
+    it_asserts(
+            [[LISTAGG("capabilities"."name") ON OVERFLOW TRUNCATE WITHOUT COUNT]],
+            run_complex_function("LISTAGG",
+                    {
+                        arguments = {reference.column("capabilities", "name")},
+                        overflowBehavior = {type = "TRUNCATE"}
+                    }
+            ),
+            "LISTAGG truncating in case of overflow"
+    )
+
+    it_asserts(
+            [[LISTAGG("capabilities"."name") ON OVERFLOW TRUNCATE ', etc.' WITHOUT COUNT]],
+            run_complex_function("LISTAGG",
+                    {
+                        arguments = {reference.column("capabilities", "name")},
+                        overflowBehavior = {
+                            type = "TRUNCATE",
+                            truncationFiller = literal.string(", etc.")
+                        }
+                    }
+            ),
+            "LISTAGG truncating with filler in case of overflow"
+    )
+
+    it_asserts(
+            [[LISTAGG("capabilities"."name") ON OVERFLOW TRUNCATE WITH COUNT]],
+            run_complex_function("LISTAGG",
+                    {
+                        arguments = {reference.column("capabilities", "name")},
+                        overflowBehavior = {
+                            type = "TRUNCATE",
+                            truncationType = "WITH COUNT"
+                        }
+                    }
+            ),
+            "LISTAGG truncating with count in case of overflow"
+    )
+
+    it_asserts(
+            [[LISTAGG(CONCAT("users"."firstname", ' ', "users"."lastname")) WITHIN GROUP (ORDER BY "users"."age" DESC)]],
+            run_complex_function("LISTAGG",
+                    {
+                        arguments = {
+                            {
+                                type = "function_scalar",
+                                name = "CONCAT",
+                                arguments = {
+                                    reference.column("users", "firstname"),
+                                    literal.string(" "),
+                                    reference.column("users", "lastname")
+                                }
+                            }
+                        },
+                        orderBy = {
+                            {
+                                type = "order_by_element",
+                                expression = reference.column("users", "age"),
+                                isAscending = false
+                            }
+                        }
+                    }
+            ),
+            "LISTAGG using a given order"
+    )
 end)

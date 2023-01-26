@@ -115,10 +115,10 @@ function AggregateFunctionAppender:_group_concat(f)
         self:_append("DISTINCT ")
     end
     self:_append_comma_separated_arguments(f.arguments)
-    if(f.orderBy) then
+    if f.orderBy then
         SelectAppender._append_order_by(self, f.orderBy)
     end
-    if(f.separator) then
+    if f.separator then
         self:_append(" SEPARATOR ")
         self:_append_string_literal(f.separator)
     end
@@ -128,6 +128,38 @@ end
 AggregateFunctionAppender._grouping = AggregateFunctionAppender._append_simple_function
 AggregateFunctionAppender._grouping_id = AggregateFunctionAppender._grouping
 AggregateFunctionAppender._last_value = AggregateFunctionAppender._append_simple_function
+
+function AggregateFunctionAppender:_listagg(f)
+    self:_append("LISTAGG(")
+    if f.distinct then
+        self:_append("DISTINCT ")
+    end
+    self:_append_expression(f.arguments[1])
+    if f.separator then
+        self:_append(", ")
+        self:_append_expression(f.separator)
+    end
+    self:_append(")")
+    if f.orderBy then
+        self:_append(" WITHIN GROUP (")
+        SelectAppender._append_order_by(self, f.orderBy, true)
+        self:_append(")")
+    end
+    local overflow = f.overflowBehavior
+    if overflow then
+        if overflow.type == "ERROR" then
+            self:_append(" ON OVERFLOW ERROR")
+        elseif overflow.type == "TRUNCATE" then
+            self:_append(" ON OVERFLOW TRUNCATE")
+            if overflow.truncationFiller then
+                self:_append(" ")
+                self:_append_expression(overflow.truncationFiller)
+            end
+            self:_append((overflow.truncationType == "WITH COUNT") and " WITH COUNT" or " WITHOUT COUNT")
+        end
+    end
+end
+
 AggregateFunctionAppender._max = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._median = AggregateFunctionAppender._append_simple_function
 AggregateFunctionAppender._min = AggregateFunctionAppender._append_distinct_function
