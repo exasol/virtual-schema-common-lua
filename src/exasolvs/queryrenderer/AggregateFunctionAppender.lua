@@ -139,12 +139,6 @@ function AggregateFunctionAppender:_listagg(f)
         self:_append(", ")
         self:_append_expression(f.separator)
     end
-    self:_append(")")
-    if f.orderBy then
-        self:_append(" WITHIN GROUP (")
-        SelectAppender._append_order_by(self, f.orderBy, true)
-        self:_append(")")
-    end
     local overflow = f.overflowBehavior
     if overflow then
         if overflow.type == "ERROR" then
@@ -157,6 +151,12 @@ function AggregateFunctionAppender:_listagg(f)
             end
             self:_append((overflow.truncationType == "WITH COUNT") and " WITH COUNT" or " WITHOUT COUNT")
         end
+    end
+    self:_append(")")
+    if f.orderBy then
+        self:_append(" WITHIN GROUP (")
+        SelectAppender._append_order_by(self, f.orderBy, true)
+        self:_append(")")
     end
 end
 

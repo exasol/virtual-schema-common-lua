@@ -127,7 +127,7 @@ describe("RequestDispatcher", function()
         assert.error_contains(call_with_illegal_request_type, "Unknown Virtual Schema request type 'illegal' received.")
     end)
 
-    it("wraps caught errors to log them",function()
+    it("wraps caught errors to log them", function()
         assert.has_error(call_with_illegal_request_type)
         assert.spy(log_mock.fatal).was.called_with(
                 [[F-RQD-1: Unknown Virtual Schema request type 'illegal' received.
