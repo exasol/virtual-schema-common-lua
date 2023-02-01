@@ -1,6 +1,6 @@
-# virtual-schema-common-lua 2.4.0, released 2023-01-??
+# virtual-schema-common-lua 2.4.0, released 2023-02-01
  
-Code name: Boolean Properties
+Code name: Boolean Properties, IS JSON, LISTAGG
  
 ## Summary
 
@@ -17,3 +17,7 @@ The core database does not push the `OVER` clause that makes the main difference
 * #19: Added `LISTAGG` aggregate function rendering
 * #60: Added `IS [NOT] JSON` predicate rendering
 * #63: Added support for boolean Virtual Schema properties
+
+## Bugfixes
+
+* #67: Fixed `LISTAGG` overflow clause

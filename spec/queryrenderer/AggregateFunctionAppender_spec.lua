@@ -181,7 +181,7 @@ describe("AggregateFunctionRenderer", function()
     )
 
     it_asserts(
-            [[LISTAGG("capabilities"."name") ON OVERFLOW ERROR]],
+            [[LISTAGG("capabilities"."name" ON OVERFLOW ERROR)]],
             run_complex_function("LISTAGG",
                     {
                         arguments = {reference.column("capabilities", "name")},
@@ -192,7 +192,7 @@ describe("AggregateFunctionRenderer", function()
     )
 
     it_asserts(
-            [[LISTAGG("capabilities"."name") ON OVERFLOW TRUNCATE WITHOUT COUNT]],
+            [[LISTAGG("capabilities"."name" ON OVERFLOW TRUNCATE WITHOUT COUNT)]],
             run_complex_function("LISTAGG",
                     {
                         arguments = {reference.column("capabilities", "name")},
@@ -203,7 +203,7 @@ describe("AggregateFunctionRenderer", function()
     )
 
     it_asserts(
-            [[LISTAGG("capabilities"."name") ON OVERFLOW TRUNCATE ', etc.' WITHOUT COUNT]],
+            [[LISTAGG("capabilities"."name" ON OVERFLOW TRUNCATE ', etc.' WITHOUT COUNT)]],
             run_complex_function("LISTAGG",
                     {
                         arguments = {reference.column("capabilities", "name")},
@@ -217,7 +217,7 @@ describe("AggregateFunctionRenderer", function()
     )
 
     it_asserts(
-            [[LISTAGG("capabilities"."name") ON OVERFLOW TRUNCATE WITH COUNT]],
+            [[LISTAGG("capabilities"."name" ON OVERFLOW TRUNCATE WITH COUNT)]],
             run_complex_function("LISTAGG",
                     {
                         arguments = {reference.column("capabilities", "name")},
