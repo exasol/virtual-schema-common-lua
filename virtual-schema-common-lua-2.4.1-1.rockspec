@@ -1,6 +1,6 @@
 rockspec_format = "3.0"
 
-local tag = "2.4.0"
+local tag = "2.4.1"
 
 package = "virtual-schema-common-lua"
 version = tag .. "-1"
@@ -22,7 +22,7 @@ description = {
 
 dependencies = {
     "lua >= 5.4, < 5.5",
-    "exaerror >= 2.0.0",
+    "exaerror >= 2.0.3",
     "lua-cjson = 2.1.0", -- pinned to prevent "undefined symbol: lua_objlen" in 2.1.0.6 (https://github.com/mpx/lua-cjson/issues/56)
     "remotelog >= 1.1.1"
 }
@@ -43,6 +43,7 @@ build = {
     modules = {
         ["exasolvs.AdapterProperties"] = "src/exasolvs/AdapterProperties.lua",
         ["exasolvs.AbstractVirtualSchemaAdapter"] = "src/exasolvs/AbstractVirtualSchemaAdapter.lua",
+        ["exasolvs.ImportBuilder"] = "src/exasolvs/ImportBuilder.lua",
         ["exasolvs.Query"] = "src/exasolvs/Query.lua",
         ["exasolvs.QueryRenderer"] = "src/exasolvs/QueryRenderer.lua",
         ["exasolvs.queryrenderer.AbstractQueryAppender"] = "src/exasolvs/queryrenderer/AbstractQueryAppender.lua",
