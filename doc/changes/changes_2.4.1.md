@@ -1,4 +1,4 @@
-# virtual-schema-common-lua 2.4.0, released 2023-03-07
+# virtual-schema-common-lua 2.4.0, released 2023-03-10
  
 Code name: Fixed Rockspec
  
