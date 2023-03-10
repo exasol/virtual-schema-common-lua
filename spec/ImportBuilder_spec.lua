@@ -5,7 +5,7 @@ local ImportBuilder = require("exasolvs.ImportBuilder")
 describe("ImportBuilder", function()
     it("produces IMPORT FROM EXA", function()
         local builder = ImportBuilder:new(ImportBuilder.EXA)
-        assert.are.equal("IMPORT FROM EXA the_connection STATEMENT 'the_statement'",
+        assert.are.equal("IMPORT FROM EXA AT \"the_connection\" STATEMENT 'the_statement'",
                 builder:statement("the_statement"):connection("the_connection"):build()
         )
     end)
@@ -14,7 +14,7 @@ describe("ImportBuilder", function()
         local builder = ImportBuilder:new()
         local originalSql = [[SELECT 'A text that ''already'' contains the quote symbol("''")']]
         local expectedSql = [[SELECT ''A text that ''''already'''' contains the quote symbol("''''")'']]
-        assert.are.equal("IMPORT FROM JDBC another_connection STATEMENT '" .. expectedSql .. "'",
+        assert.are.equal("IMPORT FROM JDBC AT \"another_connection\" STATEMENT '" .. expectedSql .. "'",
                 builder:statement(originalSql):connection("another_connection"):build()
         )
     end)
@@ -22,7 +22,7 @@ describe("ImportBuilder", function()
     it("adds a column type list", function()
         local builder = ImportBuilder:new()
         assert.are.equal("IMPORT INTO (c1 VARCHAR(40), c2 BOOLEAN, c3 DATE) "
-                .. "FROM JDBC yet_another_connection STATEMENT "
+                .. "FROM JDBC AT \"yet_another_connection\" STATEMENT "
                 .. "'SELECT VALID, LAST_CHECKED FROM CHECKS ORDER BY LAST_CHECKED DESC LIMIT 10'",
                 builder:statement("SELECT VALID, LAST_CHECKED FROM CHECKS ORDER BY LAST_CHECKED DESC LIMIT 10")
                         :connection("yet_another_connection")

@@ -63,8 +63,9 @@ busted spec/QueryRenderer_spec.lua
 If you want to run all unit tests including code coverage and static code analysis, issue the following command:
 
 ```bash
-tools/runtests.sh
+luarocks test
 ```
+
 ### Understanding the Sources
 
 Under [doc/model](../model) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
@@ -84,6 +85,20 @@ Since the model contains all important information, here just a very short summa
 1. In your concrete Virtual Schema implementation you need to write an `entry` module, that has an `adapter_call` entry function
 1. The `entry` module should create and wire up all static objects (like the `RequestDispatcher` for example)
 1. Use the `remotelog` package for logging
+
+#### `ImportBuilder`
+
+The [`ImportBuilder`](../../src/exasolvs/ImportBuilder.lua) is a class that can wrap a SQL query into an Exasol [`IMPORT`](https://docs.exasol.com/db/latest/sql/import.htm) statement. This is very handy for attaching to external databases that have a JDBC interface, because the ExaLoader supports importing from foreign DBMSes.
+
+Example:
+
+```lua
+local import = ImportBuilder:new("EXA")
+        :statement("SELECT NAME, CORNERS FROM SHAPES")
+        :connection("POSTGRES_CONNECTION")
+        :column_types("VARCHAR(40)", "INTEGER")
+        :build()
+```
 
 ### Running the Unit Tests From Intellij IDEA
 

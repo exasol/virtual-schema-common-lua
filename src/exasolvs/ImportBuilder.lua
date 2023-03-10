@@ -8,7 +8,6 @@ local ImportBuilder = {
 }
 ImportBuilder.__index = ImportBuilder
 
-
 local function _raise_illegal_type_error(type)
         ExaError:new("E-VSCL-9", "Got unknown import type {{type}} trying to create IMPORT statement.",
                 {type = {value = type,
@@ -88,9 +87,9 @@ function ImportBuilder:build()
     end
     table.insert(parts, " FROM ")
     table.insert(parts, self._type)
-    table.insert(parts, " ")
+    table.insert(parts, " AT \"")
     table.insert(parts, self._connection)
-    table.insert(parts, " STATEMENT '")
+    table.insert(parts, "\" STATEMENT '")
     local escaped_statement <const> = get_statement_with_escaped_quotes(self._statement)
     table.insert(parts, escaped_statement)
     table.insert(parts, "'")

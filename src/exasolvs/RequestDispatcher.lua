@@ -62,7 +62,6 @@ function RequestDispatcher:_handle_request(request, properties)
 end
 
 local function log_error(message)
-    log.debug("Error handler called")
     local error_type = string.sub(message, 1, 2)
     if error_type == "F-" then
         log.fatal(message)
