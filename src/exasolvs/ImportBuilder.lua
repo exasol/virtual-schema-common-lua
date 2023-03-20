@@ -54,10 +54,10 @@ end
 --- Set the column types that the imported result set should have in Exasol.
 -- When column types are explicitly specified, the ExaLoader will respect them instead of trying to determine them
 -- itself.
--- @param ... list of column types
+-- @param types list of column types
 -- @return `self` for fluent programming
-function ImportBuilder:column_types(...)
-    self._column_types = {...}
+function ImportBuilder:column_types(types)
+    self._column_types = types
     return self
 end
 

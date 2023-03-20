@@ -26,10 +26,23 @@ describe("ImportBuilder", function()
                 .. "'SELECT VALID, LAST_CHECKED FROM CHECKS ORDER BY LAST_CHECKED DESC LIMIT 10'",
                 builder:statement("SELECT VALID, LAST_CHECKED FROM CHECKS ORDER BY LAST_CHECKED DESC LIMIT 10")
                         :connection("yet_another_connection")
-                        :column_types("VARCHAR(40)", "BOOLEAN", "DATE")
+                        :column_types({"VARCHAR(40)", "BOOLEAN", "DATE"})
                         :build()
         )
     end)
+
+    it("nil in column type list does not produce INTO clause", function()
+        assert.are.equal("IMPORT FROM JDBC AT \"con1\" STATEMENT 'SELECT C1 FROM T'",
+                ImportBuilder:new():statement("SELECT C1 FROM T"):connection("con1"):column_types(nil):build()
+        )
+    end)
+
+    it("empty column type list does not produce INTO clause", function()
+        assert.are.equal("IMPORT FROM JDBC AT \"con1\" STATEMENT 'SELECT C1 FROM T'",
+                ImportBuilder:new():statement("SELECT C1 FROM T"):connection("con1"):column_types({}):build()
+        )
+    end)
+
 
     it("uses JDBC as default import type", function()
         assert.are.equal("JDBC", ImportBuilder:new()._type)
