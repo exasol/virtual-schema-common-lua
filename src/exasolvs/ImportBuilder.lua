@@ -72,7 +72,21 @@ end
 function ImportBuilder:build()
     self:_validate()
     local parts = {"IMPORT"}
-    if self._column_types then
+    self:_build_into_clause(parts)
+    table.insert(parts, " FROM ")
+    table.insert(parts, self._type)
+    table.insert(parts, " AT \"")
+    table.insert(parts, self._connection)
+    table.insert(parts, "\" STATEMENT '")
+    local escaped_statement <const> = get_statement_with_escaped_quotes(self._statement)
+    table.insert(parts, escaped_statement)
+    table.insert(parts, "'")
+    return table.concat(parts)
+end
+
+function ImportBuilder:_build_into_clause(parts)
+    local types = self._column_types
+    if (types ~= nil) and (next(types) ~= nil)  then
         table.insert(parts, " INTO (")
         for i, type in ipairs(self._column_types) do
             if i > 1 then
@@ -85,15 +99,6 @@ function ImportBuilder:build()
         end
         table.insert(parts, ")")
     end
-    table.insert(parts, " FROM ")
-    table.insert(parts, self._type)
-    table.insert(parts, " AT \"")
-    table.insert(parts, self._connection)
-    table.insert(parts, "\" STATEMENT '")
-    local escaped_statement <const> = get_statement_with_escaped_quotes(self._statement)
-    table.insert(parts, escaped_statement)
-    table.insert(parts, "'")
-    return table.concat(parts)
 end
 
 function ImportBuilder:_validate()
