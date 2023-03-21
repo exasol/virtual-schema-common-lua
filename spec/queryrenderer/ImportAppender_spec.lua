@@ -9,8 +9,7 @@ end
 
 describe("ImportAppender", function()
     it("renders minimal IMPORT", function()
-        local original_query =
-        {
+        local original_query = {
             type = "import",
             connection = "CON1",
             statement = {
@@ -22,8 +21,7 @@ describe("ImportAppender", function()
     end)
 
     it("renders an IMPORT with select list data types", function()
-        local original_query =
-        {
+        local original_query = {
             type = "import",
             connection = "CON1",
             statement = {
@@ -40,8 +38,7 @@ describe("ImportAppender", function()
     end)
 
     it("renders an IMPORT with escaped quotes", function()
-        local original_query =
-        {
+        local original_query = {
             type = "import",
             connection = "CON1",
             statement = {
