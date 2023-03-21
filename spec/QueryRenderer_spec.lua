@@ -33,4 +33,21 @@ describe("QueryRenderer", function()
         })
         assert.are.equals('SELECT APPROXIMATE_COUNT_DISTINCT("T2"."C1") FROM "T2"', renderer:render())
     end)
+
+    it("renders a query wrapped into an IMPORT", function()
+        local renderer = QueryRenderer:new({
+            type = "import",
+            connection = "CON_A",
+            statement = {
+                type = "select",
+                selectList = {
+                    {
+                        type = "literal_string",
+                        value = "hello"
+                    }
+                }
+            }
+        })
+        assert.are.equals([[IMPORT FROM EXA AT "CON_A" STATEMENT 'SELECT ''hello''']], renderer:render())
+    end)
 end)

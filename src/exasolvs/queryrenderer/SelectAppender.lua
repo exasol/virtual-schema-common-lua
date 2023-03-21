@@ -3,7 +3,7 @@ local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppen
 local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
 
 --- Appender that can add top-level elements of a `SELECT` statement (or sub-select).
--- @classmod SubQueryAppender
+-- @classmod SelectAppender
 local SelectAppender = {}
 SelectAppender.__index = SelectAppender
 setmetatable(SelectAppender, {__index = AbstractQueryRenderer})
@@ -27,7 +27,7 @@ function SelectAppender:new(out_query)
 end
 
 function SelectAppender:_init(out_query)
-    AbstractQueryRenderer:_init(out_query)
+    AbstractQueryRenderer._init(self, out_query)
 end
 
 function SelectAppender:_append_select_list_elements(select_list)

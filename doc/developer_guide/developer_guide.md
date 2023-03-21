@@ -86,18 +86,24 @@ Since the model contains all important information, here just a very short summa
 1. The `entry` module should create and wire up all static objects (like the `RequestDispatcher` for example)
 1. Use the `remotelog` package for logging
 
-#### `ImportBuilder`
+#### Wrapping the Push-down Query into an Import
 
-The [`ImportBuilder`](../../src/exasolvs/ImportBuilder.lua) is a class that can wrap a SQL query into an Exasol [`IMPORT`](https://docs.exasol.com/db/latest/sql/import.htm) statement. This is very handy for attaching to external databases that have a JDBC interface, because the ExaLoader supports importing from foreign DBMSes.
+Virtual Schemas often use the ExaLoader to get the data from the remote data source. To use the ExaLoader, you need an `IMPORT` statement.
 
-Example:
+The original push-down query is a `SELECT` and the `IMPORT` must wrap that `SELECT` after rewriting it.
 
 ```lua
-local import = ImportBuilder:new("EXA")
-        :statement("SELECT NAME, CORNERS FROM SHAPES")
-        :connection("POSTGRES_CONNECTION")
-        :column_types("VARCHAR(40)", "INTEGER")
-        :build()
+ImportQueryBuilder:new()
+       :connection("my_connection")
+       :statement({
+            type = "select"
+            -- ... rest of the push-down query
+        })
+       :column_types({
+            {type = "VARCHAR", size = 80},
+            {type = "BOOLEAN"}
+        })
+       :build()
 ```
 
 ### Running the Unit Tests From Intellij IDEA
