@@ -4,7 +4,7 @@ local ImportQueryBuilder = {}
 ImportQueryBuilder.__index = ImportQueryBuilder
 
 --- Create a new instance of an `ImportQueryBuilder`.
--- return new instance
+-- @return new instance
 function ImportQueryBuilder:new()
     local instance = setmetatable({}, self)
     instance:_init()
@@ -16,7 +16,7 @@ function ImportQueryBuilder:_init()
 end
 
 --- Set the result set column data types.
--- @data data types as list of data type structures
+-- @param column_types column types as list of data type structures
 -- @return self for fluent programming
 function ImportQueryBuilder:column_types(column_types)
     self._column_types = column_types
