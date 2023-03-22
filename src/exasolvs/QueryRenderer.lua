@@ -1,5 +1,6 @@
 local Query = require("exasolvs.Query")
 local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
+local ImportAppender = require("exasolvs.queryrenderer.ImportAppender")
 
 --- Renderer for SQL queries.
 -- @classmod QueryRenderer
@@ -23,7 +24,10 @@ end
 -- @return query as string
 function QueryRenderer:render()
     local out_query = Query:new()
-    SelectAppender:new(out_query):append(self.original_query)
+    local appender = (self.original_query.type == "import")
+            and ImportAppender:new(out_query)
+            or SelectAppender:new(out_query)
+    appender:append(self.original_query)
     return out_query:to_string()
 end
 

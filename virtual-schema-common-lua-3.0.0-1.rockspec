@@ -1,6 +1,6 @@
 rockspec_format = "3.0"
 
-local tag = "2.4.1"
+local tag = "3.0.0"
 
 package = "virtual-schema-common-lua"
 version = tag .. "-1"
@@ -43,7 +43,7 @@ build = {
     modules = {
         ["exasolvs.AdapterProperties"] = "src/exasolvs/AdapterProperties.lua",
         ["exasolvs.AbstractVirtualSchemaAdapter"] = "src/exasolvs/AbstractVirtualSchemaAdapter.lua",
-        ["exasolvs.ImportBuilder"] = "src/exasolvs/ImportBuilder.lua",
+        ["exasolvs.ImportQueryBuilder"] = "src/exasolvs/ImportQueryBuilder.lua",
         ["exasolvs.Query"] = "src/exasolvs/Query.lua",
         ["exasolvs.QueryRenderer"] = "src/exasolvs/QueryRenderer.lua",
         ["exasolvs.queryrenderer.AbstractQueryAppender"] = "src/exasolvs/queryrenderer/AbstractQueryAppender.lua",
@@ -51,6 +51,7 @@ build = {
         ["exasolvs.queryrenderer.ScalarFunctionAppender"] = "src/exasolvs/queryrenderer/ScalarFunctionAppender.lua",
         ["exasolvs.queryrenderer.AggregateFunctionAppender"] = "src/exasolvs/queryrenderer/AggregateFunctionAppender.lua",
         ["exasolvs.queryrenderer.SelectAppender"] = "src/exasolvs/queryrenderer/SelectAppender.lua",
+        ["exasolvs.queryrenderer.ImportAppender"] = "src/exasolvs/queryrenderer/ImportAppender.lua",
         ["exasolvs.RequestDispatcher"] = "src/exasolvs/RequestDispatcher.lua",
         ["text"] = "src/text.lua"
     },
