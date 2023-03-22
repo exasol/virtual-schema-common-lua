@@ -36,6 +36,7 @@ function ImportAppender:_append_connection(connection)
 end
 
 --- Get the statement with extra-quotes where necessary as it will be embedded into the IMPORT statement.
+-- @param statement statement for which to escape quotes
 -- @return statement with escaped single quotes
 local function get_statement_with_escaped_quotes(statement)
     local statement_out_query = Query:new()
@@ -53,7 +54,7 @@ end
 
 function ImportAppender:_append_into_clause(into)
     if (into ~= nil) and (next(into) ~= nil) then
-    self:_append(" INTO (")
+        self:_append(" INTO (")
         for i, data_type in ipairs(into) do
             self:_comma(i)
             self:_append("c")
