@@ -7,7 +7,7 @@ local MAX_IDENTIFIER_LENGTH <const> = 128
 
 local function validate_identifier_not_nil(id, id_type)
     if id == nil then
-        ExaError:new("E-EVSL-VAL-5", "Identifier cannot be null (or Lua nil): {{id_type|u}} name",
+        ExaError:new("E-EVSCL-VAL-5", "Identifier cannot be null (or Lua nil): {{id_type|u}} name",
                 {
                     id_type = {value = id_type, description = "type of database object which should be identified"},
                 }
@@ -18,7 +18,7 @@ end
 local function validate_identifier_length(id, id_type)
     local length = utf8.len(id)
     if length > MAX_IDENTIFIER_LENGTH then
-        ExaError:new("E-EVSL-VAL-4", "Identifier too long: {{id_type|u}} name with {{length}} characters.",
+        ExaError:new("E-EVSCL-VAL-4", "Identifier too long: {{id_type|u}} name with {{length}} characters.",
                 {
                     id_type = {value = id_type, description = "type of database object which should be identified"},
                     length = {value = length, description = "actual length of the identifier"}
@@ -85,7 +85,7 @@ local function validate_identifier_characters(id, id_type)
         if (position == 1 and not is_valid_first_identifier_character(char))
                 or (not is_valid_followup_identifier_character(char))
         then
-            ExaError:new("E-EVSL-VAL-3", "Invalid character in {{id_type|u}} name at position {{position}}: {{id}}",
+            ExaError:new("E-EVSCL-VAL-3", "Invalid character in {{id_type|u}} name at position {{position}}: {{id}}",
                     {
                         id_type = {value = id_type, description = "type of database object which should be identified"},
                         position = {value = position, description = "position of the first illegal character in identifier"},
@@ -112,13 +112,13 @@ end
 function validator.validate_port(port_string)
     local port = tonumber(port_string)
     if port == nil then
-        ExaError:new("E-EVSL-VAL-1", "Illegal source database port (not a number): {{port}}",
+        ExaError:new("E-EVSCL-VAL-1", "Illegal source database port (not a number): {{port}}",
                 {port = {value = port_string, "number of the port the source database listens on"}})
                 :add_mitigations("Please enter a number between 1 and 65535")
                 :raise()
     else
         if (port < 1) or (port > 65535) then
-            ExaError:new("E-EVSL-VAL-2", "Source database port is out of range: {{port}}",
+            ExaError:new("E-EVSCL-VAL-2", "Source database port is out of range: {{port}}",
                     {port = {value = port, "number of the port the source database listens on"}})
                     :add_mitigations("Please pick a port between 1 and 65535", "The default Exasol port is 8563")
                     :raise()
