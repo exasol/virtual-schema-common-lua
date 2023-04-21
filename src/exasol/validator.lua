@@ -2,7 +2,8 @@ local ExaError = require("ExaError")
 
 local validator = {}
 
-local SQL_IDENTIFIER_DOC_URL <const> = "https://docs.exasol.com/db/latest/sql_references/basiclanguageelements.htm#SQLIdentifier"
+local SQL_IDENTIFIER_DOC_URL <const> =
+        "https://docs.exasol.com/db/latest/sql_references/basiclanguageelements.htm#SQLIdentifier"
 local MAX_IDENTIFIER_LENGTH <const> = 128
 
 local function validate_identifier_not_nil(id, id_type)
@@ -88,7 +89,10 @@ local function validate_identifier_characters(id, id_type)
             ExaError:new("E-EVSCL-VAL-3", "Invalid character in {{id_type|u}} name at position {{position}}: {{id}}",
                     {
                         id_type = {value = id_type, description = "type of database object which should be identified"},
-                        position = {value = position, description = "position of the first illegal character in identifier"},
+                        position = {
+                            value = position,
+                            description = "position of the first illegal character in identifier"
+                        },
                         id = {value = id, description = "value of the object identifier"}
                     })
                     :add_mitigations("Please note that " .. id_type .." names are SQL identifiers. Refer to "
