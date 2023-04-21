@@ -3,7 +3,7 @@ require("busted.runner")()
 require("assertions.assertions")
 local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")
 local AdapterProperties = require("exasolvs.AdapterProperties")
-local adapter_stub = require("adapter_stub")
+local adapter_stub = require("exasolvs.adapter_stub")
 
 describe("Stubbed AbstractVirtualSchemaAdapter", function()
     it("reports all supported capabilities", function()

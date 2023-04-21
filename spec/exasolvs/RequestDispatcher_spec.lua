@@ -5,7 +5,7 @@ package.preload["remotelog"] = function () return log_mock end
 require("assertions.assertions")
 local RequestDispatcher = require("exasolvs.RequestDispatcher")
 local AdapterProperties = require("exasolvs.AdapterProperties")
-local adapater_stub = require("adapter_stub")
+local adapater_stub = require("exasolvs.adapter_stub")
 
 local function stub_adapter()
     return adapater_stub.create({
