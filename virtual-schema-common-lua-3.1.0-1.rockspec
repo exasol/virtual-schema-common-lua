@@ -1,6 +1,6 @@
 rockspec_format = "3.0"
 
-local tag = "3.0.0"
+local tag = "3.1.0"
 
 package = "virtual-schema-common-lua"
 version = tag .. "-1"
@@ -41,6 +41,7 @@ test = {
 build = {
     type = "builtin",
     modules = {
+        ["exasol.validator"] = "src/exasol/validator.lua",
         ["exasolvs.AdapterProperties"] = "src/exasolvs/AdapterProperties.lua",
         ["exasolvs.AbstractVirtualSchemaAdapter"] = "src/exasolvs/AbstractVirtualSchemaAdapter.lua",
         ["exasolvs.ImportQueryBuilder"] = "src/exasolvs/ImportQueryBuilder.lua",
