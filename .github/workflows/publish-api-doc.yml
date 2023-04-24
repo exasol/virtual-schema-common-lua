@@ -31,7 +31,7 @@ jobs:
 
       - name: Generate API documentation
         run: |
-          ./tools/build-docs.sh
+          ./tools/build_docs.sh
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
