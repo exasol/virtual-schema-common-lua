@@ -2,10 +2,10 @@
 -- @classmod AggregateFunctionAppender
 local AggregateFunctionAppender = {}
 AggregateFunctionAppender.__index = AggregateFunctionAppender
+local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
 setmetatable(AggregateFunctionAppender, {__index = AbstractQueryAppender})
 
 local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
-local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
 local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
 local ExaError = require("ExaError")
 
