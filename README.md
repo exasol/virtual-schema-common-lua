@@ -11,7 +11,7 @@ Because it is blazingly fast. Exasol has a built-in Lua interpreter for scriptin
 Users are developers including this library into their VS and using the API.
 
 * [User Guide](doc/user_guide/user_guide.md)
-* [API Documentation](https://exasol.github.io/exasol-driver-lua/api/)
+* [API Documentation](https://exasol.github.io/virtual-schema-common-lua/api/)
 * [Change Log](doc/changes/changelog.md)
 * [MIT License](LICENSE)
 
