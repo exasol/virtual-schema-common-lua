@@ -40,7 +40,7 @@ jobs:
           name: luacov-report
           path: target/luacov-reports/*
       - name: Build API documentation
-        run: ./tools/build-docs.sh
+        run: ./tools/build_docs.sh
       - name: Upload API documentation
         uses: actions/upload-artifact@v3
         with:
