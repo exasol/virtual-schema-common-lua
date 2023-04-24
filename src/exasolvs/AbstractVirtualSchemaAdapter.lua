@@ -1,11 +1,12 @@
 --- This class implements an abstract base adapter with common behavior for some of the request callback functions.
--- @classmod AbstractVirtualSchemaAdapter
 --
 -- When you derive a concrete adapter from this base class, we recommend keeping it stateless. This makes
 -- parallelization easier, reduces complexity and saves you the trouble of cleaning up in the drop-virtual-schema
 -- request.
 --
 -- [impl -> dsn~lua-virtual-schema-adapter-abstraction~0]
+--
+-- @classmod AbstractVirtualSchemaAdapter
 local AbstractVirtualSchemaAdapter = {}
 
 local ExaError = require("ExaError")
