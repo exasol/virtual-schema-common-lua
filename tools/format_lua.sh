@@ -23,4 +23,4 @@ lua-format --config="$base_dir/.lua-format" --column-limit=75 --verbose --in-pla
 
 unset GLOBIGNORE
 
-"$base_dir/tools/runluacheck.sh"
+"$base_dir/tools/run_luacheck.sh"
