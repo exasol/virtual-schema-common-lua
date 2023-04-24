@@ -1,13 +1,13 @@
-local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
-local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
-local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
-local ExaError = require("ExaError")
-
 --- Appender for aggregate functions in an SQL statement.
 -- @classmod AggregateFunctionAppender
 local AggregateFunctionAppender = {}
 AggregateFunctionAppender.__index = AggregateFunctionAppender
 setmetatable(AggregateFunctionAppender, {__index = AbstractQueryAppender})
+
+local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
+local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
+local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
+local ExaError = require("ExaError")
 
 --- Create a new instance of a `AggregateFunctionAppender`.
 -- @param out_query query to which the function will be appended

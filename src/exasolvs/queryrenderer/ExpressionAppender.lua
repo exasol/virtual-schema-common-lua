@@ -1,12 +1,12 @@
-local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
-local text = require("text")
-local ExaError = require("ExaError")
-
 --- Appender for value expressions in a SQL query.
 -- @classmod ExpressionAppender
 local ExpressionAppender = {}
 ExpressionAppender.__index = ExpressionAppender
+local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
 setmetatable(ExpressionAppender, {__index = AbstractQueryAppender})
+
+local text = require("text")
+local ExaError = require("ExaError")
 
 local OPERATORS <const> = {
     predicate_equal = "=", predicate_notequal = "<>", predicate_less = "<", predicate_greater = ">",

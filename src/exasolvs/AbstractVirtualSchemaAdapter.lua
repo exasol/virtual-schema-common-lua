@@ -1,5 +1,3 @@
-local ExaError = require("ExaError")
-
 --- This class implements an abstract base adapter with common behavior for some of the request callback functions.
 -- @classmod AbstractVirtualSchemaAdapter
 --
@@ -9,6 +7,8 @@ local ExaError = require("ExaError")
 --
 -- [impl -> dsn~lua-virtual-schema-adapter-abstraction~0]
 local AbstractVirtualSchemaAdapter = {}
+
+local ExaError = require("ExaError")
 
 function AbstractVirtualSchemaAdapter:_init()
     -- Intentionally empty
@@ -67,7 +67,7 @@ end
 -- @param _ virtual schema request
 -- @param _ user-defined properties
 -- @return same response as if you created a new Virtual Schema
-function AbstractVirtualSchemaAdapter:refresh(_)
+function AbstractVirtualSchemaAdapter:refresh(_, _)
     raise_abstract_method_call_error("refresh")
 end
 

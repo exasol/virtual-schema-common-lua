@@ -1,12 +1,12 @@
-local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppender")
-local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
-local Query = require("exasolvs.Query")
-
 --- Appender that can add top-level elements of a `SELECT` statement (or sub-select).
 -- @classmod ImportAppender
 local ImportAppender = {}
 ImportAppender.__index = ImportAppender
+local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppender")
 setmetatable(ImportAppender, {__index = AbstractQueryRenderer})
+
+local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
+local Query = require("exasolvs.Query")
 
 --- Create a new query renderer.
 -- @param out_query query structure as provided through the Virtual Schema API

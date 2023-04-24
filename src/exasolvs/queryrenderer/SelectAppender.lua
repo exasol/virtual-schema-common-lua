@@ -1,12 +1,12 @@
-local ExaError = require("ExaError")
-local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppender")
-local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
-
 --- Appender that can add top-level elements of a `SELECT` statement (or sub-select).
 -- @classmod SelectAppender
 local SelectAppender = {}
 SelectAppender.__index = SelectAppender
+local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppender")
 setmetatable(SelectAppender, {__index = AbstractQueryRenderer})
+
+local ExaError = require("ExaError")
+local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
 
 local JOIN_TYPES<const> = {inner = "INNER", left_outer = "LEFT OUTER", right_outer = "RIGHT OUTER",
                            full_outer = "FULL OUTER"}

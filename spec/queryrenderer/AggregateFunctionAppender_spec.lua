@@ -231,7 +231,8 @@ describe("AggregateFunctionRenderer", function()
     )
 
     it_asserts(
-            [[LISTAGG(CONCAT("users"."firstname", ' ', "users"."lastname")) WITHIN GROUP (ORDER BY "users"."age" DESC)]],
+            [[LISTAGG(CONCAT("users"."firstname", ' ', "users"."lastname"))]]
+                    .. [[ WITHIN GROUP (ORDER BY "users"."age" DESC)]],
             run_complex_function("LISTAGG",
                     {
                         arguments = {
