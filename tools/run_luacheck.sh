@@ -13,7 +13,6 @@ readonly ignores="--ignore 212"
 readonly src_module_path="$base_dir/src"
 readonly test_module_path="$base_dir/spec"
 
-luacheck "$src_module_path" --max-line-length 120 --codes \
---exclude-files src/luasql/exasol/luws.lua src/luasql/exasol/base64.lua $ignores
+luacheck "$src_module_path" --max-line-length 120 --codes $ignores
 
 luacheck "$test_module_path" --max-line-length 120 --codes

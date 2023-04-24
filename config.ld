@@ -8,7 +8,6 @@ Please visit the [project homepage on GitHub](https://github.com/exasol/virtual-
 ]]
 title = "Reference"
 file = {"./src/"}
---examples = {"./doc/user_guide/examples.lua"}
 package = "."
 format = "markdown"
 output = "index"
