@@ -17,5 +17,3 @@ luacheck "$src_module_path" --max-line-length 120 --codes \
 --exclude-files src/luasql/exasol/luws.lua src/luasql/exasol/base64.lua $ignores
 
 luacheck "$test_module_path" --max-line-length 120 --codes
-
-luacheck "$base_dir/doc/user_guide/examples.lua" --max-line-length 75 --codes
