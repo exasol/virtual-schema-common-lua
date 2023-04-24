@@ -1,9 +1,9 @@
-local ExaError = require("ExaError")
-
 --- This class is the abstract base class of all query renderers.
 -- It takes care of handling the temporary storage of the query to be constructed.
 -- @classmod AbstractQueryRenderer
 local AbstractQueryAppender = {}
+
+local ExaError = require("ExaError")
 
 function AbstractQueryAppender:_init(out_query)
     self._out_query = out_query
@@ -125,7 +125,7 @@ function AbstractQueryAppender:_append_data_type(data_type)
 end
 
 --- Append a string literal and enclose it in single quotes
--- @param string literal
+-- @param literal string literal
 function AbstractQueryAppender:_append_string_literal(literal)
     self:_append("'")
     self:_append(literal)

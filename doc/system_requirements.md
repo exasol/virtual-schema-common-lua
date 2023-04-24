@@ -1,5 +1,3 @@
-<head><link href="oft_spec.css" rel="stylesheet"></head>
-
 # System Requirement Specification &mdash; Virtual Schema Common Lua
 
 ## Introduction
@@ -71,7 +69,7 @@ VSCJ offers an object-oriented Lua interface for a Virtual Schema adapters.
 
 Rationale:
 
-This is a more convenient starting point for Software Developers who want to implement their own then having to work directly on the Virtual Schema API provided by the Exasol core database.
+This is a more convenient starting point for Software Developers who want to implement their own than having to work directly on the Virtual Schema API provided by the Exasol core database.
 
 Covers:
 
@@ -83,7 +81,7 @@ Needs: dsn
 
 The Virtual Schema API offered by the Exasol core database uses a request-response mechanism. Without abstraction users have to provide a central callback function, and parse the JSON based format used to exchange data with the core.
 
-VSCL abstracts this, so that Software Developers don't have to do it themselves. Instead they implement an adapter that must offer a predefined interface.
+VSCL abstracts this, so that Software Developers don't have to do it themselves. Instead, they implement an adapter that must offer a predefined interface.
 
 #### Translating JSON Requests to Lua Tables
 `req~translating-json-request-to-lua-tables~1`
@@ -120,14 +118,16 @@ Needs: dsn
 
 VSCL supports merging a set of changed properties into a set of existing properties:
 
-1. If there is no match for a old property in the set of new properties, the old value remains unchanged in the merge product
+1. If there is no match for an old property in the set of new properties, the old value remains unchanged in the merge product
 2. If a new property has a new non-null value, the property in the merge product has the new value
 3. If there is no match for a new property in the set of old properties, the new property is added to the merge product
 4. If a new property contains a null value, that property does not appear in the merge product
 
 Rationale:
 
-In the [`SET PROPERTIES` request](#dispatching-set-properties-requests), the Virtual Schema API provides both current and new (added / modified / unset) properties. To avoid code duplication, VSCL supports merging the new properties with the current ones. 
+In the [`SET PROPERTIES` request](#dispatching-set-properties-requests), the Virtual Schema API provides both current and new (added / modified / unset) properties. To avoid code duplication, VSCL supports merging the new properties with the current ones.
+
+Needs: dsn
 
 #### Request Dispatching
 

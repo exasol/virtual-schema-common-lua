@@ -1,12 +1,12 @@
-local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
-local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
-local ExaError = require("ExaError")
-
 --- Appender for scalar functions in an SQL statement.
 -- @classmod ScalarFunctionAppender
 local ScalarFunctionAppender = {}
 ScalarFunctionAppender.__index = ScalarFunctionAppender
+local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
 setmetatable(ScalarFunctionAppender, {__index = AbstractQueryAppender})
+
+local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
+local ExaError = require("ExaError")
 
 --- Create a new instance of a `ScalarFunctionAppender`.
 -- @param out_query query to which the function will be appended

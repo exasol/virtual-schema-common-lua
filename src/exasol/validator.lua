@@ -1,3 +1,5 @@
+--- Validators for common input such as user names or port numbers.
+-- @module exasol.validator
 local ExaError = require("ExaError")
 
 local validator = {}

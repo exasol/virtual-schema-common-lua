@@ -1,7 +1,3 @@
-local log = require("remotelog")
-local cjson = require("cjson")
-local ExaError = require("ExaError")
-
 --- This class dispatches Virtual Schema requests to a Virtual Schema adapter.
 -- It is independent of the use case of the VS adapter and offers functionality that each Virtual Schema needs, like
 -- JSON decoding and encoding and setting up remote logging.
@@ -10,6 +6,10 @@ local ExaError = require("ExaError")
 local RequestDispatcher = {}
 RequestDispatcher.__index = RequestDispatcher
 local TRUNCATE_ERRORS_AFTER <const> = 3000
+
+local log = require("remotelog")
+local cjson = require("cjson")
+local ExaError = require("ExaError")
 
 --- Create a new `RequestDispatcher`.
 -- @param adapter adapter that receives the dispatched requests

@@ -1,10 +1,10 @@
-local text = require("text")
-local ExaError = require("ExaError")
-
 --- This class abstracts access to the user-defined properties of the Virtual Schema.
 -- @classmod AdapterProperties
 local AdapterProperties = {null = {}}
 AdapterProperties.__index = AdapterProperties
+
+local text = require("text")
+local ExaError = require("ExaError")
 
 local EXCLUDED_CAPABILITIES_PROPERTY <const> = "EXCLUDED_CAPABILITIES"
 local LOG_LEVEL_PROPERTY <const> = "LOG_LEVEL"
@@ -192,6 +192,7 @@ end
 --- Merge new properties into a set of existing ones
 -- @param new_properties set of new properties to merge into the existing ones
 -- @return merge product
+-- [impl -> dsn~merging-user-defined-properties~0]
 function AdapterProperties:merge(new_properties)
     local merged_list = {}
     for key, value in pairs(new_properties._raw_properties) do

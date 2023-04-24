@@ -7,6 +7,9 @@ return {
   default = {
     verbose = true
   },
+  ci = {
+    coverage = true,
+  },
   utest = {
     tags = "utest",
     ROOT = {"spec"},

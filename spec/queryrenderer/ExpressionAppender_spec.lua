@@ -6,7 +6,7 @@ local literal = require("queryrenderer.literal_constructors")
 local reference = require("queryrenderer.reference_constructors")
 local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
 
-function assert_expression_yields (expression, expected)
+local function assert_expression_yields(expression, expected)
     assert.append_yields(ExpressionAppender, expected, expression)
 end
 
