@@ -7,6 +7,11 @@ return {
   default = {
     verbose = true
   },
+  ci = {
+    coverage = true,
+    --output = "junit",
+    --Xoutput = "target/test-reports/test-report.xml"
+  },
   utest = {
     tags = "utest",
     ROOT = {"spec"},
