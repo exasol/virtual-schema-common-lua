@@ -2,10 +2,10 @@
 -- @classmod ExpressionAppender
 local ExpressionAppender = {}
 ExpressionAppender.__index = ExpressionAppender
-local AbstractQueryAppender = require("exasol.vsclqueryrenderer.AbstractQueryAppender")
+local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
 setmetatable(ExpressionAppender, {__index = AbstractQueryAppender})
 
-local text = require("text")
+local text = require("exasol.vscl.text")
 local ExaError = require("ExaError")
 
 local OPERATORS <const> = {
@@ -51,7 +51,7 @@ end
 
 function ExpressionAppender:_append_exists(sub_select)
     self:_append("EXISTS(")
-    require("exasol.vsclqueryrenderer.SelectAppender"):new(self._out_query):append_select(sub_select.query)
+    require("exasol.vscl.queryrenderer.SelectAppender"):new(self._out_query):append_select(sub_select.query)
     self:_append(")")
 end
 
@@ -224,13 +224,13 @@ function ExpressionAppender:append_expression(expression)
         self:_append_quoted_literal_expression(expression)
         self:_append_interval(expression.dataType)
     elseif text.starts_with(type, "function_scalar") then
-        require("exasol.vsclqueryrenderer.ScalarFunctionAppender"):new(self._out_query):append(expression)
+        require("exasol.vscl.queryrenderer.ScalarFunctionAppender"):new(self._out_query):append(expression)
     elseif text.starts_with(type, "function_aggregate") then
-        require("exasol.vsclqueryrenderer.AggregateFunctionAppender"):new(self._out_query):append(expression)
+        require("exasol.vscl.queryrenderer.AggregateFunctionAppender"):new(self._out_query):append(expression)
     elseif text.starts_with(type, "predicate_") then
         self:append_predicate(expression)
     elseif type == "sub_select" then
-        require("exasol.vsclqueryrenderer.SelectAppender"):new(self._out_query):append_sub_select(expression)
+        require("exasol.vscl.queryrenderer.SelectAppender"):new(self._out_query):append_sub_select(expression)
     else
         ExaError:new("E-VSCL-1", "Unable to render unknown SQL expression type {{type}}.",
             {type = {value = expression.type, description = "expression type provided"}}

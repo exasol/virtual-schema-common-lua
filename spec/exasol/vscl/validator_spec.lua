@@ -1,7 +1,6 @@
-package.path = "src/main/lua/?.lua;" .. package.path
 require("busted.runner")()
 
-local validator = require("exasol.validator")
+local validator = require("exasol.vscl.validator")
 describe("validator", function()
     describe("allow compliant user (in place of all database object IDs)", function()
         for _, id in ipairs({"a", "a1", "a1A", "a_1", "a__", "A", "Aa", "A·", "B·b", "C·_·c_·"}) do

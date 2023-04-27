@@ -1,11 +1,10 @@
-package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 local log_mock = mock(require("remotelog"), true)
 package.preload["remotelog"] = function () return log_mock end
 require("assertions.assertions")
-local RequestDispatcher = require("exasol.vsclRequestDispatcher")
-local AdapterProperties = require("exasol.vsclAdapterProperties")
-local adapater_stub = require("exasol.vscladapter_stub")
+local RequestDispatcher = require("exasol.vscl.RequestDispatcher")
+local AdapterProperties = require("exasol.vscl.AdapterProperties")
+local adapater_stub = require("exasol.vscl.adapter_stub")
 
 local function stub_adapter()
     return adapater_stub.create({

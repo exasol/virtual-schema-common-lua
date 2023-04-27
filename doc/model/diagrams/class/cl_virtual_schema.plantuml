@@ -3,7 +3,7 @@
 
 title: Virtual Schema Base Library and Concrete Implementation
 
-package exasolvs {
+package exasol.vscl {
     class QueryRenderer
     together {
         class RequestDispatcher
@@ -31,7 +31,7 @@ package exasolvs {
     adapter -u-> AdapterProperties
 }
 
-package example_vs <<external>> {
+package examplevs <<external>> {
     class entry
     note left of entry
          The entry module creates
