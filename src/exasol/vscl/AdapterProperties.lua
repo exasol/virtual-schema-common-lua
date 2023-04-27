@@ -3,7 +3,7 @@
 local AdapterProperties = {null = {}}
 AdapterProperties.__index = AdapterProperties
 
-local text = require("text")
+local text = require("exasol.vscl.text")
 local ExaError = require("ExaError")
 
 local EXCLUDED_CAPABILITIES_PROPERTY <const> = "EXCLUDED_CAPABILITIES"

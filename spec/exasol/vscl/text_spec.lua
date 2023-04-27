@@ -1,6 +1,5 @@
-package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
-local text = require("text")
+local text = require("exasol.vscl.text")
 
 describe("text manipulation", function()
     it("starts with prefix", function()

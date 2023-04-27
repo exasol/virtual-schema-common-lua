@@ -1,10 +1,9 @@
-package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 require("assertions.appender_assertions")
-local Query = require("exasolvs.Query")
-local literal = require("queryrenderer.literal_constructors")
-local reference = require("queryrenderer.reference_constructors")
-local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
+local Query = require("exasol.vscl.Query")
+local literal = require("exasol.vscl.queryrenderer.literal_constructors")
+local reference = require("exasol.vscl.queryrenderer.reference_constructors")
+local ExpressionAppender = require("exasol.vscl.queryrenderer.ExpressionAppender")
 
 local function assert_expression_yields(expression, expected)
     assert.append_yields(ExpressionAppender, expected, expression)

@@ -1,9 +1,8 @@
-package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 require("assertions.assertions")
-local AbstractVirtualSchemaAdapter = require("exasolvs.AbstractVirtualSchemaAdapter")
-local AdapterProperties = require("exasolvs.AdapterProperties")
-local adapter_stub = require("exasolvs.adapter_stub")
+local AbstractVirtualSchemaAdapter = require("exasol.vscl.AbstractVirtualSchemaAdapter")
+local AdapterProperties = require("exasol.vscl.AdapterProperties")
+local adapter_stub = require("exasol.vscl.adapter_stub")
 
 describe("Stubbed AbstractVirtualSchemaAdapter", function()
     it("reports all supported capabilities", function()
