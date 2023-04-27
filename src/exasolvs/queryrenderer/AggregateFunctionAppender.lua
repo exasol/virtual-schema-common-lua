@@ -2,11 +2,11 @@
 -- @classmod AggregateFunctionAppender
 local AggregateFunctionAppender = {}
 AggregateFunctionAppender.__index = AggregateFunctionAppender
-local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
+local AbstractQueryAppender = require("exasol.vsclqueryrenderer.AbstractQueryAppender")
 setmetatable(AggregateFunctionAppender, {__index = AbstractQueryAppender})
 
-local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
-local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
+local ExpressionAppender = require("exasol.vsclqueryrenderer.ExpressionAppender")
+local SelectAppender = require("exasol.vsclqueryrenderer.SelectAppender")
 local ExaError = require("ExaError")
 
 --- Create a new instance of a `AggregateFunctionAppender`.

@@ -1,6 +1,6 @@
 package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
-local ImportQueryBuilder = require("exasolvs.ImportQueryBuilder")
+local ImportQueryBuilder = require("exasol.vsclImportQueryBuilder")
 
 describe("ImportQueryBuilder", function()
    it("wraps a SELECT query", function()

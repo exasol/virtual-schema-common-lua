@@ -2,11 +2,11 @@
 -- @classmod SelectAppender
 local SelectAppender = {}
 SelectAppender.__index = SelectAppender
-local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppender")
+local AbstractQueryRenderer = require("exasol.vsclqueryrenderer.AbstractQueryAppender")
 setmetatable(SelectAppender, {__index = AbstractQueryRenderer})
 
 local ExaError = require("ExaError")
-local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
+local ExpressionAppender = require("exasol.vsclqueryrenderer.ExpressionAppender")
 
 local JOIN_TYPES<const> = {inner = "INNER", left_outer = "LEFT OUTER", right_outer = "RIGHT OUTER",
                            full_outer = "FULL OUTER"}

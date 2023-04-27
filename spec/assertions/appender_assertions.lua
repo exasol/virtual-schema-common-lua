@@ -1,6 +1,6 @@
 local say = require("say")
 local assert = require("luassert")
-local Query = require("exasolvs.Query")
+local Query = require("exasol.vsclQuery")
 
 local function append_yields(_, arguments)
     local appender_class = arguments[1]

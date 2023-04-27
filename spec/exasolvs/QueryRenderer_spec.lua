@@ -1,6 +1,6 @@
 package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
-local QueryRenderer = require("exasolvs.QueryRenderer")
+local QueryRenderer = require("exasol.vsclQueryRenderer")
 
 describe("QueryRenderer", function()
     it("renders SELECT *", function()

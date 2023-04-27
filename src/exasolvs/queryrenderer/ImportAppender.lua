@@ -2,11 +2,11 @@
 -- @classmod ImportAppender
 local ImportAppender = {}
 ImportAppender.__index = ImportAppender
-local AbstractQueryRenderer = require("exasolvs.queryrenderer.AbstractQueryAppender")
+local AbstractQueryRenderer = require("exasol.vsclqueryrenderer.AbstractQueryAppender")
 setmetatable(ImportAppender, {__index = AbstractQueryRenderer})
 
-local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
-local Query = require("exasolvs.Query")
+local SelectAppender = require("exasol.vsclqueryrenderer.SelectAppender")
+local Query = require("exasol.vsclQuery")
 
 --- Create a new query renderer.
 -- @param out_query query structure as provided through the Virtual Schema API

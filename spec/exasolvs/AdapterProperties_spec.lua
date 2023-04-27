@@ -1,6 +1,6 @@
 package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
-local AdapterProperties = require("exasolvs.AdapterProperties")
+local AdapterProperties = require("exasol.vsclAdapterProperties")
 
 describe("AdapterProperties", function()
     describe("validates property rule:", function()

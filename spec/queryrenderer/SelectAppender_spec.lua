@@ -1,7 +1,7 @@
 package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 require("assertions.appender_assertions")
-local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
+local SelectAppender = require("exasol.vsclqueryrenderer.SelectAppender")
 
 local function assert_yields(expected, original_query)
     assert.append_yields(SelectAppender, expected, original_query)

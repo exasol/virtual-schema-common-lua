@@ -3,9 +3,9 @@ require("busted.runner")()
 local log_mock = mock(require("remotelog"), true)
 package.preload["remotelog"] = function () return log_mock end
 require("assertions.assertions")
-local RequestDispatcher = require("exasolvs.RequestDispatcher")
-local AdapterProperties = require("exasolvs.AdapterProperties")
-local adapater_stub = require("exasolvs.adapter_stub")
+local RequestDispatcher = require("exasol.vsclRequestDispatcher")
+local AdapterProperties = require("exasol.vsclAdapterProperties")
+local adapater_stub = require("exasol.vscladapter_stub")
 
 local function stub_adapter()
     return adapater_stub.create({

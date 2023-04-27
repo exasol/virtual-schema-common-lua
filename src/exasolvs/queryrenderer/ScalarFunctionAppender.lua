@@ -2,10 +2,10 @@
 -- @classmod ScalarFunctionAppender
 local ScalarFunctionAppender = {}
 ScalarFunctionAppender.__index = ScalarFunctionAppender
-local AbstractQueryAppender = require("exasolvs.queryrenderer.AbstractQueryAppender")
+local AbstractQueryAppender = require("exasol.vsclqueryrenderer.AbstractQueryAppender")
 setmetatable(ScalarFunctionAppender, {__index = AbstractQueryAppender})
 
-local ExpressionAppender = require("exasolvs.queryrenderer.ExpressionAppender")
+local ExpressionAppender = require("exasol.vsclqueryrenderer.ExpressionAppender")
 local ExaError = require("ExaError")
 
 --- Create a new instance of a `ScalarFunctionAppender`.

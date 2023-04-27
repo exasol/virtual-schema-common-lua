@@ -3,9 +3,9 @@
 local QueryRenderer = {}
 QueryRenderer.__index = QueryRenderer
 
-local Query = require("exasolvs.Query")
-local SelectAppender = require("exasolvs.queryrenderer.SelectAppender")
-local ImportAppender = require("exasolvs.queryrenderer.ImportAppender")
+local Query = require("exasol.vsclQuery")
+local SelectAppender = require("exasol.vsclqueryrenderer.SelectAppender")
+local ImportAppender = require("exasol.vsclqueryrenderer.ImportAppender")
 
 --- Create a new query renderer.
 -- @param original_query query structure as provided through the Virtual Schema API

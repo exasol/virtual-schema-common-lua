@@ -1,7 +1,7 @@
 package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 
-local Query = require("exasolvs.Query")
+local Query = require("exasol.vsclQuery")
 
 describe("Query", function()
     it("appends token", function()

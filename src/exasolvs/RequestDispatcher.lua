@@ -24,7 +24,7 @@ end
 
 function RequestDispatcher:_init(adapter, properties_reader)
     self._adapter = adapter
-    self._properties_reader = properties_reader or require("exasolvs.AdapterProperties")
+    self._properties_reader = properties_reader or require("exasol.vsclAdapterProperties")
     -- Replace the `cjson` null object to decouple the adapter properties from the `cjson` library.
     cjson.null = properties_reader.null
 end

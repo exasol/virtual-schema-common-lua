@@ -2,8 +2,8 @@ package.path = "src/?.lua;" .. package.path
 require("busted.runner")()
 local literal = require("queryrenderer.literal_constructors")
 local geo = require("queryrenderer.geo_constructors")
-local Query = require("exasolvs.Query")
-local ScalarFunctionAppender = require("exasolvs.queryrenderer.ScalarFunctionAppender")
+local Query = require("exasol.vsclQuery")
+local ScalarFunctionAppender = require("exasol.vsclqueryrenderer.ScalarFunctionAppender")
 
 local function it_asserts(expected, actual, explanation)
     it(explanation or expected, function() assert.are.equals(expected, actual) end)
