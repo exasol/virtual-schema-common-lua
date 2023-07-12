@@ -90,6 +90,14 @@ Then format all Lua sources by executing the following command:
 ./tools/format_lua.sh
 ```
 
+## Running Static Code Analysis
+
+To run static code analysis for Lua using luacheck issue the following command:
+
+```bash
+./tools/run_luacheck.sh
+```
+
 ### Understanding the Sources
 
 Under [doc/model](../model/) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
