@@ -66,6 +66,16 @@ If you want to run all unit tests including code coverage and static code analys
 ./tools/run_tests.sh
 ```
 
+## Building API Documentation
+
+To build the API documentation using ldoc issue the following command:
+
+```bash
+./tools/build_docs.sh
+```
+
+The documentation will be written as HTML files to `target/ldoc/`.
+ 
 ### Understanding the Sources
 
 Under [doc/model](../model/) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
