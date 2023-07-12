@@ -1,4 +1,4 @@
-# virtual-schema-common-lua 4.0.1, released 2023-??-??
+# virtual-schema-common-lua 4.0.1, released 2023-07-13
 
 Code name: Fix Issue With Integer Constants in `GROUP BY`
 
