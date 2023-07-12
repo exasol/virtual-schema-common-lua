@@ -75,7 +75,21 @@ To build the API documentation using ldoc issue the following command:
 ```
 
 The documentation will be written as HTML files to `target/ldoc/`.
- 
+
+## Formatting Sources
+
+First install [LuaFormatter](https://github.com/Koihik/LuaFormatter) by executing the following command:
+
+```bash
+luarocks install --local --server=https://luarocks.org/dev luaformatter
+```
+
+Then format all Lua sources by executing the following command:
+
+```bash
+./tools/format_lua.sh
+```
+
 ### Understanding the Sources
 
 Under [doc/model](../model/) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
