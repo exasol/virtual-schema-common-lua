@@ -108,7 +108,7 @@ end
 -- please note that `GROUP BY <constant>` always leads to grouping with a single group, regardless of the
 -- actual value of the constant (except for `FALSE`, which is reserved).
 --
--- @param node the original `GROUP BY` expression
+-- @param group_by_criteria the original `GROUP BY` expression
 -- @return a new, alternative expression or the original expression if no replacement is necessary
 local function workaround_group_by_integer(group_by_criteria)
     if group_by_criteria.type == "literal_exactnumeric" then
