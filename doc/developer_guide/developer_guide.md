@@ -60,7 +60,7 @@ To run a single test add the file name:
 busted spec/exasol/vscl/validator_spec.lua
 ```
 
-If you want to run all unit tests including code coverage and static code analysis, issue the following command:
+If you want to run all unit tests including code coverage, issue the following command:
 
 ```bash
 ./tools/run_tests.sh
