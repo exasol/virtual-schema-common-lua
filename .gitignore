@@ -11,3 +11,4 @@ Scripts
 .idea/sonarlint/
 .idea/workspace.xml
 .idea/misc.xml
+virtual-schema-common-lua-*.src.rock
