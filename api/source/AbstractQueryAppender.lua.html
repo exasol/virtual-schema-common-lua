@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Source</h2>
+<ul class="nowrap">
+  <li><a href="../source/AbstractVirtualSchemaAdapter.lua.html">AbstractVirtualSchemaAdapter.lua</a></li>
+  <li><a href="../source/AdapterProperties.lua.html">AdapterProperties.lua</a></li>
+  <li><a href="../source/ImportQueryBuilder.lua.html">ImportQueryBuilder.lua</a></li>
+  <li><a href="../source/Query.lua.html">Query.lua</a></li>
+  <li><a href="../source/QueryRenderer.lua.html">QueryRenderer.lua</a></li>
+  <li><a href="../source/RequestDispatcher.lua.html">RequestDispatcher.lua</a></li>
+  <li><strong>AbstractQueryAppender.lua</strong></li>
+  <li><a href="../source/AggregateFunctionAppender.lua.html">AggregateFunctionAppender.lua</a></li>
+  <li><a href="../source/ExpressionAppender.lua.html">ExpressionAppender.lua</a></li>
+  <li><a href="../source/ImportAppender.lua.html">ImportAppender.lua</a></li>
+  <li><a href="../source/ScalarFunctionAppender.lua.html">ScalarFunctionAppender.lua</a></li>
+  <li><a href="../source/SelectAppender.lua.html">SelectAppender.lua</a></li>
+  <li><a href="../source/text.lua.html">text.lua</a></li>
+  <li><a href="../source/validator.lua.html">validator.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/AbstractVirtualSchemaAdapter.html">AbstractVirtualSchemaAdapter</a></li>
+  <li><a href="../classes/AdapterProperties.html">AdapterProperties</a></li>
+  <li><a href="../classes/ImportQueryBuilder.html">ImportQueryBuilder</a></li>
+  <li><a href="../classes/Query.html">Query</a></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><a href="../classes/AbstractQueryRenderer.html">AbstractQueryRenderer</a></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><a href="../classes/ImportAppender.html">ImportAppender</a></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><a href="../classes/SelectAppender.html">SelectAppender</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>AbstractQueryAppender.lua</h2>
+<pre>
+<span class="comment">--- This class is the abstract base class of all query renderers.
+</span><span class="comment">-- It takes care of handling the temporary storage of the query to be constructed.
+</span><span class="comment">-- @classmod AbstractQueryRenderer
+</span><span class="keyword">local</span> AbstractQueryAppender = {}
+
+<span class="keyword">local</span> ExaError = <span class="global">require</span>(<span class="string">"ExaError"</span>)
+
+<span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_init</span>(out_query)
+    self._out_query = out_query
+<span class="keyword">end</span>
+
+<span class="comment">--- Append a token to the query.
+</span><a id="14"></a><span class="comment">-- @param token token to append
+</span><span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_append</span>(token)
+    self._out_query:<span class="function-name">append</span>(token)
+<span class="keyword">end</span>
+
+<span class="comment">--- Append a list of tokens to the query.
+</span><a id="20"></a><span class="comment">-- @param ... tokens to append
+</span><span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_append_all</span>(...)
+    self._out_query:<span class="function-name">append_all</span>(...)
+<span class="keyword">end</span>
+
+<span class="comment">--- Append a comma in a comma-separated list where needed.
+</span><a id="26"></a><span class="comment">-- Appends a comma if the list index is greater than one.
+</span><span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_comma</span>(index)
+    <span class="keyword">if</span> index &gt; <span class="number">1</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">", "</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_append_decimal_type_details</span>(data_type)
+    self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+    self:<span class="function-name">_append</span>(data_type.precision)
+    self:<span class="function-name">_append</span>(<span class="string">","</span>)
+    self:<span class="function-name">_append</span>(data_type.scale)
+    self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_append_character_type</span>(data_type)
+    self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+    self:<span class="function-name">_append</span>(data_type.size)
+    self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+    <span class="keyword">local</span> character_set = data_type.characterSet
+    <span class="keyword">if</span> character_set <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">" "</span>)
+        self:<span class="function-name">_append</span>(character_set)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_append_timestamp</span>(data_type)
+    <span class="keyword">if</span> data_type.withLocalTimeZone <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">" WITH LOCAL TIME ZONE"</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_append_geometry</span>(data_type)
+    <span class="keyword">local</span> srid = data_type.srid
+    <span class="keyword">if</span> srid <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+        self:<span class="function-name">_append</span>(srid)
+        self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_append_interval</span>(data_type)
+    <span class="keyword">if</span> data_type.fromTo == <span class="string">"DAY TO SECONDS"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">" DAY"</span>)
+        <span class="keyword">local</span> precision = data_type.precision
+        <span class="keyword">if</span> precision <span class="keyword">then</span>
+            self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+            self:<span class="function-name">_append</span>(precision)
+            self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+        <span class="keyword">end</span>
+        self:<span class="function-name">_append</span>(<span class="string">" TO SECOND"</span>)
+        <span class="keyword">local</span> fraction = data_type.fraction
+        <span class="keyword">if</span> fraction <span class="keyword">then</span>
+            self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+            self:<span class="function-name">_append</span>(fraction)
+            self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+        <span class="keyword">end</span>
+    <span class="keyword">else</span>
+        self:<span class="function-name">_append</span>(<span class="string">" YEAR"</span>)
+        <span class="keyword">local</span> precision = data_type.precision
+        <span class="keyword">if</span> precision <span class="keyword">then</span>
+            self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+            self:<span class="function-name">_append</span>(precision)
+            self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+        <span class="keyword">end</span>
+        self:<span class="function-name">_append</span>(<span class="string">" TO MONTH"</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_append_hashtype</span>(data_type)
+    <span class="keyword">local</span> byte_size = data_type.bytesize
+    <span class="keyword">if</span> byte_size <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+        self:<span class="function-name">_append</span>(byte_size)
+        self:<span class="function-name">_append</span>(<span class="string">" BYTE)"</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_append_data_type</span>(data_type)
+    <span class="keyword">local</span> <span class="global">type</span> = data_type.<span class="global">type</span>
+    self:<span class="function-name">_append</span>(<span class="global">type</span>)
+    <span class="keyword">if</span> <span class="global">type</span> == <span class="string">"DECIMAL"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_decimal_type_details</span>(data_type)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"VARCHAR"</span> <span class="keyword">or</span> <span class="global">type</span> == <span class="string">"CHAR"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_character_type</span>(data_type)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"TIMESTAMP"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_timestamp</span>(data_type)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"GEOMETRY"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_geometry</span>(data_type)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"INTERVAL"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_interval</span>(data_type)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"HASHTYPE"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_hashtype</span>(data_type)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"DOUBLE"</span> <span class="keyword">or</span> <span class="global">type</span> == <span class="string">"DATE"</span> <span class="keyword">or</span> <span class="global">type</span> == <span class="string">"BOOLEAN"</span> <span class="keyword">then</span>
+        <span class="keyword">return</span>
+    <span class="keyword">else</span>
+        ExaError:<span class="function-name">new</span>(<span class="string">"E-VSCL-4"</span>, <span class="string">"Unable to render unknown data type {{type}}."</span>,
+                {<span class="global">type</span> = {value = <span class="global">type</span>, description = <span class="string">"data type that was not recognized"</span>}}
+        ):<span class="function-name">add_ticket_mitigation</span>():<span class="function-name">raise</span>()
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">--- Append a string literal and enclose it in single quotes
+</span><a id="129"></a><span class="comment">-- @param literal string literal
+</span><span class="keyword">function</span> AbstractQueryAppender:<span class="function-name">_append_string_literal</span>(literal)
+    self:<span class="function-name">_append</span>(<span class="string">"'"</span>)
+    self:<span class="function-name">_append</span>(literal)
+    self:<span class="function-name">_append</span>(<span class="string">"'"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">return</span> AbstractQueryAppender</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

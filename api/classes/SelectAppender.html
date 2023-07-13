@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Local_Functions">Local Functions</a></li>
+<li><a href="#Methods">Methods</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/AbstractVirtualSchemaAdapter.html">AbstractVirtualSchemaAdapter</a></li>
+  <li><a href="../classes/AdapterProperties.html">AdapterProperties</a></li>
+  <li><a href="../classes/ImportQueryBuilder.html">ImportQueryBuilder</a></li>
+  <li><a href="../classes/Query.html">Query</a></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><a href="../classes/AbstractQueryRenderer.html">AbstractQueryRenderer</a></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><a href="../classes/ImportAppender.html">ImportAppender</a></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><strong>SelectAppender</strong></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>SelectAppender</code></h1>
+<p>Appender that can add top-level elements of a <code>SELECT</code> statement (or sub-select).</p>
+<p>
+
+</p>
+
+
+<h2><a href="#Local_Functions">Local Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" ><a href="#selectappender.workaround_group_by_integer">selectappender.workaround_group_by_integer(group_by_criteria)</a></td>
+	<td class="summary">Replace an unsupported expression in a <code>GROUP BY</code> clause with a supported one or return it unchanged.</td>
+	</tr>
+</table>
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" ><a href="#selectappender:get_join_types">selectappender:get_join_types()</a></td>
+	<td class="summary">Get a map of supported JOIN type to the join keyword.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#selectappender:new">selectappender:new(out_query)</a></td>
+	<td class="summary">Create a new query renderer.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#selectappender:append_sub_select">selectappender:append_sub_select(sub_query)</a></td>
+	<td class="summary">Append a sub-select statement.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#selectappender:append_select">selectappender:append_select(sub_query)</a></td>
+	<td class="summary">Append a <code>SELECT</code> statement.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Local_Functions"></a>Local Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "selectappender.workaround_group_by_integer"></a>
+    <strong>selectappender.workaround_group_by_integer(group_by_criteria)</strong>
+    <a style="float:right;" href="../source/SelectAppender.lua.html#113">line 113</a>
+    </dt>
+    <dd>
+    Replace an unsupported expression in a <code>GROUP BY</code> clause with a supported one or return it unchanged. </p>
+
+<p> This replaces numeric literals with the corresponding string value, as Exasol interprets
+ <code>GROUP BY &lt;integer-constant&gt;</code> as column number &mdash; which is not what the user intended. Also,
+ please note that <code>GROUP BY &lt;constant&gt;</code> always leads to grouping with a single group, regardless of the
+ actual value of the constant (except for <code>FALSE</code>, which is reserved).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">group_by_criteria</span>
+         the original <code>GROUP BY</code> expression
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        a new, alternative expression or the original expression if no replacement is necessary
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "selectappender:get_join_types"></a>
+    <strong>selectappender:get_join_types()</strong>
+    <a style="float:right;" href="../source/SelectAppender.lua.html#17">line 17</a>
+    </dt>
+    <dd>
+    Get a map of supported JOIN type to the join keyword.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        join type (key) mapped to SQL join keyword
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "selectappender:new"></a>
+    <strong>selectappender:new(out_query)</strong>
+    <a style="float:right;" href="../source/SelectAppender.lua.html#24">line 24</a>
+    </dt>
+    <dd>
+    Create a new query renderer.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">out_query</span>
+         query structure as provided through the Virtual Schema API
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        query renderer instance
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "selectappender:append_sub_select"></a>
+    <strong>selectappender:append_sub_select(sub_query)</strong>
+    <a style="float:right;" href="../source/SelectAppender.lua.html#166">line 166</a>
+    </dt>
+    <dd>
+    Append a sub-select statement.
+ This method is public to allow recursive queries (e.g. embedded into an <code>EXISTS</code> clause in an expression.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">sub_query</span>
+         query appended
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "selectappender:append_select"></a>
+    <strong>selectappender:append_select(sub_query)</strong>
+    <a style="float:right;" href="../source/SelectAppender.lua.html#174">line 174</a>
+    </dt>
+    <dd>
+    Append a <code>SELECT</code> statement.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">sub_query</span>
+         query appended
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

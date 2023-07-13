@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Methods">Methods</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/AbstractVirtualSchemaAdapter.html">AbstractVirtualSchemaAdapter</a></li>
+  <li><a href="../classes/AdapterProperties.html">AdapterProperties</a></li>
+  <li><strong>ImportQueryBuilder</strong></li>
+  <li><a href="../classes/Query.html">Query</a></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><a href="../classes/AbstractQueryRenderer.html">AbstractQueryRenderer</a></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><a href="../classes/ImportAppender.html">ImportAppender</a></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><a href="../classes/SelectAppender.html">SelectAppender</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>ImportQueryBuilder</code></h1>
+<p>Builder for an IMPORT query that wraps push-down query</p>
+<p>
+
+</p>
+
+
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" ><a href="#importquerybuilder:new">importquerybuilder:new()</a></td>
+	<td class="summary">Create a new instance of an <code>ImportQueryBuilder</code>.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#importquerybuilder:column_types">importquerybuilder:column_types(column_types)</a></td>
+	<td class="summary">Set the result set column data types.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#importquerybuilder:connection">importquerybuilder:connection(connection)</a></td>
+	<td class="summary">Set the connection.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#importquerybuilder:statement">importquerybuilder:statement(statement)</a></td>
+	<td class="summary">Set the push-down statement.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#importquerybuilder:build">importquerybuilder:build()</a></td>
+	<td class="summary">Build the <code>IMPORT</code> query structure.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "importquerybuilder:new"></a>
+    <strong>importquerybuilder:new()</strong>
+    <a style="float:right;" href="../source/ImportQueryBuilder.lua.html#8">line 8</a>
+    </dt>
+    <dd>
+    Create a new instance of an <code>ImportQueryBuilder</code>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        new instance
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "importquerybuilder:column_types"></a>
+    <strong>importquerybuilder:column_types(column_types)</strong>
+    <a style="float:right;" href="../source/ImportQueryBuilder.lua.html#21">line 21</a>
+    </dt>
+    <dd>
+    Set the result set column data types.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">column_types</span>
+         column types as list of data type structures
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        self for fluent programming
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "importquerybuilder:connection"></a>
+    <strong>importquerybuilder:connection(connection)</strong>
+    <a style="float:right;" href="../source/ImportQueryBuilder.lua.html#29">line 29</a>
+    </dt>
+    <dd>
+    Set the connection.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">connection</span>
+         connection over which the remote query should be run
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        self for fluent programming
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "importquerybuilder:statement"></a>
+    <strong>importquerybuilder:statement(statement)</strong>
+    <a style="float:right;" href="../source/ImportQueryBuilder.lua.html#37">line 37</a>
+    </dt>
+    <dd>
+    Set the push-down statement.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">statement</span>
+         push-down statement to be wrapped by the <code>IMPORT</code> statement.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        self for fluent programming
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "importquerybuilder:build"></a>
+    <strong>importquerybuilder:build()</strong>
+    <a style="float:right;" href="../source/ImportQueryBuilder.lua.html#44">line 44</a>
+    </dt>
+    <dd>
+    Build the <code>IMPORT</code> query structure.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        table that represents the <code>IMPORT</code> statement
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

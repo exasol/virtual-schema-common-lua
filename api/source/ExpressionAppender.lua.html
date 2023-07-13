@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Source</h2>
+<ul class="nowrap">
+  <li><a href="../source/AbstractVirtualSchemaAdapter.lua.html">AbstractVirtualSchemaAdapter.lua</a></li>
+  <li><a href="../source/AdapterProperties.lua.html">AdapterProperties.lua</a></li>
+  <li><a href="../source/ImportQueryBuilder.lua.html">ImportQueryBuilder.lua</a></li>
+  <li><a href="../source/Query.lua.html">Query.lua</a></li>
+  <li><a href="../source/QueryRenderer.lua.html">QueryRenderer.lua</a></li>
+  <li><a href="../source/RequestDispatcher.lua.html">RequestDispatcher.lua</a></li>
+  <li><a href="../source/AbstractQueryAppender.lua.html">AbstractQueryAppender.lua</a></li>
+  <li><a href="../source/AggregateFunctionAppender.lua.html">AggregateFunctionAppender.lua</a></li>
+  <li><strong>ExpressionAppender.lua</strong></li>
+  <li><a href="../source/ImportAppender.lua.html">ImportAppender.lua</a></li>
+  <li><a href="../source/ScalarFunctionAppender.lua.html">ScalarFunctionAppender.lua</a></li>
+  <li><a href="../source/SelectAppender.lua.html">SelectAppender.lua</a></li>
+  <li><a href="../source/text.lua.html">text.lua</a></li>
+  <li><a href="../source/validator.lua.html">validator.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/AbstractVirtualSchemaAdapter.html">AbstractVirtualSchemaAdapter</a></li>
+  <li><a href="../classes/AdapterProperties.html">AdapterProperties</a></li>
+  <li><a href="../classes/ImportQueryBuilder.html">ImportQueryBuilder</a></li>
+  <li><a href="../classes/Query.html">Query</a></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><a href="../classes/AbstractQueryRenderer.html">AbstractQueryRenderer</a></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><a href="../classes/ImportAppender.html">ImportAppender</a></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><a href="../classes/SelectAppender.html">SelectAppender</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>ExpressionAppender.lua</h2>
+<pre>
+<span class="comment">--- Appender for value expressions in a SQL query.
+</span><span class="comment">-- @classmod ExpressionAppender
+</span><span class="keyword">local</span> ExpressionAppender = {}
+ExpressionAppender.__index = ExpressionAppender
+<span class="keyword">local</span> AbstractQueryAppender = <span class="global">require</span>(<span class="string">"exasol.vscl.queryrenderer.AbstractQueryAppender"</span>)
+<span class="global">setmetatable</span>(ExpressionAppender, {__index = AbstractQueryAppender})
+
+<span class="keyword">local</span> text = <span class="global">require</span>(<span class="string">"exasol.vscl.text"</span>)
+<span class="keyword">local</span> ExaError = <span class="global">require</span>(<span class="string">"ExaError"</span>)
+
+<span class="keyword">local</span> OPERATORS &lt;const&gt; = {
+    predicate_equal = <span class="string">"="</span>, predicate_notequal = <span class="string">"&lt;&gt;"</span>, predicate_less = <span class="string">"&lt;"</span>, predicate_greater = <span class="string">"&gt;"</span>,
+    predicate_lessequal = <span class="string">"&lt;="</span>, predicate_greaterequal = <span class="string">"&gt;="</span>, predicate_between = <span class="string">"BETWEEN"</span>,
+    predicate_is_not_null = <span class="string">"IS NOT NULL"</span>, predicate_is_null = <span class="string">"IS NULL"</span>, predicate_like = <span class="string">"LIKE"</span>,
+    predicate_like_regexp = <span class="string">"REGEXP_LIKE"</span>, predicate_and = <span class="string">"AND"</span>, predicate_or = <span class="string">"OR"</span>, predicate_not = <span class="string">"NOT"</span>,
+    predicate_is_json = <span class="string">"IS JSON"</span>, predicate_is_not_json = <span class="string">"IS NOT JSON"</span>
+}
+
+<span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">get_predicate_operator</span>(predicate_type)
+    <span class="keyword">local</span> operator = OPERATORS[predicate_type]
+    <span class="keyword">if</span> operator ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+        <span class="keyword">return</span> operator
+    <span class="keyword">else</span>
+        ExaError:<span class="function-name">new</span>(<span class="string">"E-VSCL-7"</span>, <span class="string">"Cannot determine operator for unknown predicate type {{type}}."</span>,
+                {<span class="global">type</span> = {value = predicate_type, description = <span class="string">"predicate type that was not recognized"</span>}}
+        ):<span class="function-name">add_ticket_mitigation</span>():<span class="function-name">raise</span>()
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">--- Create a new instance of an `ExpressionRenderer`.
+</span><span class="comment">-- @param out_query query that the rendered tokens should be appended too
+</span><a id="33"></a><span class="comment">-- @return expression renderer
+</span><span class="keyword">function</span> ExpressionAppender:<span class="function-name">new</span>(out_query)
+    <span class="global">assert</span>(out_query ~= <span class="keyword">nil</span>, <span class="string">"Expression renderer requires a query object that it can append to."</span>)
+    <span class="keyword">local</span> instance = <span class="global">setmetatable</span>({}, self)
+    instance:<span class="function-name">_init</span>(out_query)
+    <span class="keyword">return</span> instance
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_init</span>(out_query)
+    AbstractQueryAppender.<span class="function-name">_init</span>(self, out_query)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_column_reference</span>(column)
+    self:<span class="function-name">_append</span>(<span class="string">'"'</span>)
+    self:<span class="function-name">_append</span>(column.tableName)
+    self:<span class="function-name">_append</span>(<span class="string">'"."'</span>)
+    self:<span class="function-name">_append</span>(column.name)
+    self:<span class="function-name">_append</span>(<span class="string">'"'</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_exists</span>(sub_select)
+    self:<span class="function-name">_append</span>(<span class="string">"EXISTS("</span>)
+    <span class="global">require</span>(<span class="string">"exasol.vscl.queryrenderer.SelectAppender"</span>):<span class="function-name">new</span>(self._out_query):<span class="function-name">append_select</span>(sub_select.query)
+    self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_unary_predicate</span>(predicate)
+    self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+    self:<span class="function-name">_append</span>(<span class="function-name">get_predicate_operator</span>(predicate.<span class="global">type</span>))
+    self:<span class="function-name">_append</span>(<span class="string">" "</span>)
+    self:<span class="function-name">append_expression</span>(predicate.expression)
+    self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_binary_predicate</span>(predicate)
+    self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+    self:<span class="function-name">append_expression</span>(predicate.left)
+    self:<span class="function-name">_append</span>(<span class="string">" "</span>)
+    self:<span class="function-name">_append</span>(<span class="function-name">get_predicate_operator</span>(predicate.<span class="global">type</span>))
+    self:<span class="function-name">_append</span>(<span class="string">" "</span>)
+    self:<span class="function-name">append_expression</span>(predicate.right)
+    self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_iterated_predicate</span>(predicate)
+    self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+    <span class="keyword">local</span> expressions = predicate.expressions
+    <span class="keyword">for</span> i = <span class="number">1</span>, #expressions <span class="keyword">do</span>
+        <span class="keyword">if</span> i &gt; <span class="number">1</span> <span class="keyword">then</span>
+            self:<span class="function-name">_append</span>(<span class="string">" "</span>)
+            self:<span class="function-name">_append</span>(<span class="function-name">get_predicate_operator</span>(predicate.<span class="global">type</span>))
+            self:<span class="function-name">_append</span>(<span class="string">" "</span>)
+        <span class="keyword">end</span>
+        self:<span class="function-name">append_expression</span>(expressions[i])
+    <span class="keyword">end</span>
+    self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_predicate_in</span>(predicate)
+    self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+    self:<span class="function-name">append_expression</span>(predicate.expression)
+    self:<span class="function-name">_append</span>(<span class="string">" IN ("</span>)
+    <span class="keyword">local</span> arguments = predicate.arguments
+    <span class="keyword">for</span> i = <span class="number">1</span>, #arguments <span class="keyword">do</span>
+        self:<span class="function-name">_comma</span>(i)
+        self:<span class="function-name">append_expression</span>(arguments[i])
+    <span class="keyword">end</span>
+    self:<span class="function-name">_append</span>(<span class="string">"))"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_predicate_like</span>(predicate)
+    self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+    self:<span class="function-name">append_expression</span>(predicate.expression)
+    self:<span class="function-name">_append</span>(<span class="string">" LIKE "</span>)
+    self:<span class="function-name">append_expression</span>(predicate.pattern)
+    <span class="keyword">local</span> escape = predicate.escapeChar
+    <span class="keyword">if</span> escape <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">" ESCAPE "</span>)
+        self:<span class="function-name">append_expression</span>(escape)
+    <span class="keyword">end</span>
+    self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_predicate_regexp_like</span>(predicate)
+    self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+    self:<span class="function-name">append_expression</span>(predicate.expression)
+    self:<span class="function-name">_append</span>(<span class="string">" REGEXP_LIKE "</span>)
+    self:<span class="function-name">append_expression</span>(predicate.pattern)
+    self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_postfix_predicate</span>(predicate)
+    self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+    self:<span class="function-name">append_expression</span>(predicate.expression)
+    self:<span class="function-name">_append</span>(<span class="string">" "</span>)
+    self:<span class="function-name">_append</span>(<span class="function-name">get_predicate_operator</span>(predicate.<span class="global">type</span>))
+    self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_between</span>(predicate)
+    self:<span class="function-name">_append</span>(<span class="string">"("</span>)
+    self:<span class="function-name">append_expression</span>(predicate.expression)
+    self:<span class="function-name">_append</span>(<span class="string">" BETWEEN "</span>)
+    self:<span class="function-name">append_expression</span>(predicate.left)
+    self:<span class="function-name">_append</span>(<span class="string">" AND "</span>)
+    self:<span class="function-name">append_expression</span>(predicate.right)
+    self:<span class="function-name">_append</span>(<span class="string">")"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_predicate_is_json</span>(predicate)
+    self:<span class="function-name">append_expression</span>(predicate.expression)
+    self:<span class="function-name">_append</span>(<span class="string">" "</span>)
+    self:<span class="function-name">_append</span>(<span class="function-name">get_predicate_operator</span>(predicate.<span class="global">type</span>))
+    <span class="keyword">local</span> typeConstraint = predicate.typeConstraint
+    <span class="keyword">if</span> typeConstraint == <span class="string">"VALUE"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">" VALUE"</span>)
+    <span class="keyword">elseif</span> typeConstraint == <span class="string">"ARRAY"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">" ARRAY"</span>)
+    <span class="keyword">elseif</span> typeConstraint == <span class="string">"OBJECT"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">" OBJECT"</span>)
+    <span class="keyword">elseif</span> typeConstraint == <span class="string">"SCALAR"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">" SCALAR"</span>)
+    <span class="keyword">end</span>
+    <span class="keyword">local</span> keyUniquenessConstraint = predicate.keyUniquenessConstraint
+    <span class="keyword">if</span> (keyUniquenessConstraint == <span class="string">"WITH UNIQUE KEYS"</span>) <span class="keyword">or</span> (keyUniquenessConstraint == <span class="string">"WITHOUT UNIQUE KEYS"</span>) <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">" "</span>)
+        self:<span class="function-name">_append</span>(keyUniquenessConstraint)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">--- Append a predicate to a query.
+</span><span class="comment">-- This method is public to allow nesting predicates in filters.
+</span><a id="165"></a><span class="comment">-- @param predicate predicate to append
+</span><span class="keyword">function</span> ExpressionAppender:<span class="function-name">append_predicate</span>(predicate)
+    <span class="keyword">local</span> <span class="global">type</span> = <span class="global">string</span>.<span class="function-name">sub</span>(predicate.<span class="global">type</span>, <span class="number">11</span>)
+    <span class="keyword">if</span> <span class="global">type</span> == <span class="string">"equal"</span> <span class="keyword">or</span> <span class="global">type</span> == <span class="string">"notequal"</span> <span class="keyword">or</span> <span class="global">type</span> == <span class="string">"greater"</span> <span class="keyword">or</span> <span class="global">type</span> == <span class="string">"less"</span> <span class="keyword">or</span> <span class="global">type</span> == <span class="string">"lessequal"</span>
+        <span class="keyword">or</span> <span class="global">type</span> == <span class="string">"greaterequal"</span>
+    <span class="keyword">then</span>
+        self:<span class="function-name">_append_binary_predicate</span>(predicate)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"like"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_predicate_like</span>(predicate)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"like_regexp"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_predicate_regexp_like</span>(predicate)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"is_null"</span> <span class="keyword">or</span> <span class="global">type</span> == <span class="string">"is_not_null"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_postfix_predicate</span>(predicate)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"between"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_between</span>(predicate)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"not"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_unary_predicate</span>(predicate)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"and"</span> <span class="keyword">or</span> <span class="global">type</span> == <span class="string">"or"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_iterated_predicate</span>(predicate)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"in_constlist"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_predicate_in</span>(predicate)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"exists"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_exists</span>(predicate)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"is_json"</span> <span class="keyword">or</span> <span class="global">type</span> == <span class="string">"is_not_json"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_predicate_is_json</span>(predicate)
+    <span class="keyword">else</span>
+        ExaError:<span class="function-name">new</span>(<span class="string">"E-VSCL-2"</span>, <span class="string">"Unable to render unknown SQL predicate type {{type}}."</span>,
+                {<span class="global">type</span> = {value = predicate.<span class="global">type</span>, description = <span class="string">"predicate type that was not recognized"</span>}}
+        ):<span class="function-name">add_ticket_mitigation</span>():<span class="function-name">raise</span>()
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> ExpressionAppender:<span class="function-name">_append_quoted_literal_expression</span>(literal_expression)
+    self:<span class="function-name">_append</span>(<span class="string">"'"</span>)
+    self:<span class="function-name">_append</span>(literal_expression.value)
+    self:<span class="function-name">_append</span>(<span class="string">"'"</span>)
+<span class="keyword">end</span>
+
+<span class="comment">--- Append an expression to a query.
+</span><a id="204"></a><span class="comment">-- @param expression expression to append
+</span><span class="keyword">function</span> ExpressionAppender:<span class="function-name">append_expression</span>(expression)
+    <span class="keyword">local</span> <span class="global">type</span> = expression.<span class="global">type</span>
+    <span class="keyword">if</span> <span class="global">type</span> == <span class="string">"column"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_column_reference</span>(expression)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"literal_null"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">"null"</span>)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"literal_bool"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(expression.value <span class="keyword">and</span> <span class="string">"true"</span> <span class="keyword">or</span> <span class="string">"false"</span>)
+    <span class="keyword">elseif</span> (<span class="global">type</span> == <span class="string">"literal_exactnumeric"</span>) <span class="keyword">or</span> (<span class="global">type</span> == <span class="string">"literal_double"</span>) <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(expression.value)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"literal_string"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append_quoted_literal_expression</span>(expression)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"literal_date"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">"DATE "</span>)
+        self:<span class="function-name">_append_quoted_literal_expression</span>(expression)
+    <span class="keyword">elseif</span> (<span class="global">type</span> == <span class="string">"literal_timestamp"</span>) <span class="keyword">or</span> (<span class="global">type</span> == <span class="string">"literal_timestamputc"</span>) <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">"TIMESTAMP "</span>)
+        self:<span class="function-name">_append_quoted_literal_expression</span>(expression)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"literal_interval"</span> <span class="keyword">then</span>
+        self:<span class="function-name">_append</span>(<span class="string">"INTERVAL "</span>)
+        self:<span class="function-name">_append_quoted_literal_expression</span>(expression)
+        self:<span class="function-name">_append_interval</span>(expression.dataType)
+    <span class="keyword">elseif</span> text.<span class="function-name">starts_with</span>(<span class="global">type</span>, <span class="string">"function_scalar"</span>) <span class="keyword">then</span>
+        <span class="global">require</span>(<span class="string">"exasol.vscl.queryrenderer.ScalarFunctionAppender"</span>):<span class="function-name">new</span>(self._out_query):<span class="function-name">append</span>(expression)
+    <span class="keyword">elseif</span> text.<span class="function-name">starts_with</span>(<span class="global">type</span>, <span class="string">"function_aggregate"</span>) <span class="keyword">then</span>
+        <span class="global">require</span>(<span class="string">"exasol.vscl.queryrenderer.AggregateFunctionAppender"</span>):<span class="function-name">new</span>(self._out_query):<span class="function-name">append</span>(expression)
+    <span class="keyword">elseif</span> text.<span class="function-name">starts_with</span>(<span class="global">type</span>, <span class="string">"predicate_"</span>) <span class="keyword">then</span>
+        self:<span class="function-name">append_predicate</span>(expression)
+    <span class="keyword">elseif</span> <span class="global">type</span> == <span class="string">"sub_select"</span> <span class="keyword">then</span>
+        <span class="global">require</span>(<span class="string">"exasol.vscl.queryrenderer.SelectAppender"</span>):<span class="function-name">new</span>(self._out_query):<span class="function-name">append_sub_select</span>(expression)
+    <span class="keyword">else</span>
+        ExaError:<span class="function-name">new</span>(<span class="string">"E-VSCL-1"</span>, <span class="string">"Unable to render unknown SQL expression type {{type}}."</span>,
+            {<span class="global">type</span> = {value = expression.<span class="global">type</span>, description = <span class="string">"expression type provided"</span>}}
+        ):<span class="function-name">add_ticket_mitigation</span>():<span class="function-name">raise</span>(<span class="number">3</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- Alias for main appender function to allow uniform appender calls from the outside
+</span>ExpressionAppender.append = ExpressionAppender.append_expression
+
+<span class="keyword">return</span> ExpressionAppender</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

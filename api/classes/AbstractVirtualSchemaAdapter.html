@@ -1,0 +1,384 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Methods">Methods</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><strong>AbstractVirtualSchemaAdapter</strong></li>
+  <li><a href="../classes/AdapterProperties.html">AdapterProperties</a></li>
+  <li><a href="../classes/ImportQueryBuilder.html">ImportQueryBuilder</a></li>
+  <li><a href="../classes/Query.html">Query</a></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><a href="../classes/AbstractQueryRenderer.html">AbstractQueryRenderer</a></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><a href="../classes/ImportAppender.html">ImportAppender</a></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><a href="../classes/SelectAppender.html">SelectAppender</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>AbstractVirtualSchemaAdapter</code></h1>
+<p>This class implements an abstract base adapter with common behavior for some of the request callback functions.</p>
+<p> When you derive a concrete adapter from this base class, we recommend keeping it stateless. This makes
+ parallelization easier, reduces complexity and saves you the trouble of cleaning up in the drop-virtual-schema
+ request.</p>
+
+<p> [impl -> dsn~lua-virtual-schema-adapter-abstraction~0]</p>
+
+
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" ><a href="#abstractvirtualschemaadapter:get_name">abstractvirtualschemaadapter:get_name()</a></td>
+	<td class="summary">Get the adapter name.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#abstractvirtualschemaadapter:get_version">abstractvirtualschemaadapter:get_version()</a></td>
+	<td class="summary">Get the adapter version.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#abstractvirtualschemaadapter:_define_capabilities">abstractvirtualschemaadapter:_define_capabilities()</a></td>
+	<td class="summary">Define the list of all capabilities this adapter supports.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#abstractvirtualschemaadapter:create_virtual_schema">abstractvirtualschemaadapter:create_virtual_schema(_, _)</a></td>
+	<td class="summary">Create the Virtual Schema.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#abstractvirtualschemaadapter:set_properties">abstractvirtualschemaadapter:set_properties(_, _, _)</a></td>
+	<td class="summary">Set new adapter properties.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#abstractvirtualschemaadapter:refresh">abstractvirtualschemaadapter:refresh(_, _)</a></td>
+	<td class="summary">Refresh the Virtual Schema.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#abstractvirtualschemaadapter:get_capabilities">abstractvirtualschemaadapter:get_capabilities(_, properties)</a></td>
+	<td class="summary">Get the adapter capabilities.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#abstractvirtualschemaadapter:push_down">abstractvirtualschemaadapter:push_down(_, _)</a></td>
+	<td class="summary">Push a query down to the data source</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#abstractvirtualschemaadapter:drop_virtual_schema">abstractvirtualschemaadapter:drop_virtual_schema(_, _)</a></td>
+	<td class="summary">Drop the virtual schema.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "abstractvirtualschemaadapter:get_name"></a>
+    <strong>abstractvirtualschemaadapter:get_name()</strong>
+    <a style="float:right;" href="../source/AbstractVirtualSchemaAdapter.lua.html#26">line 26</a>
+    </dt>
+    <dd>
+    Get the adapter name.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        adapter name
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "abstractvirtualschemaadapter:get_version"></a>
+    <strong>abstractvirtualschemaadapter:get_version()</strong>
+    <a style="float:right;" href="../source/AbstractVirtualSchemaAdapter.lua.html#32">line 32</a>
+    </dt>
+    <dd>
+    Get the adapter version.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        version of the adapter
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "abstractvirtualschemaadapter:_define_capabilities"></a>
+    <strong>abstractvirtualschemaadapter:_define_capabilities()</strong>
+    <a style="float:right;" href="../source/AbstractVirtualSchemaAdapter.lua.html#40">line 40</a>
+    </dt>
+    <dd>
+    Define the list of all capabilities this adapter supports.
+ Override this method in derived adapter class. Note that this differs from <code>get_capabilities</code> because
+ the later takes exclusions defined by the user into consideration.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        list of all capabilities of this adapter
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "abstractvirtualschemaadapter:create_virtual_schema"></a>
+    <strong>abstractvirtualschemaadapter:create_virtual_schema(_, _)</strong>
+    <a style="float:right;" href="../source/AbstractVirtualSchemaAdapter.lua.html#49">line 49</a>
+    </dt>
+    <dd>
+    Create the Virtual Schema.
+ Create the virtual schema and provide the corresponding metadata.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">_</span>
+         user-defined properties
+        </li>
+        <li><span class="parameter">_</span>
+         user-defined properties
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        metadata representing the structure and datatypes of the data source from Exasol's point of view
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "abstractvirtualschemaadapter:set_properties"></a>
+    <strong>abstractvirtualschemaadapter:set_properties(_, _, _)</strong>
+    <a style="float:right;" href="../source/AbstractVirtualSchemaAdapter.lua.html#62">line 62</a>
+    </dt>
+    <dd>
+    Set new adapter properties.
+ This request provides two sets of user-defined properties. The old ones (i.e. the ones that where set before this
+ request) and the properties that the user changed.
+ A new property with a key that is not present in the old set of properties means the user added a new property.
+ New properties with existing keys override or unset existing properties. An unset property contains the special
+ value <code>AdapterProperties.null</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">_</span>
+         new user-defined properties
+        </li>
+        <li><span class="parameter">_</span>
+         new user-defined properties
+        </li>
+        <li><span class="parameter">_</span>
+         new user-defined properties
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        same response as if you created a new Virtual Schema
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "abstractvirtualschemaadapter:refresh"></a>
+    <strong>abstractvirtualschemaadapter:refresh(_, _)</strong>
+    <a style="float:right;" href="../source/AbstractVirtualSchemaAdapter.lua.html#71">line 71</a>
+    </dt>
+    <dd>
+    Refresh the Virtual Schema.
+ This method reevaluates the metadata (structure and data types) that represents the data source.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">_</span>
+         user-defined properties
+        </li>
+        <li><span class="parameter">_</span>
+         user-defined properties
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        same response as if you created a new Virtual Schema
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "abstractvirtualschemaadapter:get_capabilities"></a>
+    <strong>abstractvirtualschemaadapter:get_capabilities(_, properties)</strong>
+    <a style="float:right;" href="../source/AbstractVirtualSchemaAdapter.lua.html#99">line 99</a>
+    </dt>
+    <dd>
+    Get the adapter capabilities.
+ The basic <code>get_capabilities</code> handler in this class will out-of-the-box fit all derived adapters with the
+ rare exception of those that decide on capabilities at runtime depending on for example the version number of the
+ remote data source.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">_</span>
+         virtual schema request
+        </li>
+        <li><span class="parameter">properties</span>
+         user-defined properties
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        list of non-excluded adapter capabilities
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "abstractvirtualschemaadapter:push_down"></a>
+    <strong>abstractvirtualschemaadapter:push_down(_, _)</strong>
+    <a style="float:right;" href="../source/AbstractVirtualSchemaAdapter.lua.html#115">line 115</a>
+    </dt>
+    <dd>
+    Push a query down to the data source
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">_</span>
+         user-defined properties
+        </li>
+        <li><span class="parameter">_</span>
+         user-defined properties
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        rewritten query to be executed by the ExaLoader (<code>IMPORT</code>), value providing query
+ <code>SELECT ... FROM VALUES</code>, not recommended) or local Exasol query (<code>SELECT</code>).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "abstractvirtualschemaadapter:drop_virtual_schema"></a>
+    <strong>abstractvirtualschemaadapter:drop_virtual_schema(_, _)</strong>
+    <a style="float:right;" href="../source/AbstractVirtualSchemaAdapter.lua.html#124">line 124</a>
+    </dt>
+    <dd>
+    Drop the virtual schema.
+ Override this method to implement clean-up if the adapter is not stateless.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">_</span>
+         user-defined properties
+        </li>
+        <li><span class="parameter">_</span>
+         user-defined properties
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        response confirming the request (otherwise empty)
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

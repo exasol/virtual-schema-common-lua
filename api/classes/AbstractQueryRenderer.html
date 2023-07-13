@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/AbstractVirtualSchemaAdapter.html">AbstractVirtualSchemaAdapter</a></li>
+  <li><a href="../classes/AdapterProperties.html">AdapterProperties</a></li>
+  <li><a href="../classes/ImportQueryBuilder.html">ImportQueryBuilder</a></li>
+  <li><a href="../classes/Query.html">Query</a></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><strong>AbstractQueryRenderer</strong></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><a href="../classes/ImportAppender.html">ImportAppender</a></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><a href="../classes/SelectAppender.html">SelectAppender</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>AbstractQueryRenderer</code></h1>
+<p>This class is the abstract base class of all query renderers.</p>
+<p> It takes care of handling the temporary storage of the query to be constructed.</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" ><a href="#AbstractQueryAppender:_append">AbstractQueryAppender:_append(token)</a></td>
+	<td class="summary">Append a token to the query.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#AbstractQueryAppender:_append_all">AbstractQueryAppender:_append_all(...)</a></td>
+	<td class="summary">Append a list of tokens to the query.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#AbstractQueryAppender:_comma">AbstractQueryAppender:_comma(index)</a></td>
+	<td class="summary">Append a comma in a comma-separated list where needed.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#AbstractQueryAppender:_append_string_literal">AbstractQueryAppender:_append_string_literal(literal)</a></td>
+	<td class="summary">Append a string literal and enclose it in single quotes</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "AbstractQueryAppender:_append"></a>
+    <strong>AbstractQueryAppender:_append(token)</strong>
+    <a style="float:right;" href="../source/AbstractQueryRenderer.lua.html#14">line 14</a>
+    </dt>
+    <dd>
+    Append a token to the query.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">token</span>
+         token to append
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AbstractQueryAppender:_append_all"></a>
+    <strong>AbstractQueryAppender:_append_all(...)</strong>
+    <a style="float:right;" href="../source/AbstractQueryRenderer.lua.html#20">line 20</a>
+    </dt>
+    <dd>
+    Append a list of tokens to the query.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+         tokens to append
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AbstractQueryAppender:_comma"></a>
+    <strong>AbstractQueryAppender:_comma(index)</strong>
+    <a style="float:right;" href="../source/AbstractQueryRenderer.lua.html#26">line 26</a>
+    </dt>
+    <dd>
+    Append a comma in a comma-separated list where needed.
+ Appends a comma if the list index is greater than one.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">index</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AbstractQueryAppender:_append_string_literal"></a>
+    <strong>AbstractQueryAppender:_append_string_literal(literal)</strong>
+    <a style="float:right;" href="../source/AbstractQueryRenderer.lua.html#129">line 129</a>
+    </dt>
+    <dd>
+    Append a string literal and enclose it in single quotes
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">literal</span>
+         string literal
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

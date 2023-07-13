@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Local_Functions">Local Functions</a></li>
+<li><a href="#Methods">Methods</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/AbstractVirtualSchemaAdapter.html">AbstractVirtualSchemaAdapter</a></li>
+  <li><a href="../classes/AdapterProperties.html">AdapterProperties</a></li>
+  <li><a href="../classes/ImportQueryBuilder.html">ImportQueryBuilder</a></li>
+  <li><a href="../classes/Query.html">Query</a></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><a href="../classes/AbstractQueryRenderer.html">AbstractQueryRenderer</a></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><strong>ImportAppender</strong></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><a href="../classes/SelectAppender.html">SelectAppender</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>ImportAppender</code></h1>
+<p>Appender that can add top-level elements of a <code>SELECT</code> statement (or sub-select).</p>
+<p>
+
+</p>
+
+
+<h2><a href="#Local_Functions">Local Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" ><a href="#importappender.get_statement_with_escaped_quotes">importappender.get_statement_with_escaped_quotes(statement)</a></td>
+	<td class="summary">Get the statement with extra-quotes where necessary as it will be embedded into the IMPORT statement.</td>
+	</tr>
+</table>
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" ><a href="#importappender:new">importappender:new(out_query)</a></td>
+	<td class="summary">Create a new query renderer.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#importappender:append_import">importappender:append_import(import_query)</a></td>
+	<td class="summary">Append an <code>IMPORT</code> statement.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Local_Functions"></a>Local Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "importappender.get_statement_with_escaped_quotes"></a>
+    <strong>importappender.get_statement_with_escaped_quotes(statement)</strong>
+    <a style="float:right;" href="../source/ImportAppender.lua.html#41">line 41</a>
+    </dt>
+    <dd>
+    Get the statement with extra-quotes where necessary as it will be embedded into the IMPORT statement.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">statement</span>
+         statement for which to escape quotes
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        statement with escaped single quotes
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "importappender:new"></a>
+    <strong>importappender:new(out_query)</strong>
+    <a style="float:right;" href="../source/ImportAppender.lua.html#14">line 14</a>
+    </dt>
+    <dd>
+    Create a new query renderer.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">out_query</span>
+         query structure as provided through the Virtual Schema API
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        query renderer instance
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "importappender:append_import"></a>
+    <strong>importappender:append_import(import_query)</strong>
+    <a style="float:right;" href="../source/ImportAppender.lua.html#71">line 71</a>
+    </dt>
+    <dd>
+    Append an <code>IMPORT</code> statement.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">import_query</span>
+         import query appended
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

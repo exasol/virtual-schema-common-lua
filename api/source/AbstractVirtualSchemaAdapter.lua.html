@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Source</h2>
+<ul class="nowrap">
+  <li><strong>AbstractVirtualSchemaAdapter.lua</strong></li>
+  <li><a href="../source/AdapterProperties.lua.html">AdapterProperties.lua</a></li>
+  <li><a href="../source/ImportQueryBuilder.lua.html">ImportQueryBuilder.lua</a></li>
+  <li><a href="../source/Query.lua.html">Query.lua</a></li>
+  <li><a href="../source/QueryRenderer.lua.html">QueryRenderer.lua</a></li>
+  <li><a href="../source/RequestDispatcher.lua.html">RequestDispatcher.lua</a></li>
+  <li><a href="../source/AbstractQueryAppender.lua.html">AbstractQueryAppender.lua</a></li>
+  <li><a href="../source/AggregateFunctionAppender.lua.html">AggregateFunctionAppender.lua</a></li>
+  <li><a href="../source/ExpressionAppender.lua.html">ExpressionAppender.lua</a></li>
+  <li><a href="../source/ImportAppender.lua.html">ImportAppender.lua</a></li>
+  <li><a href="../source/ScalarFunctionAppender.lua.html">ScalarFunctionAppender.lua</a></li>
+  <li><a href="../source/SelectAppender.lua.html">SelectAppender.lua</a></li>
+  <li><a href="../source/text.lua.html">text.lua</a></li>
+  <li><a href="../source/validator.lua.html">validator.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/AbstractVirtualSchemaAdapter.html">AbstractVirtualSchemaAdapter</a></li>
+  <li><a href="../classes/AdapterProperties.html">AdapterProperties</a></li>
+  <li><a href="../classes/ImportQueryBuilder.html">ImportQueryBuilder</a></li>
+  <li><a href="../classes/Query.html">Query</a></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><a href="../classes/AbstractQueryRenderer.html">AbstractQueryRenderer</a></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><a href="../classes/ImportAppender.html">ImportAppender</a></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><a href="../classes/SelectAppender.html">SelectAppender</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>AbstractVirtualSchemaAdapter.lua</h2>
+<pre>
+<span class="comment">--- This class implements an abstract base adapter with common behavior for some of the request callback functions.
+</span><span class="comment">--
+</span><span class="comment">-- When you derive a concrete adapter from this base class, we recommend keeping it stateless. This makes
+</span><span class="comment">-- parallelization easier, reduces complexity and saves you the trouble of cleaning up in the drop-virtual-schema
+</span><span class="comment">-- request.
+</span><span class="comment">--
+</span><span class="comment">-- [impl -&gt; dsn~lua-virtual-schema-adapter-abstraction~0]
+</span><span class="comment">--
+</span><span class="comment">-- @classmod AbstractVirtualSchemaAdapter
+</span><span class="keyword">local</span> AbstractVirtualSchemaAdapter = {}
+
+<span class="keyword">local</span> ExaError = <span class="global">require</span>(<span class="string">"ExaError"</span>)
+
+<span class="keyword">function</span> AbstractVirtualSchemaAdapter:<span class="function-name">_init</span>()
+    <span class="comment">-- Intentionally empty
+</span><span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">raise_abstract_method_call_error</span>(method_name)
+    ExaError:<span class="function-name">new</span>(<span class="string">"E-VSCL-8"</span>, <span class="string">"Attempted to call the abstract method AbstractVirtualSchemaAdapter:{{method|u}}."</span>,
+            {method = {value = method_name, description = <span class="string">"abstract method that was called"</span>}}
+    ):<span class="function-name">add_ticket_mitigation</span>():<span class="function-name">raise</span>()
+<span class="keyword">end</span>
+
+<span class="comment">--- Get the adapter name.
+</span><a id="26"></a><span class="comment">-- @return adapter name
+</span><span class="keyword">function</span> AbstractVirtualSchemaAdapter:<span class="function-name">get_name</span>()
+    <span class="function-name">raise_abstract_method_call_error</span>(<span class="string">"get_name"</span>)
+<span class="keyword">end</span>
+
+<span class="comment">--- Get the adapter version.
+</span><a id="32"></a><span class="comment">-- @return version of the adapter
+</span><span class="keyword">function</span> AbstractVirtualSchemaAdapter:<span class="function-name">get_version</span>()
+    <span class="function-name">raise_abstract_method_call_error</span>(<span class="string">"get_version"</span>)
+<span class="keyword">end</span>
+
+<span class="comment">--- Define the list of all capabilities this adapter supports.
+</span><span class="comment">-- Override this method in derived adapter class. Note that this differs from `get_capabilities` because
+</span><span class="comment">-- the later takes exclusions defined by the user into consideration.
+</span><a id="40"></a><span class="comment">-- @return list of all capabilities of this adapter
+</span><span class="keyword">function</span> AbstractVirtualSchemaAdapter:<span class="function-name">_define_capabilities</span>()
+    <span class="function-name">raise_abstract_method_call_error</span>(<span class="string">"_define_capabilities"</span>)
+<span class="keyword">end</span>
+
+<span class="comment">--- Create the Virtual Schema.
+</span><span class="comment">-- Create the virtual schema and provide the corresponding metadata.
+</span><span class="comment">-- @param _ virtual schema request
+</span><span class="comment">-- @param _ user-defined properties
+</span><a id="49"></a><span class="comment">-- @return metadata representing the structure and datatypes of the data source from Exasol's point of view
+</span><span class="keyword">function</span> AbstractVirtualSchemaAdapter:<span class="function-name">create_virtual_schema</span>(_, _)
+    <span class="function-name">raise_abstract_method_call_error</span>(<span class="string">"create_virtual_schema"</span>)
+<span class="keyword">end</span>
+<span class="comment">--- Set new adapter properties.
+</span><span class="comment">-- This request provides two sets of user-defined properties. The old ones (i.e. the ones that where set before this
+</span><span class="comment">-- request) and the properties that the user changed.
+</span><span class="comment">-- A new property with a key that is not present in the old set of properties means the user added a new property.
+</span><span class="comment">-- New properties with existing keys override or unset existing properties. An unset property contains the special
+</span><span class="comment">-- value `AdapterProperties.null`.
+</span><span class="comment">-- @param _ virtual schema request
+</span><span class="comment">-- @param _ old user-defined properties
+</span><span class="comment">-- @param _ new user-defined properties
+</span><a id="62"></a><span class="comment">-- @return same response as if you created a new Virtual Schema
+</span><span class="keyword">function</span> AbstractVirtualSchemaAdapter:<span class="function-name">set_properties</span>(_, _, _)
+    <span class="function-name">raise_abstract_method_call_error</span>(<span class="string">"set_properties'"</span>)
+<span class="keyword">end</span>
+
+<span class="comment">--- Refresh the Virtual Schema.
+</span><span class="comment">-- This method reevaluates the metadata (structure and data types) that represents the data source.
+</span><span class="comment">-- @param _ virtual schema request
+</span><span class="comment">-- @param _ user-defined properties
+</span><a id="71"></a><span class="comment">-- @return same response as if you created a new Virtual Schema
+</span><span class="keyword">function</span> AbstractVirtualSchemaAdapter:<span class="function-name">refresh</span>(_, _)
+    <span class="function-name">raise_abstract_method_call_error</span>(<span class="string">"refresh"</span>)
+<span class="keyword">end</span>
+
+<span class="comment">-- [impl -&gt; dsn~excluding-capabilities~0]
+</span><span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">subtract_capabilities</span>(original_capabilities, excluded_capabilities)
+    <span class="keyword">local</span> filtered_capabilities = {}
+    <span class="keyword">for</span> _, capability <span class="keyword">in</span> <span class="global">ipairs</span>(original_capabilities) <span class="keyword">do</span>
+        <span class="keyword">local</span> is_excluded = <span class="keyword">false</span>
+        <span class="keyword">for</span> _, excluded_capability <span class="keyword">in</span> <span class="global">ipairs</span>(excluded_capabilities) <span class="keyword">do</span>
+            <span class="keyword">if</span> excluded_capability == capability <span class="keyword">then</span>
+                is_excluded = <span class="keyword">true</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> is_excluded <span class="keyword">then</span>
+            <span class="global">table</span>.<span class="function-name">insert</span>(filtered_capabilities, capability)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> filtered_capabilities
+<span class="keyword">end</span>
+
+<span class="comment">--- Get the adapter capabilities.
+</span><span class="comment">-- The basic `get_capabilities` handler in this class will out-of-the-box fit all derived adapters with the
+</span><span class="comment">-- rare exception of those that decide on capabilities at runtime depending on for example the version number of the
+</span><span class="comment">-- remote data source.
+</span><span class="comment">-- @param _ virtual schema request
+</span><span class="comment">-- @param properties user-defined properties
+</span><a id="99"></a><span class="comment">-- @return list of non-excluded adapter capabilities
+</span><span class="keyword">function</span> AbstractVirtualSchemaAdapter:<span class="function-name">get_capabilities</span>(_, properties)
+    <span class="keyword">if</span> properties:<span class="function-name">has_excluded_capabilities</span>() <span class="keyword">then</span>
+        <span class="keyword">return</span> {
+            <span class="global">type</span> = <span class="string">"getCapabilities"</span>,
+            capabilities = <span class="function-name">subtract_capabilities</span>(self.<span class="function-name">_define_capabilities</span>(), properties:<span class="function-name">get_excluded_capabilities</span>())
+        }
+    <span class="keyword">else</span>
+        <span class="keyword">return</span> {<span class="global">type</span> = <span class="string">"getCapabilities"</span>, capabilities = self.<span class="function-name">_define_capabilities</span>()}
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">--- Push a query down to the data source
+</span><span class="comment">-- @param _ virtual schema request
+</span><span class="comment">-- @param _ user-defined properties
+</span><span class="comment">-- @return rewritten query to be executed by the ExaLoader (`IMPORT`), value providing query
+</span><a id="115"></a><span class="comment">-- `SELECT ... FROM VALUES`, not recommended) or local Exasol query (`SELECT`).
+</span><span class="keyword">function</span> AbstractVirtualSchemaAdapter:<span class="function-name">push_down</span>(_, _)
+    <span class="function-name">raise_abstract_method_call_error</span>(<span class="string">"push_down"</span>)
+<span class="keyword">end</span>
+
+<span class="comment">--- Drop the virtual schema.
+</span><span class="comment">-- Override this method to implement clean-up if the adapter is not stateless.
+</span><span class="comment">-- @param _ virtual schema request (not used)
+</span><span class="comment">-- @param _ user-defined properties
+</span><a id="124"></a><span class="comment">-- @return response confirming the request (otherwise empty)
+</span><span class="keyword">function</span> AbstractVirtualSchemaAdapter:<span class="function-name">drop_virtual_schema</span>(_, _)
+    <span class="keyword">return</span> {<span class="global">type</span> = <span class="string">"dropVirtualSchema"</span>}
+<span class="keyword">end</span>
+
+<span class="keyword">return</span> AbstractVirtualSchemaAdapter</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

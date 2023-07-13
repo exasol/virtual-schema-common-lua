@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Methods">Methods</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/AbstractVirtualSchemaAdapter.html">AbstractVirtualSchemaAdapter</a></li>
+  <li><a href="../classes/AdapterProperties.html">AdapterProperties</a></li>
+  <li><a href="../classes/ImportQueryBuilder.html">ImportQueryBuilder</a></li>
+  <li><strong>Query</strong></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><a href="../classes/AbstractQueryRenderer.html">AbstractQueryRenderer</a></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><a href="../classes/ImportAppender.html">ImportAppender</a></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><a href="../classes/SelectAppender.html">SelectAppender</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>Query</code></h1>
+<p>This class implements an abstraction for a query string including its tokens.</p>
+<p>
+
+</p>
+
+
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" ><a href="#query:new">query:new(tokens)</a></td>
+	<td class="summary">Create a new instance of a <code>Query</code>.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#query:append">query:append(token)</a></td>
+	<td class="summary">Append a single token.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#query:append_all">query:append_all(...)</a></td>
+	<td class="summary">Append all tokens.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#query:get_tokens">query:get_tokens()</a></td>
+	<td class="summary">Get the tokens this query consists of</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#query:to_string">query:to_string()</a></td>
+	<td class="summary">Return the whole query as string.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "query:new"></a>
+    <strong>query:new(tokens)</strong>
+    <a style="float:right;" href="../source/Query.lua.html#10">line 10</a>
+    </dt>
+    <dd>
+    Create a new instance of a <code>Query</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tokens</span>
+         list of tokens that make up the query
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        query object
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "query:append"></a>
+    <strong>query:append(token)</strong>
+    <a style="float:right;" href="../source/Query.lua.html#23">line 23</a>
+    </dt>
+    <dd>
+    Append a single token.
+ While the same can be achieved with calling <code>append_all</code> with a single parameter, this method is faster.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">token</span>
+         token to append
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "query:append_all"></a>
+    <strong>query:append_all(...)</strong>
+    <a style="float:right;" href="../source/Query.lua.html#29">line 29</a>
+    </dt>
+    <dd>
+    Append all tokens.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+         tokens to append
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "query:get_tokens"></a>
+    <strong>query:get_tokens()</strong>
+    <a style="float:right;" href="../source/Query.lua.html#37">line 37</a>
+    </dt>
+    <dd>
+    Get the tokens this query consists of
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        tokens
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "query:to_string"></a>
+    <strong>query:to_string()</strong>
+    <a style="float:right;" href="../source/Query.lua.html#43">line 43</a>
+    </dt>
+    <dd>
+    Return the whole query as string.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        query as string
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

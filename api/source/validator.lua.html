@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Source</h2>
+<ul class="nowrap">
+  <li><a href="../source/AbstractVirtualSchemaAdapter.lua.html">AbstractVirtualSchemaAdapter.lua</a></li>
+  <li><a href="../source/AdapterProperties.lua.html">AdapterProperties.lua</a></li>
+  <li><a href="../source/ImportQueryBuilder.lua.html">ImportQueryBuilder.lua</a></li>
+  <li><a href="../source/Query.lua.html">Query.lua</a></li>
+  <li><a href="../source/QueryRenderer.lua.html">QueryRenderer.lua</a></li>
+  <li><a href="../source/RequestDispatcher.lua.html">RequestDispatcher.lua</a></li>
+  <li><a href="../source/AbstractQueryAppender.lua.html">AbstractQueryAppender.lua</a></li>
+  <li><a href="../source/AggregateFunctionAppender.lua.html">AggregateFunctionAppender.lua</a></li>
+  <li><a href="../source/ExpressionAppender.lua.html">ExpressionAppender.lua</a></li>
+  <li><a href="../source/ImportAppender.lua.html">ImportAppender.lua</a></li>
+  <li><a href="../source/ScalarFunctionAppender.lua.html">ScalarFunctionAppender.lua</a></li>
+  <li><a href="../source/SelectAppender.lua.html">SelectAppender.lua</a></li>
+  <li><a href="../source/text.lua.html">text.lua</a></li>
+  <li><strong>validator.lua</strong></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/AbstractVirtualSchemaAdapter.html">AbstractVirtualSchemaAdapter</a></li>
+  <li><a href="../classes/AdapterProperties.html">AdapterProperties</a></li>
+  <li><a href="../classes/ImportQueryBuilder.html">ImportQueryBuilder</a></li>
+  <li><a href="../classes/Query.html">Query</a></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><a href="../classes/AbstractQueryRenderer.html">AbstractQueryRenderer</a></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><a href="../classes/ImportAppender.html">ImportAppender</a></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><a href="../classes/SelectAppender.html">SelectAppender</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>validator.lua</h2>
+<pre>
+<span class="comment">--- Validators for common input such as user names or port numbers.
+</span><span class="comment">-- @module exasol.validator
+</span><span class="keyword">local</span> ExaError = <span class="global">require</span>(<span class="string">"ExaError"</span>)
+
+<span class="keyword">local</span> validator = {}
+
+<span class="keyword">local</span> SQL_IDENTIFIER_DOC_URL &lt;const&gt; =
+        <span class="string">"https://docs.exasol.com/db/latest/sql_references/basiclanguageelements.htm#SQLIdentifier"</span>
+<span class="keyword">local</span> MAX_IDENTIFIER_LENGTH &lt;const&gt; = <span class="number">128</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">validate_identifier_not_nil</span>(id, id_type)
+    <span class="keyword">if</span> id == <span class="keyword">nil</span> <span class="keyword">then</span>
+        ExaError:<span class="function-name">new</span>(<span class="string">"E-EVSCL-VAL-5"</span>, <span class="string">"Identifier cannot be null (or Lua nil): {{id_type|u}} name"</span>,
+                {
+                    id_type = {value = id_type, description = <span class="string">"type of database object which should be identified"</span>},
+                }
+        ):<span class="function-name">raise</span>()
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">validate_identifier_length</span>(id, id_type)
+    <span class="keyword">local</span> length = utf8.<span class="function-name">len</span>(id)
+    <span class="keyword">if</span> length &gt; MAX_IDENTIFIER_LENGTH <span class="keyword">then</span>
+        ExaError:<span class="function-name">new</span>(<span class="string">"E-EVSCL-VAL-4"</span>, <span class="string">"Identifier too long: {{id_type|u}} name with {{length}} characters."</span>,
+                {
+                    id_type = {value = id_type, description = <span class="string">"type of database object which should be identified"</span>},
+                    length = {value = length, description = <span class="string">"actual length of the identifier"</span>}
+                }
+        ):<span class="function-name">raise</span>()
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- Currently we only support the characters between 0x41 (= A) up to 0x5A (= Z) (ASCII) in all classes.
+</span><span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">is_unicode_uppercase_letter</span>(char)
+    <span class="keyword">return</span> char &gt;= <span class="number">0x41</span> <span class="keyword">and</span> char &lt;= <span class="number">0x5A</span>;
+<span class="keyword">end</span>
+
+<span class="comment">-- Currently we only support the characters between 0x61 (= a) up to 0x7A (= z) (ASCII) in all classes.
+</span><span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">is_unicode_lowercase_letter</span>(char)
+    <span class="keyword">return</span> char &gt;= <span class="number">0x61</span> <span class="keyword">and</span> char &lt;= <span class="number">0x7A</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- Currently we only support the digits between 0x30 (= 0) up to 0x39 (= 9) (ASCII) in all classes.
+</span><span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">is_unicode_decimal_number</span>(char)
+    <span class="keyword">return</span> char &gt;= <span class="number">0x30</span> <span class="keyword">and</span> char &lt;= <span class="number">0x39</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- Currently we only support the punctuation character 0x5f (= _) (ASCII) in all classes.
+</span><span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">is_unicode_connector_punctuation</span>(char)
+    <span class="keyword">return</span> char == <span class="number">0x5f</span> <span class="comment">-- underscore
+</span><span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">is_middle_dot</span>(char)
+    <span class="keyword">return</span> char == <span class="number">0xB7</span>;
+<span class="keyword">end</span>
+
+<span class="comment">--- Check if the character is a valid first character for an identifier.
+</span><span class="comment">-- &lt;ul&gt;
+</span><span class="comment">-- &lt;li&gt;Lu (upper-case letters): partial support&lt;/li&gt;
+</span><span class="comment">-- &lt;li&gt;Ll (lower-case letters): partial support&lt;/li&gt;
+</span><span class="comment">-- &lt;li&gt;Lt (title-case letters): not supported yet&lt;/li&gt;
+</span><span class="comment">-- &lt;li&gt;Lm (modifier letters): not supported yet&lt;/li&gt;
+</span><span class="comment">-- &lt;li&gt;Lo (other letters): not supported yet&lt;/li&gt;
+</span><span class="comment">-- &lt;li&gt;Nl (letter numbers): not supported yet&lt;/li&gt;
+</span><span class="comment">-- @param char unicode character number
+</span><a id="67"></a><span class="comment">-- @return true of the character is valid
+</span><span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">is_valid_first_identifier_character</span>(char)
+    <span class="keyword">return</span> <span class="function-name">is_unicode_uppercase_letter</span>(char) <span class="keyword">or</span> <span class="function-name">is_unicode_lowercase_letter</span>(char)
+<span class="keyword">end</span>
+
+<span class="comment">--- Check if the character is a valid follow-up character for an identifier.
+</span><span class="comment">-- &lt;ul&gt;
+</span><span class="comment">-- &lt;li&gt;Mn (non-spacing marks): not supported yet&lt;/li&gt;
+</span><span class="comment">-- &lt;li&gt;Mc (spacing combination marks): not supported yet&lt;/li&gt;
+</span><span class="comment">-- &lt;li&gt;Nd (decimal numbers): partial support&lt;/li&gt;
+</span><span class="comment">-- &lt;li&gt;Pc (connectors punctuations): partial support&lt;/li&gt;
+</span><span class="comment">-- &lt;li&gt;Cf (formatting codes): not supported yet&lt;/li&gt;
+</span><span class="comment">-- &lt;li&gt;unicode character U+00B7 (middle dot): supported&lt;/li&gt;
+</span><span class="comment">-- @param char unicode character number
+</span><a id="81"></a><span class="comment">-- @return true of the character is valid
+</span><span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">is_valid_followup_identifier_character</span>(char)
+    <span class="keyword">return</span> <span class="function-name">is_valid_first_identifier_character</span>(char) <span class="keyword">or</span> <span class="function-name">is_unicode_decimal_number</span>(char)
+        <span class="keyword">or</span> <span class="function-name">is_unicode_connector_punctuation</span>(char) <span class="keyword">or</span> <span class="function-name">is_middle_dot</span>(char)
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">validate_identifier_characters</span>(id, id_type)
+    <span class="keyword">for</span> position, char <span class="keyword">in</span> utf8.<span class="function-name">codes</span>(id) <span class="keyword">do</span>
+        <span class="keyword">if</span> (position == <span class="number">1</span> <span class="keyword">and</span> <span class="keyword">not</span> <span class="function-name">is_valid_first_identifier_character</span>(char))
+                <span class="keyword">or</span> (<span class="keyword">not</span> <span class="function-name">is_valid_followup_identifier_character</span>(char))
+        <span class="keyword">then</span>
+            ExaError:<span class="function-name">new</span>(<span class="string">"E-EVSCL-VAL-3"</span>, <span class="string">"Invalid character in {{id_type|u}} name at position {{position}}: {{id}}"</span>,
+                    {
+                        id_type = {value = id_type, description = <span class="string">"type of database object which should be identified"</span>},
+                        position = {
+                            value = position,
+                            description = <span class="string">"position of the first illegal character in identifier"</span>
+                        },
+                        id = {value = id, description = <span class="string">"value of the object identifier"</span>}
+                    })
+                    :<span class="function-name">add_mitigations</span>(<span class="string">"Please note that "</span> .. id_type ..<span class="string">" names are SQL identifiers. Refer to "</span>
+                    .. SQL_IDENTIFIER_DOC_URL .. <span class="string">" for information about valid identifiers."</span>)
+                    :<span class="function-name">raise</span>()
+
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">validate_sql_identifier</span>(id, id_type)
+    <span class="function-name">validate_identifier_not_nil</span>(id, id_type)
+    <span class="function-name">validate_identifier_length</span>(id, id_type)
+    <span class="function-name">validate_identifier_characters</span>(id, id_type)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> validator.<span class="function-name">validate_user</span> (id)
+    <span class="function-name">validate_sql_identifier</span>(id, <span class="string">"user"</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> validator.<span class="function-name">validate_port</span>(port_string)
+    <span class="keyword">local</span> port = <span class="global">tonumber</span>(port_string)
+    <span class="keyword">if</span> port == <span class="keyword">nil</span> <span class="keyword">then</span>
+        ExaError:<span class="function-name">new</span>(<span class="string">"E-EVSCL-VAL-1"</span>, <span class="string">"Illegal source database port (not a number): {{port}}"</span>,
+                {port = {value = port_string, <span class="string">"number of the port the source database listens on"</span>}})
+                :<span class="function-name">add_mitigations</span>(<span class="string">"Please enter a number between 1 and 65535"</span>)
+                :<span class="function-name">raise</span>()
+    <span class="keyword">else</span>
+        <span class="keyword">if</span> (port &lt; <span class="number">1</span>) <span class="keyword">or</span> (port &gt; <span class="number">65535</span>) <span class="keyword">then</span>
+            ExaError:<span class="function-name">new</span>(<span class="string">"E-EVSCL-VAL-2"</span>, <span class="string">"Source database port is out of range: {{port}}"</span>,
+                    {port = {value = port, <span class="string">"number of the port the source database listens on"</span>}})
+                    :<span class="function-name">add_mitigations</span>(<span class="string">"Please pick a port between 1 and 65535"</span>, <span class="string">"The default Exasol port is 8563"</span>)
+                    :<span class="function-name">raise</span>()
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">return</span> validator</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

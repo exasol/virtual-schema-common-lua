@@ -1,0 +1,584 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Methods">Methods</a></li>
+<li><a href="#Metamethods">Metamethods</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/AbstractVirtualSchemaAdapter.html">AbstractVirtualSchemaAdapter</a></li>
+  <li><strong>AdapterProperties</strong></li>
+  <li><a href="../classes/ImportQueryBuilder.html">ImportQueryBuilder</a></li>
+  <li><a href="../classes/Query.html">Query</a></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><a href="../classes/AbstractQueryRenderer.html">AbstractQueryRenderer</a></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><a href="../classes/ImportAppender.html">ImportAppender</a></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><a href="../classes/SelectAppender.html">SelectAppender</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>AdapterProperties</code></h1>
+<p>This class abstracts access to the user-defined properties of the Virtual Schema.</p>
+<p>
+
+</p>
+
+
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" ><a href="#adapterproperties:new">adapterproperties:new(raw_properties)</a></td>
+	<td class="summary">Create a new instance of adapter properties.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:class">adapterproperties:class()</a></td>
+	<td class="summary">Get the class of the object
+ return class</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:get">adapterproperties:get(property_name)</a></td>
+	<td class="summary">Get the value of a property.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:is_property_set">adapterproperties:is_property_set(property_name)</a></td>
+	<td class="summary">Check if the property is set.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:has_value">adapterproperties:has_value(property_name)</a></td>
+	<td class="summary">Check if the property has a non-empty value.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:is_empty">adapterproperties:is_empty(property_name)</a></td>
+	<td class="summary">Check if the property value is empty.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:is_true">adapterproperties:is_true(property_name)</a></td>
+	<td class="summary">Check if the property contains the string <code>true</code> (case-sensitive).</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:is_false">adapterproperties:is_false(property_name)</a></td>
+	<td class="summary">Check if the property evaluates to <code>false</code>.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:validate">adapterproperties:validate()</a></td>
+	<td class="summary">Validate the adapter properties.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:validate_boolean">adapterproperties:validate_boolean(property_name)</a></td>
+	<td class="summary">Validate a boolean property.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:get_log_level">adapterproperties:get_log_level()</a></td>
+	<td class="summary">Get the log level</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:has_log_level">adapterproperties:has_log_level()</a></td>
+	<td class="summary">Check if the log level is set</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:get_excluded_capabilities">adapterproperties:get_excluded_capabilities()</a></td>
+	<td class="summary">Get the list of names of the excluded capabilities.</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:has_excluded_capabilities">adapterproperties:has_excluded_capabilities()</a></td>
+	<td class="summary">Check if excluded capabilities are set</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:get_debug_address">adapterproperties:get_debug_address()</a></td>
+	<td class="summary">Get the debug address (host and port)</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:has_debug_address">adapterproperties:has_debug_address()</a></td>
+	<td class="summary">Check if log address is set</td>
+	</tr>
+	<tr>
+	<td class="name" ><a href="#adapterproperties:merge">adapterproperties:merge(new_properties)</a></td>
+	<td class="summary">Merge new properties into a set of existing ones</td>
+	</tr>
+</table>
+<h2><a href="#Metamethods">Metamethods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" ><a href="#adapterproperties:__tostring">adapterproperties:__tostring()</a></td>
+	<td class="summary">Create a string representation</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "adapterproperties:new"></a>
+    <strong>adapterproperties:new(raw_properties)</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#17">line 17</a>
+    </dt>
+    <dd>
+    Create a new instance of adapter properties.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">raw_properties</span>
+         properties as key-value pairs
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        new instance
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:class"></a>
+    <strong>adapterproperties:class()</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#29">line 29</a>
+    </dt>
+    <dd>
+    Get the class of the object
+ return class
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:get"></a>
+    <strong>adapterproperties:get(property_name)</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#36">line 36</a>
+    </dt>
+    <dd>
+    Get the value of a property.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">property_name</span>
+         name of the property to get
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        property value
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:is_property_set"></a>
+    <strong>adapterproperties:is_property_set(property_name)</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#43">line 43</a>
+    </dt>
+    <dd>
+    Check if the property is set.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">property_name</span>
+         name of the property to check
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <code>true</code> if the property is set (i.e. not <code>nil</code>)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:has_value"></a>
+    <strong>adapterproperties:has_value(property_name)</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#50">line 50</a>
+    </dt>
+    <dd>
+    Check if the property has a non-empty value.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">property_name</span>
+         name of the property to check
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <code>true</code> if the property has a non-empty value (i.e. not <code>nil</code> or an empty string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:is_empty"></a>
+    <strong>adapterproperties:is_empty(property_name)</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#58">line 58</a>
+    </dt>
+    <dd>
+    Check if the property value is empty.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">property_name</span>
+         name of the property to check
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <code>true</code> if the property's value is empty (i.e. the property is set to an empty string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:is_true"></a>
+    <strong>adapterproperties:is_true(property_name)</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#65">line 65</a>
+    </dt>
+    <dd>
+    Check if the property contains the string <code>true</code> (case-sensitive).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">property_name</span>
+         name of the property to check
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <code>true</code> if the property's value is the string <code>true</code>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:is_false"></a>
+    <strong>adapterproperties:is_false(property_name)</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#72">line 72</a>
+    </dt>
+    <dd>
+    Check if the property evaluates to <code>false</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">property_name</span>
+         name of the property to check
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <code>true</code> if the property's value is anything else than the string <code>true</code>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:validate"></a>
+    <strong>adapterproperties:validate()</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#126">line 126</a>
+    </dt>
+    <dd>
+    Validate the adapter properties.
+
+
+
+
+    <h3>Raises:</h3>
+    validation error
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:validate_boolean"></a>
+    <strong>adapterproperties:validate_boolean(property_name)</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#135">line 135</a>
+    </dt>
+    <dd>
+    Validate a boolean property.
+ Allowed values are <code>true</code>, <code>false</code> or an unset variable.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">property_name</span>
+
+
+
+        </li>
+    </ul>
+
+
+    <h3>Raises:</h3>
+    validation error
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:get_log_level"></a>
+    <strong>adapterproperties:get_log_level()</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#146">line 146</a>
+    </dt>
+    <dd>
+    Get the log level
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        log level
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:has_log_level"></a>
+    <strong>adapterproperties:has_log_level()</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#152">line 152</a>
+    </dt>
+    <dd>
+    Check if the log level is set
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <code>true</code> if the log level is set
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:get_excluded_capabilities"></a>
+    <strong>adapterproperties:get_excluded_capabilities()</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#158">line 158</a>
+    </dt>
+    <dd>
+    Get the list of names of the excluded capabilities.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        excluded capabilities
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:has_excluded_capabilities"></a>
+    <strong>adapterproperties:has_excluded_capabilities()</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#164">line 164</a>
+    </dt>
+    <dd>
+    Check if excluded capabilities are set
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <code>true</code> if the excluded capabilities are set
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:get_debug_address"></a>
+    <strong>adapterproperties:get_debug_address()</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#170">line 170</a>
+    </dt>
+    <dd>
+    Get the debug address (host and port)
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        host, port or nil if the property has no value
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:has_debug_address"></a>
+    <strong>adapterproperties:has_debug_address()</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#188">line 188</a>
+    </dt>
+    <dd>
+    Check if log address is set
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <code>true</code> if the log address is set
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "adapterproperties:merge"></a>
+    <strong>adapterproperties:merge(new_properties)</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#196">line 196</a>
+    </dt>
+    <dd>
+    Merge new properties into a set of existing ones
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">new_properties</span>
+         set of new properties to merge into the existing ones
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        merge product
+ [impl -> dsn~merging-user-defined-properties~0]
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Metamethods"></a>Metamethods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "adapterproperties:__tostring"></a>
+    <strong>adapterproperties:__tostring()</strong>
+    <a style="float:right;" href="../source/AdapterProperties.lua.html#214">line 214</a>
+    </dt>
+    <dd>
+    Create a string representation
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        string representation
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

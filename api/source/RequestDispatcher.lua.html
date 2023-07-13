@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Virtual Schema Common Lua</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Source</h2>
+<ul class="nowrap">
+  <li><a href="../source/AbstractVirtualSchemaAdapter.lua.html">AbstractVirtualSchemaAdapter.lua</a></li>
+  <li><a href="../source/AdapterProperties.lua.html">AdapterProperties.lua</a></li>
+  <li><a href="../source/ImportQueryBuilder.lua.html">ImportQueryBuilder.lua</a></li>
+  <li><a href="../source/Query.lua.html">Query.lua</a></li>
+  <li><a href="../source/QueryRenderer.lua.html">QueryRenderer.lua</a></li>
+  <li><strong>RequestDispatcher.lua</strong></li>
+  <li><a href="../source/AbstractQueryAppender.lua.html">AbstractQueryAppender.lua</a></li>
+  <li><a href="../source/AggregateFunctionAppender.lua.html">AggregateFunctionAppender.lua</a></li>
+  <li><a href="../source/ExpressionAppender.lua.html">ExpressionAppender.lua</a></li>
+  <li><a href="../source/ImportAppender.lua.html">ImportAppender.lua</a></li>
+  <li><a href="../source/ScalarFunctionAppender.lua.html">ScalarFunctionAppender.lua</a></li>
+  <li><a href="../source/SelectAppender.lua.html">SelectAppender.lua</a></li>
+  <li><a href="../source/text.lua.html">text.lua</a></li>
+  <li><a href="../source/validator.lua.html">validator.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/exasol.vscl.text.html">exasol.vscl.text</a></li>
+  <li><a href="../modules/exasol.validator.html">exasol.validator</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/AbstractVirtualSchemaAdapter.html">AbstractVirtualSchemaAdapter</a></li>
+  <li><a href="../classes/AdapterProperties.html">AdapterProperties</a></li>
+  <li><a href="../classes/ImportQueryBuilder.html">ImportQueryBuilder</a></li>
+  <li><a href="../classes/Query.html">Query</a></li>
+  <li><a href="../classes/QueryRenderer.html">QueryRenderer</a></li>
+  <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
+  <li><a href="../classes/AbstractQueryRenderer.html">AbstractQueryRenderer</a></li>
+  <li><a href="../classes/AggregateFunctionAppender.html">AggregateFunctionAppender</a></li>
+  <li><a href="../classes/ExpressionAppender.html">ExpressionAppender</a></li>
+  <li><a href="../classes/ImportAppender.html">ImportAppender</a></li>
+  <li><a href="../classes/ScalarFunctionAppender.html">ScalarFunctionAppender</a></li>
+  <li><a href="../classes/SelectAppender.html">SelectAppender</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>RequestDispatcher.lua</h2>
+<pre>
+<span class="comment">--- This class dispatches Virtual Schema requests to a Virtual Schema adapter.
+</span><span class="comment">-- It is independent of the use case of the VS adapter and offers functionality that each Virtual Schema needs, like
+</span><span class="comment">-- JSON decoding and encoding and setting up remote logging.
+</span><span class="comment">-- To use the dispatcher, you need to inject the concrete adapter the dispatcher should send the prepared requests to.
+</span><span class="comment">-- @classmod RequestDispatcher
+</span><span class="keyword">local</span> RequestDispatcher = {}
+RequestDispatcher.__index = RequestDispatcher
+<span class="keyword">local</span> TRUNCATE_ERRORS_AFTER &lt;const&gt; = <span class="number">3000</span>
+
+<span class="keyword">local</span> log = <span class="global">require</span>(<span class="string">"remotelog"</span>)
+<span class="keyword">local</span> cjson = <span class="global">require</span>(<span class="string">"cjson"</span>)
+<span class="keyword">local</span> ExaError = <span class="global">require</span>(<span class="string">"ExaError"</span>)
+
+<span class="comment">--- Create a new `RequestDispatcher`.
+</span><span class="comment">-- @param adapter adapter that receives the dispatched requests
+</span><span class="comment">-- @param properties_reader properties reader
+</span><a id="18"></a><span class="comment">-- @return dispatcher instance
+</span><span class="keyword">function</span> RequestDispatcher:<span class="function-name">new</span>(adapter, properties_reader)
+    <span class="global">assert</span>(adapter ~= <span class="keyword">nil</span>, <span class="string">"Request Dispatcher requires an adapter to dispatch too"</span>)
+    <span class="keyword">local</span> instance = <span class="global">setmetatable</span>({}, self)
+    instance:<span class="function-name">_init</span>(adapter, properties_reader)
+    <span class="keyword">return</span> instance
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> RequestDispatcher:<span class="function-name">_init</span>(adapter, properties_reader)
+    self._adapter = adapter
+    self._properties_reader = properties_reader <span class="keyword">or</span> <span class="global">require</span>(<span class="string">"exasol.vscl.AdapterProperties"</span>)
+    <span class="comment">-- Replace the `cjson` null object to decouple the adapter properties from the `cjson` library.
+</span>    cjson.null = properties_reader.null
+<span class="keyword">end</span>
+
+<span class="comment">-- [impl -&gt; dsn~dispatching-push-down-requests~0]
+</span><span class="comment">-- [impl -&gt; dsn~dispatching-create-virtual-schema-requests~0]
+</span><span class="comment">-- [impl -&gt; dsn~dispatching-drop-virtual-schema-requests~0]
+</span><span class="comment">-- [impl -&gt; dsn~dispatching-refresh-requests~0]
+</span><span class="comment">-- [impl -&gt; dsn~dispatching-get-capabilities-requests~0]
+</span><span class="comment">-- [impl -&gt; dsn~dispatching-set-properties-requests~0]
+</span><span class="keyword">function</span> RequestDispatcher:<span class="function-name">_handle_request</span>(request, properties)
+    <span class="keyword">local</span> handlers = {
+        pushdown =  self._adapter.push_down,
+        createVirtualSchema = self._adapter.create_virtual_schema,
+        dropVirtualSchema = self._adapter.drop_virtual_schema,
+        refresh = self._adapter.refresh,
+        getCapabilities = self._adapter.get_capabilities,
+        setProperties = self._adapter.set_properties
+    }
+    log.<span class="function-name">info</span>(<span class="string">'Received "%s" request.'</span>, request.<span class="global">type</span>)
+    <span class="keyword">local</span> handler = handlers[request.<span class="global">type</span>]
+    <span class="keyword">if</span>(handler ~= <span class="keyword">nil</span>) <span class="keyword">then</span>
+        <span class="keyword">if</span> request.<span class="global">type</span> == <span class="string">"setProperties"</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> new_properties = self:<span class="function-name">_extract_new_properties</span>(request)
+            <span class="keyword">return</span> <span class="function-name">handler</span>(self._adapter, request, properties, new_properties)
+        <span class="keyword">else</span>
+            <span class="keyword">return</span> <span class="function-name">handler</span>(self._adapter, request, properties)
+        <span class="keyword">end</span>
+    <span class="keyword">else</span>
+        ExaError:<span class="function-name">new</span>(<span class="string">"F-RQD-1"</span>, <span class="string">"Unknown Virtual Schema request type {{request_type}} received."</span>,
+            {request_type = request.<span class="global">type</span>})
+            :<span class="function-name">add_ticket_mitigation</span>()
+            :<span class="function-name">raise</span>(<span class="number">0</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">log_error</span>(message)
+    <span class="keyword">local</span> error_type = <span class="global">string</span>.<span class="function-name">sub</span>(message, <span class="number">1</span>, <span class="number">2</span>)
+    <span class="keyword">if</span> error_type == <span class="string">"F-"</span> <span class="keyword">then</span>
+        log.<span class="function-name">fatal</span>(message)
+    <span class="keyword">else</span>
+        log.<span class="global">error</span>(message)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> <span class="function-name">handle_error</span>(message)
+    <span class="keyword">if</span> <span class="global">string</span>.<span class="function-name">len</span>(message) &gt; TRUNCATE_ERRORS_AFTER <span class="keyword">then</span>
+        message = <span class="global">string</span>.<span class="function-name">sub</span>(message, <span class="number">1</span>, TRUNCATE_ERRORS_AFTER) ..
+            <span class="string">"\n... (error message truncated after "</span> .. TRUNCATE_ERRORS_AFTER .. <span class="string">" characters)"</span>
+    <span class="keyword">end</span>
+    <span class="function-name">log_error</span>(message)
+    <span class="keyword">return</span> message
+<span class="keyword">end</span>
+
+<span class="comment">-- [impl -&gt; dsn~reading-user-defined-properties~0]
+</span><span class="keyword">function</span> RequestDispatcher:<span class="function-name">_extract_properties</span>(request)
+    <span class="keyword">local</span> raw_properties = (request.schemaMetadataInfo <span class="keyword">or</span> {}).properties <span class="keyword">or</span> {}
+    <span class="keyword">return</span> self._properties_reader:<span class="function-name">new</span>(raw_properties)
+<span class="keyword">end</span>
+
+<span class="comment">-- The "set properties" request contains the new properties in the `properties` element directly under the root element.
+</span><span class="keyword">function</span> RequestDispatcher:<span class="function-name">_extract_new_properties</span>(request)
+    <span class="keyword">local</span> raw_properties = request.properties <span class="keyword">or</span> {}
+    <span class="keyword">return</span> self._properties_reader:<span class="function-name">new</span>(raw_properties)
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> RequestDispatcher:<span class="function-name">_init_logging</span>(properties)
+    log.<span class="function-name">set_client_name</span>(self._adapter:<span class="function-name">get_name</span>() .. <span class="string">" "</span> .. self._adapter:<span class="function-name">get_version</span>())
+    <span class="keyword">if</span> properties:<span class="function-name">has_log_level</span>() <span class="keyword">then</span>
+        log.<span class="function-name">set_level</span>(<span class="global">string</span>.<span class="function-name">upper</span>(properties:<span class="function-name">get_log_level</span>()))
+    <span class="keyword">end</span>
+    <span class="keyword">local</span> host, port = properties:<span class="function-name">get_debug_address</span>()
+    <span class="keyword">if</span> host <span class="keyword">then</span>
+        log.<span class="function-name">connect</span>(host, port)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">---
+</span><span class="comment">-- RLS adapter entry point.
+</span><span class="comment">-- &lt;p&gt;
+</span><span class="comment">-- This global function receives the request from the Exasol core database.
+</span><span class="comment">-- &lt;/p&gt;
+</span><span class="comment">--
+</span><span class="comment">-- @param request_as_json JSON-encoded adapter request
+</span><span class="comment">--
+</span><span class="comment">-- @return JSON-encoded adapter response
+</span><span class="comment">--
+</span><span class="comment">-- [impl -&gt; dsn~translating-json-request-to-lua-tables~0]
+</span><a id="117"></a><span class="comment">-- [impl -&gt; dsn~translating-lua-tables-to-json-responses~0]
+</span><span class="keyword">function</span> RequestDispatcher:<span class="function-name">adapter_call</span>(request_as_json)
+    <span class="keyword">local</span> request = cjson.<span class="function-name">decode</span>(request_as_json)
+    <span class="keyword">local</span> properties = self:<span class="function-name">_extract_properties</span>(request)
+    self:<span class="function-name">_init_logging</span>(properties)
+    log.<span class="global">debug</span>(<span class="string">"Raw request:\n%s"</span>, request_as_json)
+    <span class="keyword">local</span> ok, result = <span class="global">xpcall</span>(RequestDispatcher._handle_request, handle_error, self, request, properties)
+    <span class="keyword">if</span> ok <span class="keyword">then</span>
+        <span class="keyword">local</span> response = cjson.<span class="function-name">encode</span>(result)
+        log.<span class="global">debug</span>(<span class="string">"Response:\n"</span> .. response)
+        log.<span class="function-name">disconnect</span>()
+        <span class="keyword">return</span> response
+    <span class="keyword">else</span>
+        log.<span class="function-name">disconnect</span>()
+        <span class="global">error</span>(result)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">return</span> RequestDispatcher</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-07-13 08:49:23 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
