@@ -114,7 +114,7 @@ local function workaround_group_by_integer(group_by_criteria)
     if group_by_criteria.type == "literal_exactnumeric" then
         local new_value = tostring(group_by_criteria.value)
         log.debug("Replacing numeric literal " .. new_value .. " with string literal in GROUP BY")
-        return {type="literal_string", value=new_value}
+        return {type = "literal_string", value = new_value}
     else
         return group_by_criteria
     end
