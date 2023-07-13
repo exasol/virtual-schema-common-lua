@@ -6,6 +6,7 @@ local AbstractQueryRenderer = require("exasol.vscl.queryrenderer.AbstractQueryAp
 setmetatable(SelectAppender, {__index = AbstractQueryRenderer})
 
 local ExaError = require("ExaError")
+local log = require("remotelog")
 local ExpressionAppender = require("exasol.vscl.queryrenderer.ExpressionAppender")
 
 local JOIN_TYPES<const> = {inner = "INNER", left_outer = "LEFT OUTER", right_outer = "RIGHT OUTER",
@@ -100,12 +101,31 @@ function SelectAppender:_append_filter(filter)
     end
 end
 
+--- Replace an unsupported expression in a `GROUP BY` clause with a supported one or return it unchanged.
+--
+-- This replaces numeric literals with the corresponding string value, as Exasol interprets
+-- `GROUP BY <integer-constant>` as column number &mdash; which is not what the user intended. Also,
+-- please note that `GROUP BY <constant>` always leads to grouping with a single group, regardless of the
+-- actual value of the constant (except for `FALSE`, which is reserved).
+--
+-- @param group_by_criteria the original `GROUP BY` expression
+-- @return a new, alternative expression or the original expression if no replacement is necessary
+local function workaround_group_by_integer(group_by_criteria)
+    if group_by_criteria.type == "literal_exactnumeric" then
+        local new_value = tostring(group_by_criteria.value)
+        log.debug("Replacing numeric literal " .. new_value .. " with string literal in GROUP BY")
+        return {type = "literal_string", value = new_value}
+    else
+        return group_by_criteria
+    end
+end
+
 function SelectAppender:_append_group_by(group)
     if group then
         self:_append(" GROUP BY ")
         for i, criteria in ipairs(group) do
             self:_comma(i)
-            ExpressionAppender:new(self._out_query):append_expression(criteria)
+            ExpressionAppender:new(self._out_query):append_expression(workaround_group_by_integer(criteria))
         end
     end
 end

@@ -443,6 +443,33 @@ describe("SelectAppender", function()
                 .. ' GROUP BY "TICKETS"."TYPE", "TICKETS"."PRIORITY"', original_query)
     end)
 
+    it("replaces a numeric literal in a GROUP BY with a string literal", function()
+        local original_query = {
+            type = "select",
+            selectList = {
+                {
+                    name = "COUNT",
+                    type = "function_aggregate"
+                },
+                {
+                    name = "TYPE",
+                    tableName = "TICKETS",
+                    type = "column"
+                }
+            },
+            from = {
+                type = "table", name = "TICKETS"
+            },
+            groupBy = {
+                {
+                    value = 0,
+                    type = "literal_exactnumeric"
+                }
+            }
+        }
+        assert_yields('SELECT COUNT(*), "TICKETS"."TYPE" FROM "TICKETS" GROUP BY \'0\'', original_query)
+    end)
+
     it("raises an error if the WHERE clause type is unknown", function()
         local original_query = {
             type = "select",

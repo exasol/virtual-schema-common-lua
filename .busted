@@ -2,17 +2,19 @@ return {
   _all = {
     coverage = true,
     shuffle = true,
-    lpath = "./src/?.lua;./spec/?.lua"
+    recursive = true,
+    verbose = true,
+    lazy = false,
+    ["auto-insulate"] = true,
+    ["keep-going"] = true,
+    ["defer-print"] = false,
+    lpath = "./src/?.lua;./spec/?.lua",
+    ROOT = {"spec/"},
   },
   default = {
     verbose = true
   },
   ci = {
     coverage = true,
-  },
-  utest = {
-    tags = "utest",
-    ROOT = {"spec"},
-    verbose = true
   },
 }

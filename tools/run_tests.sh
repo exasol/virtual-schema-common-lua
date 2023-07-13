@@ -18,10 +18,7 @@ readonly report="$luacov_dir/luacov.report.out"
 # Print the summary section of the code coverage report to the console
 #
 function print_coverage_summary {
-    if [[ -e "$report" ]]; then
-      echo
-      grep --after 500 'File\s*Hits' "$report"
-    fi
+    grep --after 500 'File\s*Hits' "$report"
 }
 
 rm -rf "$luacov_dir"
@@ -30,4 +27,5 @@ mkdir -p "$luacov_dir"
 
 cd "$base_dir"
 luarocks test --local -- "$@"
+luacov --config .coverage_config.lua $report
 print_coverage_summary

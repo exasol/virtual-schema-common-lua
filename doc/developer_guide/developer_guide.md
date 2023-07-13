@@ -57,34 +57,66 @@ busted
 To run a single test add the file name:
 
 ```bash
-busted spec/QueryRenderer_spec.lua 
+busted spec/exasol/vscl/validator_spec.lua
 ```
 
-If you want to run all unit tests including code coverage and static code analysis, issue the following command:
+If you want to run all unit tests including code coverage, issue the following command:
 
 ```bash
-luarocks test
+./tools/run_tests.sh
+```
+
+## Building API Documentation
+
+To build the API documentation using ldoc issue the following command:
+
+```bash
+./tools/build_docs.sh
+```
+
+The documentation will be written as HTML files to `target/ldoc/`.
+
+## Formatting Sources
+
+First install [LuaFormatter](https://github.com/Koihik/LuaFormatter) by executing the following command:
+
+```bash
+luarocks install --local --server=https://luarocks.org/dev luaformatter
+```
+
+Then format all Lua sources by executing the following command:
+
+```bash
+./tools/format_lua.sh
+```
+
+## Running Static Code Analysis
+
+To run static code analysis for Lua using luacheck issue the following command:
+
+```bash
+./tools/run_luacheck.sh
 ```
 
 ### Understanding the Sources
 
-Under [doc/model](../model) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
+Under [doc/model](../model/) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
 
 You can render the model by running:
 
 ```bash
-mvn com.github.jeluard:plantuml-maven-plugin:generate
+./tools/build_diagrams.sh
 ```
 
-The resulting SVG files are located under `target/plantuml`. They contain links for drilling down.
+The resulting SVG files are located under `doc/images/generated/`. They contain links for drilling down.
 
 Since the model contains all important information, here just a very short summary.
 
 1. VSCL provides a base library for writing your own Virtual Schemas in Lua
-1. The resulting package is available as LuaRocks package `virtual-schema-common-lua`
-1. In your concrete Virtual Schema implementation you need to write an `entry` module, that has an `adapter_call` entry function
-1. The `entry` module should create and wire up all static objects (like the `RequestDispatcher` for example)
-1. Use the `remotelog` package for logging
+2. The resulting package is available as LuaRocks package `virtual-schema-common-lua`
+3. In your concrete Virtual Schema implementation you need to write an `entry` module, that has an `adapter_call` entry function
+4. The `entry` module should create and wire up all static objects (like the `RequestDispatcher` for example)
+5. Use the `remotelog` package for logging
 
 #### Wrapping the Push-down Query into an Import
 
@@ -140,7 +172,7 @@ Developers writing Virtual Schema adapters should know about the limitations of 
 
 ### No Push-down for Analytic Functions
 
-[Analytic functions](https://docs.exasol.com/db/latest/sql_references/functions/analyticfunctions.htm) are aggregate functions that have an `OVER` clause. Since they are connected, this also applies to the `PARTIION`, `WINDOW FRAME` and partition `ORDER` clauses.  
+[Analytic functions](https://docs.exasol.com/db/latest/sql_references/functions/analyticfunctions.htm) are aggregate functions that have an `OVER` clause. Since they are connected, this also applies to the `PARTITION`, `WINDOW FRAME` and partition `ORDER` clauses.  
 
 Exasol does not support pushing analytic functions to the source database. This would be too complex and is very seldom useful in the situations were Virtual Schemas are needed. Virtual Schemas mainly exist to explore a remote data source through Exasol. Often as preparation for later data export directly through the ExaLoader.
 
@@ -148,6 +180,6 @@ So to recapitulate: while basic aggregate functions are supported, the `OVER` cl
 
 ### Read the Documentation on Functions
 
-Sometimes limitations come in the form of SQL pharses that Exasol ignores. Take [`RESPECT NULLS` in `FIRST_VALUE`](https://docs.exasol.com/db/latest/sql_references/functions/alphabeticallistfunctions/first_value.htm) for example. The Exasol core database simply ignores it, so there is also no push-down.
+Sometimes limitations come in the form of SQL phrases that Exasol ignores. Take [`RESPECT NULLS` in `FIRST_VALUE`](https://docs.exasol.com/db/latest/sql_references/functions/alphabeticallistfunctions/first_value.htm) for example. The Exasol core database simply ignores it, so there is also no push-down.
 
 So if you are unsure about the behavior of a certain function, please check [Exasol's online user guide](https://docs.exasol.com/db/latest/sql_references/functions/built-in_functions.htm).
