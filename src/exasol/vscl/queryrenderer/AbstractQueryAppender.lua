@@ -111,7 +111,8 @@ end
 
 ---@param data_type TypeDefinition
 function AbstractQueryAppender:_append_data_type(data_type)
-    self:_append(data_type.type)
+    local type = data_type.type
+    self:_append(type)
     if type == "DECIMAL" then
         self:_append_decimal_type_details(data_type)
     elseif type == "VARCHAR" or type == "CHAR" then
