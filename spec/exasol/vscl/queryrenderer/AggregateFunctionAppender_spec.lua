@@ -25,9 +25,9 @@ local function run_complex_function(name, extra_attributes, ...)
 end
 
 --- Run a scalar function.
--- @param name name of the scalar function to run
--- @param ... arguments passed to the function
--- @return function rendered as string
+---@param name string name of the scalar function to run
+---@param ... Expression arguments passed to the function
+---@return string rendered_function function rendered as string
 local function run_function(name, ...)
     return run_complex_function(name, {}, ...)
 end

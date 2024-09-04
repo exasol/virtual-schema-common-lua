@@ -1,5 +1,6 @@
 --- This class abstracts access to the user-defined properties of the Virtual Schema.
--- @classmod AdapterProperties
+---@class AdapterProperties
+---@field _raw_properties table<string, string>
 local AdapterProperties = {null = {}}
 AdapterProperties.__index = AdapterProperties
 
@@ -12,8 +13,8 @@ local DEBUG_ADDRESS_PROPERTY<const> = "DEBUG_ADDRESS"
 local DEFAULT_LOG_PORT<const> = 3000
 
 --- Create a new instance of adapter properties.
--- @param raw_properties properties as key-value pairs
--- @return new instance
+---@param raw_properties table<string, string> properties as key-value pairs
+---@return AdapterProperties properties new instance
 function AdapterProperties:new(raw_properties)
     local instance = setmetatable({}, self)
     instance:_init(raw_properties)
@@ -25,50 +26,50 @@ function AdapterProperties:_init(raw_properties)
 end
 
 --- Get the class of the object
--- return class
+---@return table class
 function AdapterProperties:class()
     return AdapterProperties
 end
 
 --- Get the value of a property.
--- @param property_name name of the property to get
--- @return property value
+---@param property_name string name of the property to get
+---@return string property_value
 function AdapterProperties:get(property_name)
     return self._raw_properties[property_name]
 end
 
 --- Check if the property is set.
--- @param property_name name of the property to check
--- @return `true` if the property is set (i.e. not `nil`)
+---@param property_name string name of the property to check
+---@return boolean property_set `true` if the property is set (i.e. not `nil`)
 function AdapterProperties:is_property_set(property_name)
     return self:get(property_name) ~= nil
 end
 
 --- Check if the property has a non-empty value.
--- @param property_name name of the property to check
--- @return `true` if the property has a non-empty value (i.e. not `nil` or an empty string)
+---@param property_name string name of the property to check
+---@return boolean has_value `true` if the property has a non-empty value (i.e. not `nil` or an empty string)
 function AdapterProperties:has_value(property_name)
     local value = self:get(property_name)
     return value ~= nil and value ~= ""
 end
 
 --- Check if the property value is empty.
--- @param property_name name of the property to check
--- @return `true` if the property's value is empty (i.e. the property is set to an empty string)
+---@param property_name string name of the property to check
+---@return boolean is_empty `true` if the property's value is empty (i.e. the property is set to an empty string)
 function AdapterProperties:is_empty(property_name)
     return self:get(property_name) == ""
 end
 
 --- Check if the property contains the string `true` (case-sensitive).
--- @param property_name name of the property to check
--- @return `true` if the property's value is the string `true`
+---@param property_name string name of the property to check
+---@return boolean is_true `true` if the property's value is the string `true`
 function AdapterProperties:is_true(property_name)
     return self:get(property_name) == "true"
 end
 
 --- Check if the property evaluates to `false`.
--- @param property_name name of the property to check
--- @return `true` if the property's value is anything else than the string `true`
+---@param property_name string name of the property to check
+---@return boolean is_false `true` if the property's value is anything else than the string `true`
 function AdapterProperties:is_false(property_name)
     return not self:is_true(property_name)
 end
@@ -119,7 +120,7 @@ function AdapterProperties:_validate_excluded_capabilities()
 end
 
 --- Validate the adapter properties.
--- @raise validation error
+---@raise validation error
 function AdapterProperties:validate()
     self:_validate_debug_address()
     self:_validate_log_level()
@@ -127,8 +128,8 @@ function AdapterProperties:validate()
 end
 
 --- Validate a boolean property.
--- Allowed values are `true`, `false` or an unset variable.
--- @raise validation error
+---Allowed values are `true`, `false` or an unset variable.
+---@raise validation error
 function AdapterProperties:validate_boolean(property_name)
     local value = self:get(property_name)
     if not (value == nil or value == "true" or value == "false") then
@@ -139,31 +140,31 @@ function AdapterProperties:validate_boolean(property_name)
 end
 
 --- Get the log level
--- @return log level
+---@return string log_level
 function AdapterProperties:get_log_level()
     return self:get(LOG_LEVEL_PROPERTY)
 end
 
 --- Check if the log level is set
--- @return `true` if the log level is set
+---@return boolean has_log_level `true` if the log level is set
 function AdapterProperties:has_log_level()
     return self:has_value(LOG_LEVEL_PROPERTY)
 end
 
 --- Get the list of names of the excluded capabilities.
--- @return excluded capabilities
+---@return string[]? excluded_capabilities
 function AdapterProperties:get_excluded_capabilities()
     return text.split(self:get(EXCLUDED_CAPABILITIES_PROPERTY))
 end
 
 --- Check if excluded capabilities are set
--- @return `true` if the excluded capabilities are set
+---@return boolean has_excluded_capabilities `true` if the excluded capabilities are set
 function AdapterProperties:has_excluded_capabilities()
     return self:has_value(EXCLUDED_CAPABILITIES_PROPERTY)
 end
 
 --- Get the debug address (host and port)
--- @return host, port or nil if the property has no value
+---@return string? host, integer? port or `nil` if the property has no value
 function AdapterProperties:get_debug_address()
     if self:has_value(DEBUG_ADDRESS_PROPERTY) then
         local debug_address = self:get(DEBUG_ADDRESS_PROPERTY)
@@ -172,7 +173,7 @@ function AdapterProperties:get_debug_address()
             return debug_address, DEFAULT_LOG_PORT
         else
             local host = string.sub(debug_address, 1, colon_position - 1)
-            local port = tonumber(string.sub(debug_address, colon_position + 1))
+            local port = math.tointeger(tonumber(string.sub(debug_address, colon_position + 1)))
             return host, port
         end
     else
@@ -181,14 +182,14 @@ function AdapterProperties:get_debug_address()
 end
 
 --- Check if log address is set
--- @return `true` if the log address is set
+---@return boolean has_debug_address `true` if the log address is set
 function AdapterProperties:has_debug_address()
     return self:has_value(DEBUG_ADDRESS_PROPERTY)
 end
 
 --- Merge new properties into a set of existing ones
--- @param new_properties set of new properties to merge into the existing ones
--- @return merge product
+---@param new_properties AdapterProperties set of new properties to merge into the existing ones
+---@return AdapterProperties merge_product
 -- [impl -> dsn~merging-user-defined-properties~0]
 function AdapterProperties:merge(new_properties)
     local merged_list = {}
@@ -207,7 +208,7 @@ function AdapterProperties:merge(new_properties)
 end
 
 --- Create a string representation
--- @return string representation
+---@return string string_representation
 function AdapterProperties:__tostring()
     local keys = {}
     local i = 0

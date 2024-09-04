@@ -25,7 +25,7 @@ function AggregateFunctionAppender:_init(out_query)
 end
 
 --- Append an aggregate function to an SQL query.
--- @param aggregate_function function to append
+---@param aggregate_function AggregateFunctionExpression function to append
 function AggregateFunctionAppender:append_aggregate_function(aggregate_function)
     local function_name = string.lower(aggregate_function.name)
     local implementation = AggregateFunctionAppender["_" .. function_name]

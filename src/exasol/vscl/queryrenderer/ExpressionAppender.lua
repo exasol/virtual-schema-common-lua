@@ -27,6 +27,8 @@ local OPERATORS<const> = {
     predicate_is_not_json = "IS NOT JSON"
 }
 
+---@param predicate_type string
+---@return string
 local function get_predicate_operator(predicate_type)
     local operator = OPERATORS[predicate_type]
     if operator ~= nil then
@@ -69,6 +71,7 @@ function ExpressionAppender:_append_exists(sub_select)
     self:_append(")")
 end
 
+---@param predicate UnaryPredicate
 function ExpressionAppender:_append_unary_predicate(predicate)
     self:_append("(")
     self:_append(get_predicate_operator(predicate.type))
@@ -77,6 +80,7 @@ function ExpressionAppender:_append_unary_predicate(predicate)
     self:_append(")")
 end
 
+---@param predicate BinaryPredicateExpression
 function ExpressionAppender:_append_binary_predicate(predicate)
     self:_append("(")
     self:append_expression(predicate.left)
@@ -87,6 +91,7 @@ function ExpressionAppender:_append_binary_predicate(predicate)
     self:_append(")")
 end
 
+---@param predicate IteratedPredicate
 function ExpressionAppender:_append_iterated_predicate(predicate)
     self:_append("(")
     local expressions = predicate.expressions
@@ -101,6 +106,7 @@ function ExpressionAppender:_append_iterated_predicate(predicate)
     self:_append(")")
 end
 
+---@param predicate InPredicate
 function ExpressionAppender:_append_predicate_in(predicate)
     self:_append("(")
     self:append_expression(predicate.expression)
@@ -175,7 +181,7 @@ end
 
 --- Append a predicate to a query.
 -- This method is public to allow nesting predicates in filters.
--- @param predicate predicate to append
+---@param predicate PredicateExpression predicate to append
 function ExpressionAppender:append_predicate(predicate)
     local type = string.sub(predicate.type, 11)
     if type == "equal" or type == "notequal" or type == "greater" or type == "less" or type == "lessequal" or type
@@ -214,7 +220,7 @@ function ExpressionAppender:_append_quoted_literal_expression(literal_expression
 end
 
 --- Append an expression to a query.
---- @param expression Expression to append
+---@param expression Expression to append
 function ExpressionAppender:append_expression(expression)
     local type = expression.type
     if type == "column" then

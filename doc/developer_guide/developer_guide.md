@@ -74,7 +74,7 @@ To build the API documentation using luals issue the following command:
 ./tools/build_docs.sh
 ```
 
-The documentation will be written as a MarkDown file to `target/luals-doc/doc.md`.
+The documentation will be written as a Markdown file to `target/luals-doc/doc.md`.
 
 ## Formatting Sources
 
