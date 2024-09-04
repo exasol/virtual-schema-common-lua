@@ -263,7 +263,8 @@ describe("ScalarFunctionRenderer", function()
 
         it_asserts("ST_NUMPOINTS('LINESTRING (1 2, 3 4)')", run_function("ST_NUMPOINTS", geo.linestring(1, 2, 3, 4)))
 
-        it_asserts("ST_POINTN('LINESTRING (0 5, 10 20)', 2)", run_function("ST_POINTN", geo.linestring(0, 5, 10, 20), 2))
+        it_asserts("ST_POINTN('LINESTRING (0 5, 10 20)', 2)", --
+        run_function("ST_POINTN", geo.linestring(0, 5, 10, 20), 2))
 
         it_asserts("ST_STARTPOINT('LINESTRING (0 0, 0 1, 1 1)')",
                    run_function("ST_STARTPOINT", geo.linestring(0, 0, 0, 1, 1, 1)))

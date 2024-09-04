@@ -125,7 +125,8 @@ describe("RequestDispatcher", function()
 
     it("sets up remote logging", function()
         dispatcher:adapter_call('{"type" : "getCapabilities", "schemaMetadataInfo" : '
-                                        .. '{"properties" : {"DEBUG_ADDRESS" : "10.0.0.1:4000", "LOG_LEVEL" : "TRACE"}}}')
+                                        .. '{"properties" : {"DEBUG_ADDRESS" : "10.0.0.1:4000", '
+                                        .. '"LOG_LEVEL" : "TRACE"}}}')
         assert.spy(log_mock.set_level).was.called_with("TRACE")
         assert.spy(log_mock.connect).was.called_with("10.0.0.1", 4000)
     end)

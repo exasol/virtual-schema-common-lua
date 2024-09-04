@@ -11,7 +11,8 @@ end
 
 describe("ExpressionRenderer", function()
     it("renders column reference", function()
-        assert_expression_yields(reference.column("the_table", "the_column"), '"the_table"."the_column"')
+        assert_expression_yields(reference.column("the_table", --
+        "the_column"), '"the_table"."the_column"')
     end)
 
     describe("renders literal:", function()
@@ -44,7 +45,8 @@ describe("ExpressionRenderer", function()
         end)
 
         it("timestamp", function()
-            assert_expression_yields(literal.timestamp("2022-12-31 12:30:24.007"), "TIMESTAMP '2022-12-31 12:30:24.007'")
+            assert_expression_yields(literal.timestamp("2022-12-31 12:30:24.007"), --
+            "TIMESTAMP '2022-12-31 12:30:24.007'")
         end)
 
         it("interval YM with precision", function()
@@ -212,8 +214,8 @@ describe("ExpressionRenderer", function()
                 left = reference.column("temperatures", "out_min"),
                 right = reference.column("temperatures", "out_max")
             }
-            assert_expression_yields(original_query,
-                                     [[("temperatures"."in_avg" BETWEEN "temperatures"."out_min" AND "temperatures"."out_max")]])
+            assert_expression_yields(original_query, '("temperatures"."in_avg" BETWEEN "temperatures"."out_min" '
+                                             .. 'AND "temperatures"."out_max")')
         end)
 
         for predicate_key, predicate in pairs({predicate_is_json = "IS JSON", predicate_is_not_json = "IS NOT JSON"}) do
