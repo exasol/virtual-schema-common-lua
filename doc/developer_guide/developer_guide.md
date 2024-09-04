@@ -98,6 +98,12 @@ To run static code analysis for Lua using luacheck issue the following command:
 ./tools/run_luacheck.sh
 ```
 
+## Running Type Checker
+
+```bash
+./tools/run-type-check.sh
+```
+
 ### Understanding the Sources
 
 Under [doc/model](../model/) you find a UML model of the project that you can render with [PlantUML](https://plantuml.com/). We recommend studying the model to understand structure and behavior.
