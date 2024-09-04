@@ -12,7 +12,7 @@ readonly base_dir
 readonly diagrams_dir="$base_dir/doc/model/diagrams"
 readonly output_dir="$base_dir/doc/images/generated"
 
-if [[ "$(ls -A $output_dir)" ]]; then
+if [[ "$(ls -A "$output_dir")" ]]; then
   echo "Deleting diagrams from $output_dir..."
   rm "$output_dir"/*.svg
 fi

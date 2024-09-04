@@ -44,6 +44,8 @@ jobs:
         run: tools/run_luacheck.sh
       - name: Run type checker
         run: tools/run-type-check.sh
+      - name: Run shellcheck
+        run: tools/shellcheck.sh
       - name: Archive code coverage results
         uses: actions/upload-artifact@v4
         with:

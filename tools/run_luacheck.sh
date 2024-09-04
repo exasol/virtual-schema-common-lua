@@ -13,6 +13,7 @@ readonly ignores="--ignore 212"
 readonly src_module_path="$base_dir/src"
 readonly test_module_path="$base_dir/spec"
 
+# shellcheck disable=SC2086 # Word splitting used intentionally
 luacheck "$src_module_path" --max-line-length 120 --codes $ignores
 
 luacheck "$test_module_path" --max-line-length 120 --codes
