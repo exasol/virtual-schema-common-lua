@@ -6,12 +6,11 @@ local M = {}
 ---
 -- Check if string starts with a substring.
 --
--- @param text string to check
+--- @param text string? string to check
+--- @param start string? substring
 --
--- @param start substring
---
--- @return <code>true</code> if text starts with mentioned substring, <code>false</code> if any of the parameters is nil
---         or the text does not start with the substring
+--- @return boolean result `true` if text starts with mentioned substring, `false` if any of the parameters is `nil`
+---         or the text does not start with the substring
 --
 function M.starts_with(text, start)
     return text ~= nil and start ~= nil and start == string.sub(text, 1, string.len(start))
@@ -20,9 +19,9 @@ end
 ---
 -- Remove leading and trailing spaces from a string
 --
--- @param text string to be trimmed
+--- @param text string string to be trimmed
 --
--- @return trimmed string
+--- @return string trimmed string
 --
 function M.trim(text)
     return text:match "^%s*(.-)%s*$"
@@ -31,9 +30,10 @@ end
 ---
 -- Split a delimited string into its components.
 --
--- @param text string to split
+--- @param text string string to split
 --
--- @param delimiter to split at (default: ',')
+--- @param delimiter string to split at (default: ',')
+--- @return string[]? components
 --
 function M.split(text, delimiter)
     if (text == nil) then
