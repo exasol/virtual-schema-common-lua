@@ -1,0 +1,10 @@
+{
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.generate.finalModifiers": "explicit",
+        "source.fixAll": "explicit"
+    },
+    "busted-test-explorer.cwd": "${workspaceFolder}",
+    "vscode-lua-format.configPath": ".lua-format"
+}

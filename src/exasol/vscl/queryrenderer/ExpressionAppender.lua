@@ -8,12 +8,23 @@ setmetatable(ExpressionAppender, {__index = AbstractQueryAppender})
 local text = require("exasol.vscl.text")
 local ExaError = require("ExaError")
 
-local OPERATORS <const> = {
-    predicate_equal = "=", predicate_notequal = "<>", predicate_less = "<", predicate_greater = ">",
-    predicate_lessequal = "<=", predicate_greaterequal = ">=", predicate_between = "BETWEEN",
-    predicate_is_not_null = "IS NOT NULL", predicate_is_null = "IS NULL", predicate_like = "LIKE",
-    predicate_like_regexp = "REGEXP_LIKE", predicate_and = "AND", predicate_or = "OR", predicate_not = "NOT",
-    predicate_is_json = "IS JSON", predicate_is_not_json = "IS NOT JSON"
+local OPERATORS<const> = {
+    predicate_equal = "=",
+    predicate_notequal = "<>",
+    predicate_less = "<",
+    predicate_greater = ">",
+    predicate_lessequal = "<=",
+    predicate_greaterequal = ">=",
+    predicate_between = "BETWEEN",
+    predicate_is_not_null = "IS NOT NULL",
+    predicate_is_null = "IS NULL",
+    predicate_like = "LIKE",
+    predicate_like_regexp = "REGEXP_LIKE",
+    predicate_and = "AND",
+    predicate_or = "OR",
+    predicate_not = "NOT",
+    predicate_is_json = "IS JSON",
+    predicate_is_not_json = "IS NOT JSON"
 }
 
 local function get_predicate_operator(predicate_type)
@@ -22,8 +33,8 @@ local function get_predicate_operator(predicate_type)
         return operator
     else
         ExaError:new("E-VSCL-7", "Cannot determine operator for unknown predicate type {{type}}.",
-                {type = {value = predicate_type, description = "predicate type that was not recognized"}}
-        ):add_ticket_mitigation():raise()
+                     {type = {value = predicate_type, description = "predicate type that was not recognized"}})
+                :add_ticket_mitigation():raise()
     end
 end
 
@@ -164,9 +175,8 @@ end
 -- @param predicate predicate to append
 function ExpressionAppender:append_predicate(predicate)
     local type = string.sub(predicate.type, 11)
-    if type == "equal" or type == "notequal" or type == "greater" or type == "less" or type == "lessequal"
-        or type == "greaterequal"
-    then
+    if type == "equal" or type == "notequal" or type == "greater" or type == "less" or type == "lessequal" or type
+            == "greaterequal" then
         self:_append_binary_predicate(predicate)
     elseif type == "like" then
         self:_append_predicate_like(predicate)
@@ -188,8 +198,8 @@ function ExpressionAppender:append_predicate(predicate)
         self:_append_predicate_is_json(predicate)
     else
         ExaError:new("E-VSCL-2", "Unable to render unknown SQL predicate type {{type}}.",
-                {type = {value = predicate.type, description = "predicate type that was not recognized"}}
-        ):add_ticket_mitigation():raise()
+                     {type = {value = predicate.type, description = "predicate type that was not recognized"}})
+                :add_ticket_mitigation():raise()
     end
 end
 
@@ -233,8 +243,8 @@ function ExpressionAppender:append_expression(expression)
         require("exasol.vscl.queryrenderer.SelectAppender"):new(self._out_query):append_sub_select(expression)
     else
         ExaError:new("E-VSCL-1", "Unable to render unknown SQL expression type {{type}}.",
-            {type = {value = expression.type, description = "expression type provided"}}
-        ):add_ticket_mitigation():raise(3)
+                     {type = {value = expression.type, description = "expression type provided"}})
+                :add_ticket_mitigation():raise(3)
     end
 end
 

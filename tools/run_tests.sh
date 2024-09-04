@@ -19,6 +19,7 @@ readonly report="$luacov_dir/luacov.report.out"
 #
 function print_coverage_summary {
     grep --after 500 'File\s*Hits' "$report"
+    echo "See details in $report"
 }
 
 rm -rf "$luacov_dir"
@@ -27,5 +28,5 @@ mkdir -p "$luacov_dir"
 
 cd "$base_dir"
 luarocks test --local -- "$@"
-luacov --config .coverage_config.lua $report
+luacov --config .coverage_config.lua "$report"
 print_coverage_summary

@@ -30,11 +30,9 @@ function ScalarFunctionAppender:append_scalar_function(scalar_function)
     if implementation ~= nil then
         implementation(self, scalar_function)
     else
-        ExaError:new("E-VSCL-3", "Unable to render unsupported scalar function type {{function_name}}.",
-                {function_name =
-                    {value = function_name, description = "name of the SQL function that is not yet supported"}
-                }
-        ):add_ticket_mitigation():raise()
+        ExaError:new("E-VSCL-3", "Unable to render unsupported scalar function type {{function_name}}.", {
+            function_name = {value = function_name, description = "name of the SQL function that is not yet supported"}
+        }):add_ticket_mitigation():raise()
     end
 end
 
@@ -103,7 +101,6 @@ ScalarFunctionAppender._ln = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._log = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._min_scale = ScalarFunctionAppender._append_simple_function
 ScalarFunctionAppender._mod = ScalarFunctionAppender._append_simple_function
-
 
 function ScalarFunctionAppender:_mult(f)
     self:_append_arithmetic_function(f.arguments[1], "*", f.arguments[2])

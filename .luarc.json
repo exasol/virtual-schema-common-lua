@@ -1,0 +1,63 @@
+{
+    "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+    "hint.enable": true,
+    "addonManager": {
+        "enable": true
+    },
+    "runtime": {
+        "version": "Lua 5.4",
+        "fileEncoding": "utf8",
+        "path": [
+            "src/?.lua",
+            "spec/?.lua"
+        ],
+        "pathStrict": true,
+        "builtin": {
+            "basic": "enable",
+            "bit": "disable",
+            "bit32": "disable",
+            "builtin": "enable",
+            "coroutine": "disable",
+            "debug": "disable",
+            "ffi": "disable",
+            "io": "enable", // Required by integration tests for reading test.properties
+            "jit": "disable",
+            "jit.profile": "disable",
+            "jit.util": "disable",
+            "math": "enable",
+            "package": "enable",
+            "string": "enable",
+            "table": "enable",
+            "table.clear": "disable",
+            "table.new": "disable",
+            "utf8": "disable"
+        }
+    },
+    "type": {
+        "checkTableShape": true,
+        "inferParamType": false,
+        "weakNilCheck": false,
+        "weakUnionCheck": false,
+        "castNumberToInteger": false
+    },
+    "typeFormat": {
+        "config": {
+            "auto_complete_end": "true",
+            "auto_complete_table_sep": "true",
+            "format_line": "true"
+        }
+    },
+    "workspace": {
+        "ignoreDir": [
+            ".luarocks/" // Directory is used on GitHub Actions and causes findings during type checking
+        ],
+        "library": [
+            "target/lua-type-definitions/busted/library"
+        ],
+        "checkThirdParty": "Disable",
+        "useGitIgnore": true
+    },
+    "format": {
+        "enable": true
+    }
+}
