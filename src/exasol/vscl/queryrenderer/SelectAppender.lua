@@ -1,9 +1,9 @@
 --- Appender that can add top-level elements of a `SELECT` statement (or sub-select).
--- @classmod SelectAppender
+---@class SelectAppender: AbstractQueryAppender
 local SelectAppender = {}
 SelectAppender.__index = SelectAppender
-local AbstractQueryRenderer = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
-setmetatable(SelectAppender, {__index = AbstractQueryRenderer})
+local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
+setmetatable(SelectAppender, {__index = AbstractQueryAppender})
 
 local ExaError = require("ExaError")
 local log = require("remotelog")
@@ -19,16 +19,17 @@ function SelectAppender.get_join_types()
 end
 
 --- Create a new query renderer.
--- @param out_query query structure as provided through the Virtual Schema API
--- @return query renderer instance
+---@param out_query Query query structure as provided through the Virtual Schema API
+---@return SelectAppender query renderer instance
 function SelectAppender:new(out_query)
     local instance = setmetatable({}, self)
     instance:_init(out_query)
     return instance
 end
 
+---@param out_query Query
 function SelectAppender:_init(out_query)
-    AbstractQueryRenderer._init(self, out_query)
+    AbstractQueryAppender._init(self, out_query)
 end
 
 ---@param select_list SelectList
@@ -49,6 +50,7 @@ function SelectAppender:_append_select_list(select_list)
     end
 end
 
+---@param table TableExpression
 function SelectAppender:_append_table(table)
     self:_append('"')
     if table.schema then
@@ -59,6 +61,7 @@ function SelectAppender:_append_table(table)
     self:_append('"')
 end
 
+---@param join JoinExpression
 function SelectAppender:_append_join(join)
     local join_type_keyword = JOIN_TYPES[join.join_type]
     if join_type_keyword then
@@ -165,7 +168,7 @@ end
 
 --- Append a sub-select statement.
 -- This method is public to allow recursive queries (e.g. embedded into an `EXISTS` clause in an expression.
--- @param sub_query query appended
+---@param sub_query SubSelect query appended
 function SelectAppender:append_sub_select(sub_query)
     self:_append("(")
     self:append_select(sub_query)

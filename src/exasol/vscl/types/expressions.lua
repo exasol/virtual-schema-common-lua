@@ -34,10 +34,12 @@
 ---@class LiteralInterval
 ---@field type "literal_interval"
 ---@field value string
+---@field dataType IntervalTypeDefinition
 
 ---@alias Expression ColumnReference|LiteralNull|LiteralBoolean|LiteralExactNumeric|LiteralDouble|LiteralString|LiteralDate|LiteralTimestamp|LiteralInterval
 
 ---@class SubSelect
+---@field type "sub_select"
 ---@field query SelectExpression
 
 ---@class SelectExpression
@@ -48,5 +50,18 @@
 ---@field orderBy string
 ---@field limit string
 
+---@class TableExpression
+---@field schema string?
+---@field name string
+
+---@class JoinExpression
+---@field join_type "inner" | "left_outer" | "right_outer" | "full_outer"
+---@field left TableExpression
+---@field right TableExpression
+---@field condition Expression
+
+
+---@class ScalarFunctionExpression
+---@field name string
 
 ---@alias SelectList Expression[]

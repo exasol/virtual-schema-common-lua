@@ -10,8 +10,8 @@ local SelectAppender = require("exasol.vscl.queryrenderer.SelectAppender")
 local ExaError = require("ExaError")
 
 --- Create a new instance of a `AggregateFunctionAppender`.
--- @param out_query query to which the function will be appended
--- @return renderer for aggregate functions
+---@param out_query Query query to which the function will be appended
+---@return AggregateFunctionAppender renderer for aggregate functions
 function AggregateFunctionAppender:new(out_query)
     assert(out_query ~= nil, "Renderer for aggregate function requires a query object that it can append to.")
     local instance = setmetatable({}, self)
@@ -19,6 +19,7 @@ function AggregateFunctionAppender:new(out_query)
     return instance
 end
 
+---@param out_query Query
 function AggregateFunctionAppender:_init(out_query)
     AbstractQueryAppender._init(self, out_query)
 end
@@ -31,18 +32,16 @@ function AggregateFunctionAppender:append_aggregate_function(aggregate_function)
     if implementation ~= nil then
         implementation(self, aggregate_function)
     else
-        ExaError:new("E-VSCL-3", "Unable to render unsupported aggregate function type {{function_name}}.",
-                {function_name =
-                    {value = function_name, description = "name of the SQL function that is not yet supported"}
-                }
-        ):add_ticket_mitigation():raise()
+        ExaError:new("E-VSCL-3", "Unable to render unsupported aggregate function type {{function_name}}.", {
+            function_name = {value = function_name, description = "name of the SQL function that is not yet supported"}
+        }):add_ticket_mitigation():raise()
     end
 end
 
 -- Alias for main appender function for uniform appender invocation
 AggregateFunctionAppender.append = AggregateFunctionAppender.append_aggregate_function
 
----@param expression any
+---@param expression Expression
 function AggregateFunctionAppender:_append_expression(expression)
     local expression_renderer = ExpressionAppender:new(self._out_query)
     expression_renderer:append_expression(expression)
@@ -91,9 +90,9 @@ AggregateFunctionAppender._covar_samp = AggregateFunctionAppender._append_simple
 
 function AggregateFunctionAppender:_count(f)
     local distinct = f.distinct or false
-    if(f.arguments == nil or next(f.arguments) == nil) then
+    if (f.arguments == nil or next(f.arguments) == nil) then
         self:_append("COUNT(*)")
-    elseif(#f.arguments == 1) then
+    elseif (#f.arguments == 1) then
         self:_append("COUNT")
         self:_append_function_argument_list(distinct, f.arguments)
     else
