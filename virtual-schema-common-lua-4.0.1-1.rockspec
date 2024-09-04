@@ -28,11 +28,11 @@ dependencies = {
 }
 
 test_dependencies = {
-    "busted >= 2.0.0",
-    "luacheck >= 0.25.0",
+    "busted >= 2.2.0",
+    "luacheck >= 1.2.0",
     "luacov >= 0.15.0",
     "luacov-coveralls >= 0.2.3",
-    "ldoc >= 1.4.6-2"
+    "ldoc >= 1.5.0-1"
 }
 
 test = {
