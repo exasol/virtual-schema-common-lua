@@ -31,8 +31,7 @@ test_dependencies = {
     "busted >= 2.2.0",
     "luacheck >= 1.2.0",
     "luacov >= 0.15.0",
-    "luacov-coveralls >= 0.2.3",
-    "ldoc >= 1.5.0-1"
+    "luacov-coveralls >= 0.2.3"
 }
 
 test = {
