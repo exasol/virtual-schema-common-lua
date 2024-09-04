@@ -1,5 +1,4 @@
 ---@alias Token string|number
-
 --- This class implements an abstraction for a query string including its tokens.
 ---@class Query
 ---@field _tokens Token[]

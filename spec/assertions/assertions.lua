@@ -8,19 +8,19 @@ local cjson = require("cjson")
 local M = {}
 
 local function same_json(_, arguments)
-    local expected <const> = arguments[1]
-    local actual <const> = arguments[2]
+    local expected<const> = arguments[1]
+    local actual<const> = arguments[2]
     return assert.are.same(expected, cjson.decode(actual))
 end
 
 local function error_contains(_, arguments)
-    local callback <const> = arguments[1]
-    local expected <const> = arguments[2]
+    local callback<const> = arguments[1]
+    local expected<const> = arguments[2]
     return assert.error_matches(callback, expected, 1, true)
 end
 
 local function abstract_method(_, arguments)
-    local callback <const> = arguments[1]
+    local callback<const> = arguments[1]
     return assert.error_matches(callback, "Attempted to call the abstract method .*")
 end
 
@@ -33,8 +33,8 @@ say:set("assertion.abstract_method.negative", "Expected %s\to be a concrete meth
 
 assert:register("assertion", "same_json", same_json, "assertion.same_json.positive", "assertion.same_json.negative")
 assert:register("assertion", "error_contains", error_contains, "assertion.error_contains.positive",
-        "assertion.error_contains.negative")
+                "assertion.error_contains.negative")
 assert:register("assertion", "abstract_method", abstract_method, "assertion.abstract_method_positive",
-        "assertion.abstract_error.negative")
+                "assertion.abstract_error.negative")
 
 return M

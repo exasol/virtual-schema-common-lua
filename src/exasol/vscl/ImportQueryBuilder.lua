@@ -42,12 +42,7 @@ end
 --- Build the `IMPORT` query structure.
 -- @return table that represents the `IMPORT` statement
 function ImportQueryBuilder:build()
-    return {
-        type = "import",
-        into = self._column_types,
-        connection = self._connection,
-        statement = self._statement
-    }
+    return {type = "import", into = self._column_types, connection = self._connection, statement = self._statement}
 end
 
 return ImportQueryBuilder

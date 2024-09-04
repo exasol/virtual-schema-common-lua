@@ -16,7 +16,7 @@ describe("text manipulation", function()
         end)
 
         it("leaves spaces in the middle untouched", function()
-        assert.are.same("middle space", text.trim("middle space"))
+            assert.are.same("middle space", text.trim("middle space"))
         end)
     end)
 
@@ -29,7 +29,7 @@ describe("text manipulation", function()
             assert.are.same({"foo", "bar", "baz"}, text.split("foo,,bar,baz"))
         end)
 
-        it("ignores empty start", function ()
+        it("ignores empty start", function()
             assert.are.same({"1", "2", "3"}, text.split(",1,2,3"))
         end)
 

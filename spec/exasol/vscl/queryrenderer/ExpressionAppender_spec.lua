@@ -16,7 +16,7 @@ describe("ExpressionRenderer", function()
 
     describe("renders literal:", function()
         it("null", function()
-            assert_expression_yields(literal.null() , "null")
+            assert_expression_yields(literal.null(), "null")
         end)
 
         it("true", function()
@@ -44,28 +44,26 @@ describe("ExpressionRenderer", function()
         end)
 
         it("timestamp", function()
-            assert_expression_yields(literal.timestamp("2022-12-31 12:30:24.007"),
-                    "TIMESTAMP '2022-12-31 12:30:24.007'")
+            assert_expression_yields(literal.timestamp("2022-12-31 12:30:24.007"), --
+            "TIMESTAMP '2022-12-31 12:30:24.007'")
         end)
 
         it("interval YM with precision", function()
-            assert_expression_yields(literal.interval_ym("+14-05", 5),
-            "INTERVAL '+14-05' YEAR(5) TO MONTH")
+            assert_expression_yields(literal.interval_ym("+14-05", 5), "INTERVAL '+14-05' YEAR(5) TO MONTH")
         end)
 
         it("interval YM without precision", function()
-            assert_expression_yields(literal.interval_ym("+14-05"),
-            "INTERVAL '+14-05' YEAR TO MONTH")
+            assert_expression_yields(literal.interval_ym("+14-05"), "INTERVAL '+14-05' YEAR TO MONTH")
         end)
 
         it("interval DS with precision and fraction", function()
             assert_expression_yields(literal.interval_ds("-123 01:02:03.456", 4, 3),
-            "INTERVAL '-123 01:02:03.456' DAY(4) TO SECOND(3)")
+                                     "INTERVAL '-123 01:02:03.456' DAY(4) TO SECOND(3)")
         end)
 
         it("interval DS without precision and fraction", function()
             assert_expression_yields(literal.interval_ds("-234 12:23:34.001"),
-            "INTERVAL '-234 12:23:34.001' DAY TO SECOND")
+                                     "INTERVAL '-234 12:23:34.001' DAY TO SECOND")
         end)
     end)
 
@@ -81,45 +79,65 @@ describe("ExpressionRenderer", function()
         end)
 
         it("AND", function()
-            assert_expression_yields({type = "predicate_and",
-                                      expressions = {literal.bool(true), literal.bool(false)}}, "(true AND false)")
+            assert_expression_yields({type = "predicate_and", expressions = {literal.bool(true), literal.bool(false)}},
+                                     "(true AND false)")
         end)
 
         it("OR", function()
-            assert_expression_yields({type = "predicate_or",
-                                      expressions = {literal.bool(true), literal.bool(false),
-                                                         {type = "predicate_not", expression = literal.bool(true)}}},
-                    "(true OR false OR (NOT true))")
+            assert_expression_yields({
+                type = "predicate_or",
+                expressions = {
+                    literal.bool(true), literal.bool(false), {type = "predicate_not", expression = literal.bool(true)}
+                }
+            }, "(true OR false OR (NOT true))")
         end)
 
         it("=", function()
-            assert_expression_yields({type = "predicate_equal", left = literal.exactnumeric(4),
-                                      right = literal.exactnumeric(7)}, "(4 = 7)")
+            assert_expression_yields({
+                type = "predicate_equal",
+                left = literal.exactnumeric(4),
+                right = literal.exactnumeric(7)
+            }, "(4 = 7)")
         end)
 
         it("<>", function()
-            assert_expression_yields({type = "predicate_notequal", left = literal.exactnumeric(4),
-                                      right = literal.exactnumeric(7)}, "(4 <> 7)")
+            assert_expression_yields({
+                type = "predicate_notequal",
+                left = literal.exactnumeric(4),
+                right = literal.exactnumeric(7)
+            }, "(4 <> 7)")
         end)
 
         it("<", function()
-            assert_expression_yields({type = "predicate_less", left = literal.exactnumeric(4),
-                                      right = literal.exactnumeric(7)}, "(4 < 7)")
+            assert_expression_yields({
+                type = "predicate_less",
+                left = literal.exactnumeric(4),
+                right = literal.exactnumeric(7)
+            }, "(4 < 7)")
         end)
 
         it(">", function()
-            assert_expression_yields({type = "predicate_greater", left = literal.exactnumeric(4),
-                                      right = literal.exactnumeric(7)}, "(4 > 7)")
+            assert_expression_yields({
+                type = "predicate_greater",
+                left = literal.exactnumeric(4),
+                right = literal.exactnumeric(7)
+            }, "(4 > 7)")
         end)
 
         it("<=", function()
-            assert_expression_yields({type = "predicate_lessequal", left = literal.exactnumeric(4),
-                                      right = literal.exactnumeric(7)}, "(4 <= 7)")
+            assert_expression_yields({
+                type = "predicate_lessequal",
+                left = literal.exactnumeric(4),
+                right = literal.exactnumeric(7)
+            }, "(4 <= 7)")
         end)
 
         it(">=", function()
-            assert_expression_yields({type = "predicate_greaterequal", left = literal.exactnumeric(4),
-                                      right = literal.exactnumeric(7)}, "(4 >= 7)")
+            assert_expression_yields({
+                type = "predicate_greaterequal",
+                left = literal.exactnumeric(4),
+                right = literal.exactnumeric(7)
+            }, "(4 >= 7)")
         end)
 
         it("LIKE", function()
@@ -127,9 +145,7 @@ describe("ExpressionRenderer", function()
                 type = "predicate_like",
                 expression = reference.column("ADDRESSES", "STREET"),
                 pattern = literal.string("Bakerst%")
-            },
-                    "(\"ADDRESSES\".\"STREET\" LIKE 'Bakerst%')"
-            )
+            }, "(\"ADDRESSES\".\"STREET\" LIKE 'Bakerst%')")
         end)
 
         it("LIKE with custom escape character", function()
@@ -138,33 +154,29 @@ describe("ExpressionRenderer", function()
                 expression = reference.column("VARIABLES", "ID"),
                 pattern = literal.string("MAX~_%"),
                 escapeChar = literal.string('~')
-            },
-                    "(\"VARIABLES\".\"ID\" LIKE 'MAX~_%' ESCAPE '~')"
-            )
+            }, "(\"VARIABLES\".\"ID\" LIKE 'MAX~_%' ESCAPE '~')")
         end)
 
         it("LIKE with a regular expression", function()
             assert_expression_yields({
                 type = "predicate_like_regexp",
                 expression = reference.column("VARIABLES", "ID"),
-                pattern = literal.string("(MIN|MAX)_[^_]+_VALUE"),
-            },
-                    "(\"VARIABLES\".\"ID\" REGEXP_LIKE '(MIN|MAX)_[^_]+_VALUE')"
-            )
+                pattern = literal.string("(MIN|MAX)_[^_]+_VALUE")
+            }, "(\"VARIABLES\".\"ID\" REGEXP_LIKE '(MIN|MAX)_[^_]+_VALUE')")
         end)
 
         it("EXISTS in the where clause", function()
             local original_query = {
-                 type = "predicate_exists",
-                 query = {
-                     type = "sub_select",
-                     selectList = {literal.exactnumeric(1)},
-                     filter = {
-                         type = "predicate_greater",
-                         left = reference.column("people", "age"),
-                         right = literal.exactnumeric(21)
-                     }
-                 }
+                type = "predicate_exists",
+                query = {
+                    type = "sub_select",
+                    selectList = {literal.exactnumeric(1)},
+                    filter = {
+                        type = "predicate_greater",
+                        left = reference.column("people", "age"),
+                        right = literal.exactnumeric(21)
+                    }
+                }
             }
             assert_expression_yields(original_query, 'EXISTS(SELECT 1 WHERE ("people"."age" > 21))')
         end)
@@ -173,9 +185,7 @@ describe("ExpressionRenderer", function()
             local original_query = {
                 type = "predicate_in_constlist",
                 expression = reference.column("open", "weekday"),
-                arguments = {
-                    literal.string("Mon"), literal.string("Tue"), literal.string("Wed"), literal.string("Thu")
-                }
+                arguments = {literal.string("Mon"), literal.string("Tue"), literal.string("Wed"), literal.string("Thu")}
             }
             assert_expression_yields(original_query, [[("open"."weekday" IN ('Mon', 'Tue', 'Wed', 'Thu'))]])
         end)
@@ -183,7 +193,7 @@ describe("ExpressionRenderer", function()
         it("IS NULL", function()
             local original_query = {
                 type = "predicate_is_null",
-                expression = reference.column("deliveries", "return_address"),
+                expression = reference.column("deliveries", "return_address")
             }
             assert_expression_yields(original_query, [[("deliveries"."return_address" IS NULL)]])
         end)
@@ -191,7 +201,7 @@ describe("ExpressionRenderer", function()
         it("IS NOT NULL", function()
             local original_query = {
                 type = "predicate_is_not_null",
-                expression = reference.column("deliveries", "return_address"),
+                expression = reference.column("deliveries", "return_address")
             }
             assert_expression_yields(original_query, [[("deliveries"."return_address" IS NOT NULL)]])
         end)
@@ -203,8 +213,8 @@ describe("ExpressionRenderer", function()
                 left = reference.column("temperatures", "out_min"),
                 right = reference.column("temperatures", "out_max")
             }
-            assert_expression_yields(original_query,
-                    [[("temperatures"."in_avg" BETWEEN "temperatures"."out_min" AND "temperatures"."out_max")]])
+            assert_expression_yields(original_query, '("temperatures"."in_avg" BETWEEN "temperatures"."out_min" '
+                                             .. 'AND "temperatures"."out_max")')
         end)
 
         for predicate_key, predicate in pairs({predicate_is_json = "IS JSON", predicate_is_not_json = "IS NOT JSON"}) do
@@ -212,7 +222,7 @@ describe("ExpressionRenderer", function()
                 it("minimal", function()
                     local original_query = {
                         type = predicate_key,
-                        expression = reference.column("configurations", "ui_settings"),
+                        expression = reference.column("configurations", "ui_settings")
                     }
                     assert_expression_yields(original_query, [["configurations"."ui_settings" ]] .. predicate)
                 end)
@@ -225,7 +235,7 @@ describe("ExpressionRenderer", function()
                             typeConstraint = constraint
                         }
                         assert_expression_yields(original_query,
-                                [["configurations"."ui_settings" ]] .. predicate .. " ".. constraint)
+                                                 [["configurations"."ui_settings" ]] .. predicate .. " " .. constraint)
                     end)
                 end
 
@@ -237,7 +247,7 @@ describe("ExpressionRenderer", function()
                             keyUniquenessConstraint = uniqueness
                         }
                         assert_expression_yields(original_query,
-                                [['{"enabled" : true}' ]] .. predicate .. " " .. uniqueness)
+                                                 [['{"enabled" : true}' ]] .. predicate .. " " .. uniqueness)
                     end)
                 end
             end)
@@ -245,26 +255,30 @@ describe("ExpressionRenderer", function()
     end)
 
     it("raises an error if the output query is missing", function()
-        assert.has_error(function() ExpressionAppender:new() end,
-                "Expression renderer requires a query object that it can append to.")
+        assert.has_error(function()
+            ExpressionAppender:new()
+        end, "Expression renderer requires a query object that it can append to.")
 
     end)
 
     it("raises an error if an unknown predicate type is used", function()
         local appender = ExpressionAppender:new(Query:new())
-        assert.error_matches(function() appender:_append_unary_predicate({type = "illegal predicate type"}) end,
-                "Cannot determine operator for unknown predicate type 'illegal predicate type'.", 1, true)
+        assert.error_matches(function()
+            appender:_append_unary_predicate({type = "illegal predicate type"})
+        end, "Cannot determine operator for unknown predicate type 'illegal predicate type'.", 1, true)
     end)
 
     it("raises an error if the expression type is unknown", function()
         local appender = ExpressionAppender:new(Query:new())
-        assert.error_matches(function() appender:append_expression({type = "illegal expression type"}) end,
-                "Unable to render unknown SQL expression type 'illegal expression type'.", 1, true)
+        assert.error_matches(function()
+            appender:append_expression({type = "illegal expression type"})
+        end, "Unable to render unknown SQL expression type 'illegal expression type'.", 1, true)
     end)
 
     it("raises an error if the data type is unknown", function()
         local appender = ExpressionAppender:new(Query:new())
-        assert.error_matches(function() appender:_append_data_type({type = "illegal datatype"}) end,
-                "Unable to render unknown data type 'illegal datatype'.")
+        assert.error_matches(function()
+            appender:_append_data_type({type = "illegal datatype"})
+        end, "Unable to render unknown data type 'illegal datatype'.")
     end)
 end)
