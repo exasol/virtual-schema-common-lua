@@ -1,6 +1,5 @@
 --- This class implements an abstraction for a query string including its tokens.
 -- @classmod Query
-
 local Query = {}
 Query.__index = Query
 

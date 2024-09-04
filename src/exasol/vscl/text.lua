@@ -36,7 +36,7 @@ end
 -- @param delimiter to split at (default: ',')
 --
 function M.split(text, delimiter)
-    if(text == nil) then
+    if (text == nil) then
         return nil
     end
     delimiter = delimiter or ','

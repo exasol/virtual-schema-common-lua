@@ -6,10 +6,10 @@ AdapterProperties.__index = AdapterProperties
 local text = require("exasol.vscl.text")
 local ExaError = require("ExaError")
 
-local EXCLUDED_CAPABILITIES_PROPERTY <const> = "EXCLUDED_CAPABILITIES"
-local LOG_LEVEL_PROPERTY <const> = "LOG_LEVEL"
-local DEBUG_ADDRESS_PROPERTY <const> = "DEBUG_ADDRESS"
-local DEFAULT_LOG_PORT <const> = 3000
+local EXCLUDED_CAPABILITIES_PROPERTY<const> = "EXCLUDED_CAPABILITIES"
+local LOG_LEVEL_PROPERTY<const> = "LOG_LEVEL"
+local DEBUG_ADDRESS_PROPERTY<const> = "DEBUG_ADDRESS"
+local DEFAULT_LOG_PORT<const> = 3000
 
 --- Create a new instance of adapter properties.
 -- @param raw_properties properties as key-value pairs
@@ -78,13 +78,11 @@ function AdapterProperties:_validate_debug_address()
         local address = self:get(DEBUG_ADDRESS_PROPERTY)
         if not string.match(address, "^.-:[0-9]+$") then
             ExaError:new("F-VSCL-PROP-3", "Expected log address in " .. DEBUG_ADDRESS_PROPERTY
-                    .. " to look like '<ip>|<host>[:<port>]', but got {{address}} instead"
-                    , {address = address})
-                    :add_mitigations("Provide an valid IP address or host name")
-                    :add_mitigations("Make sure host/ip and port number are separated by a colon")
-                    :add_mitigations("Optionally add a port number (default is 3000)")
-                    :add_mitigations("Don't add any whitespace characters")
-                    :raise(0)
+                                 .. " to look like '<ip>|<host>[:<port>]', but got {{address}} instead",
+                         {address = address}):add_mitigations("Provide an valid IP address or host name")
+                    :add_mitigations("Make sure host/ip and port number are separated by a colon"):add_mitigations(
+                            "Optionally add a port number (default is 3000)"):add_mitigations(
+                            "Don't add any whitespace characters"):raise(0)
         end
     end
 end
@@ -102,8 +100,7 @@ function AdapterProperties:_validate_log_level()
         end
         if not found then
             ExaError:new("F-VSCL-PROP-2", "Unknown log level {{level}} in " .. LOG_LEVEL_PROPERTY .. " property",
-                    {level = level})
-                    :add_mitigations("Pick one of: " .. table.concat(allowed_levels, ", "))
+                         {level = level}):add_mitigations("Pick one of: " .. table.concat(allowed_levels, ", "))
                     :raise(0)
         end
     end
@@ -113,10 +110,10 @@ function AdapterProperties:_validate_excluded_capabilities()
     if self:has_value(EXCLUDED_CAPABILITIES_PROPERTY) then
         local value = self:get(EXCLUDED_CAPABILITIES_PROPERTY)
         if not string.match(value, "^[ A-Za-z0-9_,]*$") then
-            ExaError:new("F-VSCL-PROP-1", "Invalid character(s) in " .. EXCLUDED_CAPABILITIES_PROPERTY
-                    .. " property: {{value}}", {value = value})
-                    :add_mitigations("Use only the following characters: ASCII letter, digit, underscore, comma, space")
-                    :raise(0)
+            ExaError:new("F-VSCL-PROP-1",
+                         "Invalid character(s) in " .. EXCLUDED_CAPABILITIES_PROPERTY .. " property: {{value}}",
+                         {value = value}):add_mitigations(
+                    "Use only the following characters: ASCII letter, digit, underscore, comma, space"):raise(0)
         end
     end
 end
@@ -170,7 +167,7 @@ end
 function AdapterProperties:get_debug_address()
     if self:has_value(DEBUG_ADDRESS_PROPERTY) then
         local debug_address = self:get(DEBUG_ADDRESS_PROPERTY)
-        local colon_position = string.find(debug_address,":", 1, true)
+        local colon_position = string.find(debug_address, ":", 1, true)
         if colon_position == nil then
             return debug_address, DEFAULT_LOG_PORT
         else
@@ -221,7 +218,7 @@ function AdapterProperties:__tostring()
     table.sort(keys)
     local str = {"("}
     for _, key in ipairs(keys) do
-        if(#str > 1 ) then
+        if (#str > 1) then
             str[#str + 1] = ", "
         end
         str[#str + 1] = key

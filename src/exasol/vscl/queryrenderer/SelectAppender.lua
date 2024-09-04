@@ -9,8 +9,12 @@ local ExaError = require("ExaError")
 local log = require("remotelog")
 local ExpressionAppender = require("exasol.vscl.queryrenderer.ExpressionAppender")
 
-local JOIN_TYPES<const> = {inner = "INNER", left_outer = "LEFT OUTER", right_outer = "RIGHT OUTER",
-                           full_outer = "FULL OUTER"}
+local JOIN_TYPES<const> = {
+    inner = "INNER",
+    left_outer = "LEFT OUTER",
+    right_outer = "RIGHT OUTER",
+    full_outer = "FULL OUTER"
+}
 
 --- Get a map of supported JOIN type to the join keyword.
 -- @return join type (key) mapped to SQL join keyword
@@ -69,8 +73,8 @@ function SelectAppender:_append_join(join)
         self:_append_expression(join.condition)
     else
         ExaError:new("E-VSCL-6", "Unable to render unknown join type {{type}}.",
-                {type = {value = join.join_type, description = "type of join that was not recognized"}}
-        ):add_ticket_mitigation():raise()
+                     {type = {value = join.join_type, description = "type of join that was not recognized"}})
+                :add_ticket_mitigation():raise()
     end
 end
 
@@ -84,8 +88,8 @@ function SelectAppender:_append_from(from)
             self:_append_join(from)
         else
             ExaError:new("E-VSCL-5", "Unable to render unknown SQL FROM clause type {{type}}.",
-                    {type = {value = type, description = "type of the FROM clause that was not recognized"}}
-            ):add_ticket_mitigation():raise()
+                         {type = {value = type, description = "type of the FROM clause that was not recognized"}})
+                    :add_ticket_mitigation():raise()
         end
     end
 end

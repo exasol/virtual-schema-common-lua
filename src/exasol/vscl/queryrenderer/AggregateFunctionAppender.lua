@@ -31,11 +31,9 @@ function AggregateFunctionAppender:append_aggregate_function(aggregate_function)
     if implementation ~= nil then
         implementation(self, aggregate_function)
     else
-        ExaError:new("E-VSCL-3", "Unable to render unsupported aggregate function type {{function_name}}.",
-                {function_name =
-                    {value = function_name, description = "name of the SQL function that is not yet supported"}
-                }
-        ):add_ticket_mitigation():raise()
+        ExaError:new("E-VSCL-3", "Unable to render unsupported aggregate function type {{function_name}}.", {
+            function_name = {value = function_name, description = "name of the SQL function that is not yet supported"}
+        }):add_ticket_mitigation():raise()
     end
 end
 
@@ -90,9 +88,9 @@ AggregateFunctionAppender._covar_samp = AggregateFunctionAppender._append_simple
 
 function AggregateFunctionAppender:_count(f)
     local distinct = f.distinct or false
-    if(f.arguments == nil or next(f.arguments) == nil) then
+    if (f.arguments == nil or next(f.arguments) == nil) then
         self:_append("COUNT(*)")
-    elseif(#f.arguments == 1) then
+    elseif (#f.arguments == 1) then
         self:_append("COUNT")
         self:_append_function_argument_list(distinct, f.arguments)
     else

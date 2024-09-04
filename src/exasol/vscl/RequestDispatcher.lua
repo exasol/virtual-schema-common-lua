@@ -5,7 +5,7 @@
 -- @classmod RequestDispatcher
 local RequestDispatcher = {}
 RequestDispatcher.__index = RequestDispatcher
-local TRUNCATE_ERRORS_AFTER <const> = 3000
+local TRUNCATE_ERRORS_AFTER<const> = 3000
 
 local log = require("remotelog")
 local cjson = require("cjson")
@@ -37,7 +37,7 @@ end
 -- [impl -> dsn~dispatching-set-properties-requests~0]
 function RequestDispatcher:_handle_request(request, properties)
     local handlers = {
-        pushdown =  self._adapter.push_down,
+        pushdown = self._adapter.push_down,
         createVirtualSchema = self._adapter.create_virtual_schema,
         dropVirtualSchema = self._adapter.drop_virtual_schema,
         refresh = self._adapter.refresh,
@@ -46,7 +46,7 @@ function RequestDispatcher:_handle_request(request, properties)
     }
     log.info('Received "%s" request.', request.type)
     local handler = handlers[request.type]
-    if(handler ~= nil) then
+    if (handler ~= nil) then
         if request.type == "setProperties" then
             local new_properties = self:_extract_new_properties(request)
             return handler(self._adapter, request, properties, new_properties)
@@ -55,9 +55,7 @@ function RequestDispatcher:_handle_request(request, properties)
         end
     else
         ExaError:new("F-RQD-1", "Unknown Virtual Schema request type {{request_type}} received.",
-            {request_type = request.type})
-            :add_ticket_mitigation()
-            :raise(0)
+                     {request_type = request.type}):add_ticket_mitigation():raise(0)
     end
 end
 
@@ -72,8 +70,8 @@ end
 
 local function handle_error(message)
     if string.len(message) > TRUNCATE_ERRORS_AFTER then
-        message = string.sub(message, 1, TRUNCATE_ERRORS_AFTER) ..
-            "\n... (error message truncated after " .. TRUNCATE_ERRORS_AFTER .. " characters)"
+        message = string.sub(message, 1, TRUNCATE_ERRORS_AFTER) .. "\n... (error message truncated after "
+                          .. TRUNCATE_ERRORS_AFTER .. " characters)"
     end
     log_error(message)
     return message

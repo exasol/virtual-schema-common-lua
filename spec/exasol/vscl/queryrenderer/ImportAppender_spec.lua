@@ -12,10 +12,7 @@ describe("ImportAppender", function()
         local original_query = {
             type = "import",
             connection = "CON1",
-            statement = {
-                type = "select",
-                from = {type  = "table", name = "T1"}
-            }
+            statement = {type = "select", from = {type = "table", name = "T1"}}
         }
         assert_yields([[IMPORT FROM EXA AT "CON1" STATEMENT 'SELECT * FROM "T1"']], original_query)
     end)
@@ -24,17 +21,11 @@ describe("ImportAppender", function()
         local original_query = {
             type = "import",
             connection = "CON1",
-            statement = {
-                type = "select",
-                from = {type  = "table", name = "T2"}
-            },
-            into = {
-                {size = 10, type = "VARCHAR"},
-                {type = "BOOLEAN"}
-            }
+            statement = {type = "select", from = {type = "table", name = "T2"}},
+            into = {{size = 10, type = "VARCHAR"}, {type = "BOOLEAN"}}
         }
         assert_yields([[IMPORT INTO (c1 VARCHAR(10), c2 BOOLEAN) FROM EXA AT "CON1" STATEMENT 'SELECT * FROM "T2"']],
-                original_query)
+                      original_query)
     end)
 
     it("renders an IMPORT with escaped quotes", function()
@@ -43,10 +34,8 @@ describe("ImportAppender", function()
             connection = "CON1",
             statement = {
                 type = "select",
-                selectList = {
-                    {type = "literal_string", value = "a_text"}
-                },
-                from = {type  = "table", name = "T1"}
+                selectList = {{type = "literal_string", value = "a_text"}},
+                from = {type = "table", name = "T1"}
             }
         }
         assert_yields([[IMPORT FROM EXA AT "CON1" STATEMENT 'SELECT ''a_text'' FROM "T1"']], original_query)

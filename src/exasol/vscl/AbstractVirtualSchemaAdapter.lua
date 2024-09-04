@@ -17,8 +17,8 @@ end
 
 local function raise_abstract_method_call_error(method_name)
     ExaError:new("E-VSCL-8", "Attempted to call the abstract method AbstractVirtualSchemaAdapter:{{method|u}}.",
-            {method = {value = method_name, description = "abstract method that was called"}}
-    ):add_ticket_mitigation():raise()
+                 {method = {value = method_name, description = "abstract method that was called"}})
+            :add_ticket_mitigation():raise()
 end
 
 --- Get the adapter name.

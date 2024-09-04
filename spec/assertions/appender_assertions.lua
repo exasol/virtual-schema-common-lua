@@ -42,12 +42,12 @@ end
 say:set("assertion.append_yields.positive", "Appended query part:\n%s\nExpected: %s\nbut got : %s")
 say:set("assertion.append_yields.negative",
         "Appender query part \n%s\nExpected a different query than %s\nbut got exactly that")
-say:set("assertion.append_error.positive", "Appended query  part:\n%s\n"
-        .. "\nExpected error containing: %s\nbut got                  : %s")
+say:set("assertion.append_error.positive",
+        "Appended query  part:\n%s\n" .. "\nExpected error containing: %s\nbut got                  : %s")
 say:set("assertion.append_error.negative",
         "Appended query part\n%sExpected error not containing:\n%s\nbut got exactly that")
 
-assert:register("assertion", "append_error", append_error,
-        "assertion.append_error.positive", "assertion.append_error.negative")
+assert:register("assertion", "append_error", append_error, "assertion.append_error.positive",
+                "assertion.append_error.negative")
 assert:register("assertion", "append_yields", append_yields, "assertion.append_yields.positive",
-        "assertion.append_yields.negative")
+                "assertion.append_yields.negative")

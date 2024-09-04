@@ -3,33 +3,31 @@ local AdapterProperties = require("exasol.vscl.AdapterProperties")
 
 describe("AdapterProperties", function()
     describe("validates property rule:", function()
-            local tests = {
-                {
-                    properties = {EXCLUDED_CAPABILITIES = "a;b;c"},
-                    expected = "Invalid character(s) in EXCLUDED_CAPABILITIES property"
-                },
-                {
-                    properties = {LOG_LEVEL = "INVALID"},
-                    expected = "Unknown log level 'INVALID' in LOG_LEVEL property"
-                },
-                {
-                    properties = {DEBUG_ADDRESS = "host:not-a-number"},
-                    expected = "Expected log address in DEBUG_ADDRESS to look like '<ip>|<host>[:<port>]'"
-                    .. ", but got 'host:not-a-number' instead"
-                }
+        local tests = {
+            {
+                properties = {EXCLUDED_CAPABILITIES = "a;b;c"},
+                expected = "Invalid character(s) in EXCLUDED_CAPABILITIES property"
+            }, {properties = {LOG_LEVEL = "INVALID"}, expected = "Unknown log level 'INVALID' in LOG_LEVEL property"}, {
+                properties = {DEBUG_ADDRESS = "host:not-a-number"},
+                expected = "Expected log address in DEBUG_ADDRESS to look like '<ip>|<host>[:<port>]'"
+                        .. ", but got 'host:not-a-number' instead"
             }
-            for _, test in ipairs(tests) do
-                it(test.expected, function()
-                    local properties = AdapterProperties:new(test.properties)
-                    assert.error_matches(function() properties:validate() end,  test.expected, 1, true)
-                end)
-            end
+        }
+        for _, test in ipairs(tests) do
+            it(test.expected, function()
+                local properties = AdapterProperties:new(test.properties)
+                assert.error_matches(function()
+                    properties:validate()
+                end, test.expected, 1, true)
+            end)
+        end
     end)
 
     it("recognizes an illegal value in a boolean property", function()
         local properties = AdapterProperties:new({switch = "tRUe"})
-        assert.error_matches(function() properties:validate_boolean("switch") end,
-                "Property 'switch' contains an illegal value: 'tRUe'", 1, true)
+        assert.error_matches(function()
+            properties:validate_boolean("switch")
+        end, "Property 'switch' contains an illegal value: 'tRUe'", 1, true)
     end)
 
     describe("gets the DEBUG_ADDRESS property", function()
@@ -54,7 +52,7 @@ describe("AdapterProperties", function()
 
     it("gets the EXCLUDED_CAPABILITIES property", function()
         assert.are.same({"a", "b", "c"},
-                AdapterProperties:new({EXCLUDED_CAPABILITIES = "a,b, c"}):get_excluded_capabilities())
+                        AdapterProperties:new({EXCLUDED_CAPABILITIES = "a,b, c"}):get_excluded_capabilities())
     end)
 
     it("checks if a property is present", function()
