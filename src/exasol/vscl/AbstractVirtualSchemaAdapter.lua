@@ -6,7 +6,7 @@
 --
 -- [impl -> dsn~lua-virtual-schema-adapter-abstraction~0]
 --
--- @classmod AbstractVirtualSchemaAdapter
+---@class AbstractVirtualSchemaAdapter
 local AbstractVirtualSchemaAdapter = {}
 
 local ExaError = require("ExaError")

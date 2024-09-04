@@ -1,5 +1,5 @@
 --- Appender that can add top-level elements of a `SELECT` statement (or sub-select).
--- @classmod ImportAppender
+---@class ImportAppender: AbstractQueryRenderer
 local ImportAppender = {}
 ImportAppender.__index = ImportAppender
 local AbstractQueryRenderer = require("exasol.vscl.queryrenderer.AbstractQueryAppender")

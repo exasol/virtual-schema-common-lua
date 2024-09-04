@@ -1,5 +1,5 @@
 --- Appender for value expressions in a SQL query.
--- @classmod ExpressionAppender
+---@class ExpressionAppender: AbstractQueryAppender
 local ExpressionAppender = {}
 ExpressionAppender.__index = ExpressionAppender
 local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
@@ -28,8 +28,8 @@ local function get_predicate_operator(predicate_type)
 end
 
 --- Create a new instance of an `ExpressionRenderer`.
--- @param out_query query that the rendered tokens should be appended too
--- @return expression renderer
+---@param out_query Query query that the rendered tokens should be appended too
+---@return ExpressionAppender expression_renderer
 function ExpressionAppender:new(out_query)
     assert(out_query ~= nil, "Expression renderer requires a query object that it can append to.")
     local instance = setmetatable({}, self)
@@ -37,10 +37,12 @@ function ExpressionAppender:new(out_query)
     return instance
 end
 
+---@param out_query Query
 function ExpressionAppender:_init(out_query)
     AbstractQueryAppender._init(self, out_query)
 end
 
+---@param column ColumnReference
 function ExpressionAppender:_append_column_reference(column)
     self:_append('"')
     self:_append(column.tableName)
@@ -49,6 +51,7 @@ function ExpressionAppender:_append_column_reference(column)
     self:_append('"')
 end
 
+---@param sub_select SubSelect
 function ExpressionAppender:_append_exists(sub_select)
     self:_append("EXISTS(")
     require("exasol.vscl.queryrenderer.SelectAppender"):new(self._out_query):append_select(sub_select.query)
@@ -193,6 +196,7 @@ function ExpressionAppender:append_predicate(predicate)
     end
 end
 
+---@param literal_expression LiteralString|LiteralDate|LiteralTimestamp|LiteralInterval
 function ExpressionAppender:_append_quoted_literal_expression(literal_expression)
     self:_append("'")
     self:_append(literal_expression.value)
@@ -200,7 +204,7 @@ function ExpressionAppender:_append_quoted_literal_expression(literal_expression
 end
 
 --- Append an expression to a query.
--- @param expression expression to append
+--- @param expression Expression to append
 function ExpressionAppender:append_expression(expression)
     local type = expression.type
     if type == "column" then

@@ -31,6 +31,7 @@ function SelectAppender:_init(out_query)
     AbstractQueryRenderer._init(self, out_query)
 end
 
+---@param select_list SelectList
 function SelectAppender:_append_select_list_elements(select_list)
     for i = 1, #select_list do
         local element = select_list[i]
@@ -39,6 +40,7 @@ function SelectAppender:_append_select_list_elements(select_list)
     end
 end
 
+---@param select_list SelectList?
 function SelectAppender:_append_select_list(select_list)
     if not select_list then
         self:_append("*")
@@ -90,6 +92,7 @@ function SelectAppender:_append_from(from)
     end
 end
 
+---@param expression Expression
 function SelectAppender:_append_expression(expression)
     ExpressionAppender:new(self._out_query):append_expression(expression)
 end
@@ -170,7 +173,7 @@ function SelectAppender:append_sub_select(sub_query)
 end
 
 --- Append a `SELECT` statement.
--- @param sub_query query appended
+---@param sub_query SelectExpression query appended
 function SelectAppender:append_select(sub_query)
     self:_append("SELECT ")
     self:_append_select_list(sub_query.selectList)

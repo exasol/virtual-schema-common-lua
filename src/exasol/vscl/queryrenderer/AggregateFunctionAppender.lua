@@ -1,5 +1,5 @@
 --- Appender for aggregate functions in an SQL statement.
--- @classmod AggregateFunctionAppender
+---@class AggregateFunctionAppender: AbstractQueryAppender
 local AggregateFunctionAppender = {}
 AggregateFunctionAppender.__index = AggregateFunctionAppender
 local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
@@ -42,6 +42,7 @@ end
 -- Alias for main appender function for uniform appender invocation
 AggregateFunctionAppender.append = AggregateFunctionAppender.append_aggregate_function
 
+---@param expression any
 function AggregateFunctionAppender:_append_expression(expression)
     local expression_renderer = ExpressionAppender:new(self._out_query)
     expression_renderer:append_expression(expression)
