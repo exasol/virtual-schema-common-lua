@@ -11,7 +11,8 @@ end
 
 describe("ExpressionRenderer", function()
     it("renders column reference", function()
-        assert_expression_yields(reference.column("the_table", "the_column"), '"the_table"."the_column"')
+        assert_expression_yields(reference.column("the_table", --
+        "the_column"), '"the_table"."the_column"')
     end)
 
     describe("renders literal:", function()
