@@ -26,6 +26,16 @@ jobs:
         uses: leafo/gh-actions-luarocks@v4
         with:
           luaRocksVersion: "3.11.1"
+      - name: Cache Lua dependencies
+        id: cache-lua-dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.luarocks
+          key: |
+            ${{ runner.os }}-lua-${{ matrix.lua_version }}-${{ hashFiles('*.rockspec') }}
+          restore-keys: |
+            "${{ runner.os }}-lua-${{ matrix.lua_version }}"
+            "${{ runner.os }}-lua"
       - name: Install Lua dependencies
         run: luarocks make --local
       - name: Run tests
