@@ -83,8 +83,8 @@ local function is_valid_followup_identifier_character(char)
                    or is_unicode_connector_punctuation(char) or is_middle_dot(char)
 end
 
----@param id string
----@param id_type string
+---@param id string database object identifier
+---@param id_type string type of the database object referenced by the identifier
 local function validate_identifier_characters(id, id_type)
     for position, char in utf8.codes(id) do
         if (position == 1 and not is_valid_first_identifier_character(char))
@@ -99,8 +99,8 @@ local function validate_identifier_characters(id, id_type)
     end
 end
 
----@param id string?
----@param id_type string
+---@param id string? database object identifier (e.g. a table name)
+---@param id_type string type of the database object
 local function validate_sql_identifier(id, id_type)
     validate_identifier_not_nil(id, id_type)
     assert(id ~= nil)
@@ -108,12 +108,12 @@ local function validate_sql_identifier(id, id_type)
     validate_identifier_characters(id, id_type)
 end
 
----@param id string?
+---@param id string? user name
 function validator.validate_user(id)
     validate_sql_identifier(id, "user")
 end
 
----@param port_string string?
+---@param port_string string? port as string (before it is proven to be a number)
 function validator.validate_port(port_string)
     local port = tonumber(port_string)
     if port == nil then

@@ -42,7 +42,7 @@ end
 
 --- Create a new instance of an `ExpressionRenderer`.
 ---@param out_query Query query that the rendered tokens should be appended too
----@return ExpressionAppender expression_renderer
+---@return ExpressionAppender expression_renderer new expression appender
 function ExpressionAppender:new(out_query)
     assert(out_query ~= nil, "Expression renderer requires a query object that it can append to.")
     local instance = setmetatable({}, self)

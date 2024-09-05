@@ -25,7 +25,7 @@ end
 
 ---Append a comma in a comma-separated list where needed.
 ---Appends a comma if the list index is greater than one.
----@param index integer
+---@param index integer position in the comma-separated list
 function AbstractQueryAppender:_comma(index)
     if index > 1 then
         self:_append(", ")

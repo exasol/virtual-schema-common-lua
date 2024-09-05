@@ -7,7 +7,7 @@ local ImportQueryBuilder = {}
 ImportQueryBuilder.__index = ImportQueryBuilder
 
 --- Create a new instance of an `ImportQueryBuilder`.
----@return ImportQueryBuilder new_instance
+---@return ImportQueryBuilder new_instance new query builder
 function ImportQueryBuilder:new()
     local instance = setmetatable({}, self)
     instance:_init()

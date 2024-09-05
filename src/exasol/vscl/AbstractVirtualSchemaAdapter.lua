@@ -22,7 +22,7 @@ local function raise_abstract_method_call_error(method_name)
 end
 
 --- Get the adapter name.
----@return string adapter_name
+---@return string adapter_name name of the adapter
 function AbstractVirtualSchemaAdapter:get_name()
     raise_abstract_method_call_error("get_name")
 end
@@ -36,7 +36,7 @@ end
 --- Define the list of all capabilities this adapter supports.
 -- Override this method in derived adapter class. Note that this differs from `get_capabilities` because
 -- the later takes exclusions defined by the user into consideration.
----@return string[] capabilities list of all capabilities of this adapter
+---@return string[] capabilities list of all capabilities supported by this adapter
 function AbstractVirtualSchemaAdapter:_define_capabilities()
     raise_abstract_method_call_error("_define_capabilities")
 end
@@ -98,7 +98,7 @@ end
 -- remote data source.
 ---@param _request any virtual schema request
 ---@param properties any user-defined properties
----@return string[] capabilities list of non-excluded adapter capabilities
+---@return table<string, any> capabilities list of non-excluded adapter capabilities
 function AbstractVirtualSchemaAdapter:get_capabilities(_request, properties)
     if properties:has_excluded_capabilities() then
         return {
