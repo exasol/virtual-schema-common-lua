@@ -12,6 +12,7 @@ readonly language_server_dir="$target_dir/luals"
 readonly language_server_executable="$language_server_dir/bin/lua-language-server"
 readonly type_check_log_dir="$target_dir/type-checker-logs"
 
+# Install luals on demand (skips installation if present)
 "$base_dir/tools/install-luals.sh"
 
 readonly doc_path="$target_dir/luals-doc"

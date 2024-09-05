@@ -42,7 +42,7 @@ M.DoubleTypeDefinition = {}
 ---@class DateTypeDefinition
 ---@field type "DATE"
 ---@class BooleanTypeDefinition
----@field type "BOOLEN"
+---@field type "BOOLEAN"
 M.BooleanTypeDefinition = {}
 
 -- luacheck: max line length 230

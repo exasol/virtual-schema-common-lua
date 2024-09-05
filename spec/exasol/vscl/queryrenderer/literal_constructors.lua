@@ -67,7 +67,7 @@ end
 --- Wrap Lua literals so that they look like the literal definition the Virtual Schema API uses.
 -- When fed with Lua literals, the function wraps the parameter in the corresponding VS API definition. Tables remain
 -- unchanged.
----@param ... number|integer|string|table list of Lua literals and/or tables
+---@param ... boolean|number|integer|string|table list of Lua literals and/or tables
 ---@return LiteralExpression[] same list with Lua literals wrapped
 function literal_constructors.wrap_literals(...)
     local wrapped_arguments = {}

@@ -68,7 +68,7 @@ If you want to run all unit tests including code coverage, issue the following c
 
 ## Building API Documentation
 
-To build the API documentation using luals issue the following command:
+To build the API documentation using `luals` issue the following command:
 
 ```bash
 ./tools/build_docs.sh

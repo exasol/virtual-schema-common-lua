@@ -17,7 +17,7 @@ local JOIN_TYPES<const> = {
 }
 
 --- Get a map of supported JOIN type to the join keyword.
----@return table<string,string> join type (key) mapped to SQL join keyword
+---@return table<string, string> join type (key) mapped to SQL join keyword
 function SelectAppender.get_join_types()
     return JOIN_TYPES
 end

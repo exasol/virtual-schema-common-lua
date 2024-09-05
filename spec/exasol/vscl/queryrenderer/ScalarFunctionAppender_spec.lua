@@ -13,7 +13,7 @@ end
 ---@param name string
 ---@param extra_attributes table<string, any>
 ---@param ... number|integer|string|table
----@return string
+---@return string rendered_function function rendered as string
 local function run_complex_function(name, extra_attributes, ...)
     local out_query = Query:new()
     local renderer = ScalarFunctionAppender:new(out_query)
