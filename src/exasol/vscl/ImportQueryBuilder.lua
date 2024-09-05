@@ -1,6 +1,7 @@
 --- Builder for an IMPORT query that wraps push-down query
 ---@class ImportQueryBuilder
 ---@field _column_types TypeDefinition[]
+---@field _source_type SourceType default: "EXA"
 ---@field _connection string
 ---@field _statement SelectExpression
 local ImportQueryBuilder = {}
@@ -16,6 +17,7 @@ end
 
 function ImportQueryBuilder:_init()
     -- intentionally empty
+    self._source_type = "EXA"
 end
 
 --- Set the result set column data types.
@@ -23,6 +25,14 @@ end
 ---@return ImportQueryBuilder self for fluent programming
 function ImportQueryBuilder:column_types(column_types)
     self._column_types = column_types
+    return self
+end
+
+--- Set the source type to one of `EXA`, `JDBC`, `ORA`. Default: `EXA`.
+---@param source_type SourceType type of the source from which to import
+---@return ImportQueryBuilder self for fluent programming
+function ImportQueryBuilder:source_type(source_type)
+    self._source_type = source_type
     return self
 end
 
@@ -45,7 +55,13 @@ end
 --- Build the `IMPORT` query structure.
 ---@return ImportStatement import_statement that represents the `IMPORT` statement
 function ImportQueryBuilder:build()
-    return {type = "import", into = self._column_types, connection = self._connection, statement = self._statement}
+    return {
+        type = "import",
+        into = self._column_types,
+        source_type = self._source_type,
+        connection = self._connection,
+        statement = self._statement
+    }
 end
 
 return ImportQueryBuilder
@@ -54,5 +70,8 @@ return ImportQueryBuilder
 ---@class ImportStatement
 ---@field type "import"
 ---@field into TypeDefinition[]
+---@field source_type SourceType
 ---@field connection string
 ---@field statement SelectExpression
+
+---@alias SourceType "EXA"|"JDBC"|"ORA"
