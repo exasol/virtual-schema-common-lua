@@ -205,7 +205,7 @@ describe("SelectAppender", function()
         assert_yields('SELECT "FRUITS"."NAME", "FRUITS"."SUGAR_PERCENTAGE" FROM "FRUITS"'
                               .. ' WHERE ("FRUITS"."SUGAR_PERCENTAGE"' .. ' > ('
                               .. 'SELECT "SNACKS"."SUGAR_PERCENTAGE" FROM "SNACKS" WHERE '
-                              .. '("SNACKS"."CATEGORY" = \'desert\'))' .. ')', original_query)
+                              .. '("SNACKS"."CATEGORY" = \'desert\')))', original_query)
     end)
 
     it("renders a JOIN clause", function()

@@ -1,5 +1,5 @@
 --- Appender for aggregate functions in an SQL statement.
--- @classmod AggregateFunctionAppender
+---@class AggregateFunctionAppender: AbstractQueryAppender
 local AggregateFunctionAppender = {}
 AggregateFunctionAppender.__index = AggregateFunctionAppender
 local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
@@ -10,8 +10,8 @@ local SelectAppender = require("exasol.vscl.queryrenderer.SelectAppender")
 local ExaError = require("ExaError")
 
 --- Create a new instance of a `AggregateFunctionAppender`.
--- @param out_query query to which the function will be appended
--- @return renderer for aggregate functions
+---@param out_query Query query to which the function will be appended
+---@return AggregateFunctionAppender renderer for aggregate functions
 function AggregateFunctionAppender:new(out_query)
     assert(out_query ~= nil, "Renderer for aggregate function requires a query object that it can append to.")
     local instance = setmetatable({}, self)
@@ -19,12 +19,13 @@ function AggregateFunctionAppender:new(out_query)
     return instance
 end
 
+---@param out_query Query
 function AggregateFunctionAppender:_init(out_query)
     AbstractQueryAppender._init(self, out_query)
 end
 
 --- Append an aggregate function to an SQL query.
--- @param aggregate_function function to append
+---@param aggregate_function AggregateFunctionExpression function to append
 function AggregateFunctionAppender:append_aggregate_function(aggregate_function)
     local function_name = string.lower(aggregate_function.name)
     local implementation = AggregateFunctionAppender["_" .. function_name]
@@ -40,6 +41,7 @@ end
 -- Alias for main appender function for uniform appender invocation
 AggregateFunctionAppender.append = AggregateFunctionAppender.append_aggregate_function
 
+---@param expression Expression
 function AggregateFunctionAppender:_append_expression(expression)
     local expression_renderer = ExpressionAppender:new(self._out_query)
     expression_renderer:append_expression(expression)

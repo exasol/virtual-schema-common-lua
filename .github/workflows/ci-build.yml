@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: api-documentation
-          path: target/ldoc/
+          path: target/luals-doc/
           if-no-files-found: error
 
   ## This is a separate job because it requires running apt-get which takes > 40s.

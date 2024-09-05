@@ -1,26 +1,28 @@
 --- Appender that can add top-level elements of a `SELECT` statement (or sub-select).
--- @classmod ImportAppender
+---@class ImportAppender: AbstractQueryAppender
 local ImportAppender = {}
 ImportAppender.__index = ImportAppender
-local AbstractQueryRenderer = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
-setmetatable(ImportAppender, {__index = AbstractQueryRenderer})
+local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
+setmetatable(ImportAppender, {__index = AbstractQueryAppender})
 
 local SelectAppender = require("exasol.vscl.queryrenderer.SelectAppender")
 local Query = require("exasol.vscl.Query")
 
 --- Create a new query renderer.
--- @param out_query query structure as provided through the Virtual Schema API
--- @return query renderer instance
+---@param out_query Query query structure as provided through the Virtual Schema API
+---@return ImportAppender query_renderer instance
 function ImportAppender:new(out_query)
     local instance = setmetatable({}, self)
     instance:_init(out_query)
     return instance
 end
 
+---@param out_query Query
 function ImportAppender:_init(out_query)
-    AbstractQueryRenderer._init(self, out_query)
+    AbstractQueryAppender._init(self, out_query)
 end
 
+-- TODO: this is not tested, check if this can be deleted
 function ImportAppender:_append_select_list_elements(select_list)
     for i = 1, #select_list do
         local element = select_list[i]
@@ -36,16 +38,18 @@ function ImportAppender:_append_connection(connection)
 end
 
 --- Get the statement with extra-quotes where necessary as it will be embedded into the IMPORT statement.
--- @param statement statement for which to escape quotes
--- @return statement with escaped single quotes
+---@param statement SelectExpression statement for which to escape quotes
+---@return string statement statement with escaped single quotes
 local function get_statement_with_escaped_quotes(statement)
     local statement_out_query = Query:new()
     local select_appender = SelectAppender:new(statement_out_query)
     select_appender:append(statement)
     local rendered_statement = statement_out_query:to_string()
-    return rendered_statement:gsub("'", "''")
+    local escaped_statement, _ = rendered_statement:gsub("'", "''")
+    return escaped_statement
 end
 
+---@param statement SelectExpression
 function ImportAppender:_append_statement(statement)
     self:_append(" STATEMENT '")
     self:_append(get_statement_with_escaped_quotes(statement))
@@ -67,7 +71,7 @@ function ImportAppender:_append_into_clause(into)
 end
 
 --- Append an `IMPORT` statement.
--- @param import_query import query appended
+---@param import_query ImportStatement import query appended
 function ImportAppender:append_import(import_query)
     self:_append("IMPORT")
     self:_append_into_clause(import_query.into)

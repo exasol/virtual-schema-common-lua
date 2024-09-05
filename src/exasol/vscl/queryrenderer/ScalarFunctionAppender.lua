@@ -1,5 +1,5 @@
 --- Appender for scalar functions in an SQL statement.
--- @classmod ScalarFunctionAppender
+---@class ScalarFunctionAppender: AbstractQueryAppender
 local ScalarFunctionAppender = {}
 ScalarFunctionAppender.__index = ScalarFunctionAppender
 local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
@@ -9,8 +9,8 @@ local ExpressionAppender = require("exasol.vscl.queryrenderer.ExpressionAppender
 local ExaError = require("ExaError")
 
 --- Create a new instance of a `ScalarFunctionAppender`.
--- @param out_query query to which the function will be appended
--- @return renderer for scalar functions
+---@param out_query Query query to which the function will be appended
+---@return ScalarFunctionAppender renderer for scalar functions
 function ScalarFunctionAppender:new(out_query)
     assert(out_query ~= nil, "Renderer for scalar function requires a query object that it can append to.")
     local instance = setmetatable({}, self)
@@ -18,12 +18,13 @@ function ScalarFunctionAppender:new(out_query)
     return instance
 end
 
+---@param out_query Query query to which the function will be appended
 function ScalarFunctionAppender:_init(out_query)
     AbstractQueryAppender._init(self, out_query)
 end
 
 --- Append a scalar function to an SQL query.
--- @param scalar_function function to append
+---@param scalar_function ScalarFunctionExpression function to append
 function ScalarFunctionAppender:append_scalar_function(scalar_function)
     local function_name = string.lower(scalar_function.name)
     local implementation = ScalarFunctionAppender["_" .. function_name]
@@ -39,11 +40,13 @@ end
 -- Alias for main appender function for uniform appender invocation
 ScalarFunctionAppender.append = ScalarFunctionAppender.append_scalar_function
 
+---@param expression Expression
 function ScalarFunctionAppender:_append_expression(expression)
     local expression_renderer = ExpressionAppender:new(self._out_query)
     expression_renderer:append_expression(expression)
 end
 
+---@param arguments Expression[]
 function ScalarFunctionAppender:_append_function_argument_list(arguments)
     self:_append("(")
     if (arguments) then
@@ -55,6 +58,9 @@ function ScalarFunctionAppender:_append_function_argument_list(arguments)
     self:_append(")")
 end
 
+---@param left Expression
+---@param operator string
+---@param right Expression
 function ScalarFunctionAppender:_append_arithmetic_function(left, operator, right)
     self:_append_expression(left)
     self:_append(" ")

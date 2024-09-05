@@ -68,13 +68,13 @@ If you want to run all unit tests including code coverage, issue the following c
 
 ## Building API Documentation
 
-To build the API documentation using ldoc issue the following command:
+To build the API documentation using `luals` issue the following command:
 
 ```bash
 ./tools/build_docs.sh
 ```
 
-The documentation will be written as HTML files to `target/ldoc/`.
+The documentation will be written as a Markdown file to `target/luals-doc/doc.md`.
 
 ## Formatting Sources
 

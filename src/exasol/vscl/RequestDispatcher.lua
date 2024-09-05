@@ -2,7 +2,9 @@
 -- It is independent of the use case of the VS adapter and offers functionality that each Virtual Schema needs, like
 -- JSON decoding and encoding and setting up remote logging.
 -- To use the dispatcher, you need to inject the concrete adapter the dispatcher should send the prepared requests to.
--- @classmod RequestDispatcher
+---@class RequestDispatcher
+---@field _adapter AbstractVirtualSchemaAdapter
+---@field _properties_reader AdapterProperties
 local RequestDispatcher = {}
 RequestDispatcher.__index = RequestDispatcher
 local TRUNCATE_ERRORS_AFTER<const> = 3000
@@ -12,9 +14,9 @@ local cjson = require("cjson")
 local ExaError = require("ExaError")
 
 --- Create a new `RequestDispatcher`.
--- @param adapter adapter that receives the dispatched requests
--- @param properties_reader properties reader
--- @return dispatcher instance
+---@param adapter AbstractVirtualSchemaAdapter adapter that receives the dispatched requests
+---@param properties_reader AdapterProperties properties reader
+---@return RequestDispatcher dispatcher_instance
 function RequestDispatcher:new(adapter, properties_reader)
     assert(adapter ~= nil, "Request Dispatcher requires an adapter to dispatch too")
     local instance = setmetatable({}, self)
@@ -22,6 +24,8 @@ function RequestDispatcher:new(adapter, properties_reader)
     return instance
 end
 
+---@param adapter AbstractVirtualSchemaAdapter adapter that receives the dispatched requests
+---@param properties_reader AdapterProperties properties reader
 function RequestDispatcher:_init(adapter, properties_reader)
     self._adapter = adapter
     self._properties_reader = properties_reader or require("exasol.vscl.AdapterProperties")
@@ -106,9 +110,9 @@ end
 -- This global function receives the request from the Exasol core database.
 -- </p>
 --
--- @param request_as_json JSON-encoded adapter request
+---@param request_as_json string JSON-encoded adapter request
 --
--- @return JSON-encoded adapter response
+---@return string response JSON-encoded adapter response
 --
 -- [impl -> dsn~translating-json-request-to-lua-tables~0]
 -- [impl -> dsn~translating-lua-tables-to-json-responses~0]

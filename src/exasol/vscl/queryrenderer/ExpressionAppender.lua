@@ -1,5 +1,5 @@
 --- Appender for value expressions in a SQL query.
--- @classmod ExpressionAppender
+---@class ExpressionAppender: AbstractQueryAppender
 local ExpressionAppender = {}
 ExpressionAppender.__index = ExpressionAppender
 local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
@@ -27,6 +27,8 @@ local OPERATORS<const> = {
     predicate_is_not_json = "IS NOT JSON"
 }
 
+---@param predicate_type string
+---@return string
 local function get_predicate_operator(predicate_type)
     local operator = OPERATORS[predicate_type]
     if operator ~= nil then
@@ -39,8 +41,8 @@ local function get_predicate_operator(predicate_type)
 end
 
 --- Create a new instance of an `ExpressionRenderer`.
--- @param out_query query that the rendered tokens should be appended too
--- @return expression renderer
+---@param out_query Query query that the rendered tokens should be appended too
+---@return ExpressionAppender expression_renderer new expression appender
 function ExpressionAppender:new(out_query)
     assert(out_query ~= nil, "Expression renderer requires a query object that it can append to.")
     local instance = setmetatable({}, self)
@@ -48,10 +50,12 @@ function ExpressionAppender:new(out_query)
     return instance
 end
 
+---@param out_query Query
 function ExpressionAppender:_init(out_query)
     AbstractQueryAppender._init(self, out_query)
 end
 
+---@param column ColumnReference
 function ExpressionAppender:_append_column_reference(column)
     self:_append('"')
     self:_append(column.tableName)
@@ -60,12 +64,14 @@ function ExpressionAppender:_append_column_reference(column)
     self:_append('"')
 end
 
+---@param sub_select ExistsPredicate
 function ExpressionAppender:_append_exists(sub_select)
     self:_append("EXISTS(")
     require("exasol.vscl.queryrenderer.SelectAppender"):new(self._out_query):append_select(sub_select.query)
     self:_append(")")
 end
 
+---@param predicate UnaryPredicate
 function ExpressionAppender:_append_unary_predicate(predicate)
     self:_append("(")
     self:_append(get_predicate_operator(predicate.type))
@@ -74,6 +80,7 @@ function ExpressionAppender:_append_unary_predicate(predicate)
     self:_append(")")
 end
 
+---@param predicate BinaryPredicateExpression
 function ExpressionAppender:_append_binary_predicate(predicate)
     self:_append("(")
     self:append_expression(predicate.left)
@@ -84,6 +91,7 @@ function ExpressionAppender:_append_binary_predicate(predicate)
     self:_append(")")
 end
 
+---@param predicate IteratedPredicate
 function ExpressionAppender:_append_iterated_predicate(predicate)
     self:_append("(")
     local expressions = predicate.expressions
@@ -98,6 +106,7 @@ function ExpressionAppender:_append_iterated_predicate(predicate)
     self:_append(")")
 end
 
+---@param predicate InPredicate
 function ExpressionAppender:_append_predicate_in(predicate)
     self:_append("(")
     self:append_expression(predicate.expression)
@@ -110,6 +119,7 @@ function ExpressionAppender:_append_predicate_in(predicate)
     self:_append("))")
 end
 
+---@param predicate LikePredicate
 function ExpressionAppender:_append_predicate_like(predicate)
     self:_append("(")
     self:append_expression(predicate.expression)
@@ -123,6 +133,7 @@ function ExpressionAppender:_append_predicate_like(predicate)
     self:_append(")")
 end
 
+---@param predicate LikeRegexpPredicate
 function ExpressionAppender:_append_predicate_regexp_like(predicate)
     self:_append("(")
     self:append_expression(predicate.expression)
@@ -131,6 +142,7 @@ function ExpressionAppender:_append_predicate_regexp_like(predicate)
     self:_append(")")
 end
 
+---@param predicate PostfixPredicate
 function ExpressionAppender:_append_postfix_predicate(predicate)
     self:_append("(")
     self:append_expression(predicate.expression)
@@ -139,6 +151,7 @@ function ExpressionAppender:_append_postfix_predicate(predicate)
     self:_append(")")
 end
 
+---@param predicate BetweenPredicate
 function ExpressionAppender:_append_between(predicate)
     self:_append("(")
     self:append_expression(predicate.expression)
@@ -149,6 +162,7 @@ function ExpressionAppender:_append_between(predicate)
     self:_append(")")
 end
 
+---@param predicate JsonPredicate
 function ExpressionAppender:_append_predicate_is_json(predicate)
     self:append_expression(predicate.expression)
     self:_append(" ")
@@ -172,7 +186,7 @@ end
 
 --- Append a predicate to a query.
 -- This method is public to allow nesting predicates in filters.
--- @param predicate predicate to append
+---@param predicate PredicateExpression predicate to append
 function ExpressionAppender:append_predicate(predicate)
     local type = string.sub(predicate.type, 11)
     if type == "equal" or type == "notequal" or type == "greater" or type == "less" or type == "lessequal" or type
@@ -203,6 +217,7 @@ function ExpressionAppender:append_predicate(predicate)
     end
 end
 
+---@param literal_expression StringBasedLiteral
 function ExpressionAppender:_append_quoted_literal_expression(literal_expression)
     self:_append("'")
     self:_append(literal_expression.value)
@@ -210,7 +225,7 @@ function ExpressionAppender:_append_quoted_literal_expression(literal_expression
 end
 
 --- Append an expression to a query.
--- @param expression expression to append
+---@param expression Expression to append
 function ExpressionAppender:append_expression(expression)
     local type = expression.type
     if type == "column" then

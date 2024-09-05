@@ -25,10 +25,6 @@ jobs:
         with:
           luaRocksVersion: "3.11.1"
 
-      - name: Install Tools
-        run: |
-          luarocks install --local ldoc
-
       - name: Generate API documentation
         run: |
           ./tools/build_docs.sh
@@ -37,7 +33,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: target/ldoc
+          folder: target/luals-doc
           target-folder: api
           clean: true
           single-commit: true

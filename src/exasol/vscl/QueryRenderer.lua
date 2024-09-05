@@ -1,5 +1,6 @@
 --- Renderer for SQL queries.
--- @classmod QueryRenderer
+---@class QueryRenderer
+---@field original_query SelectExpression
 local QueryRenderer = {}
 QueryRenderer.__index = QueryRenderer
 
@@ -8,8 +9,8 @@ local SelectAppender = require("exasol.vscl.queryrenderer.SelectAppender")
 local ImportAppender = require("exasol.vscl.queryrenderer.ImportAppender")
 
 --- Create a new query renderer.
--- @param original_query query structure as provided through the Virtual Schema API
--- @return query renderer instance
+---@param original_query Query query structure as provided through the Virtual Schema API
+---@return QueryRenderer query_renderer instance
 function QueryRenderer:new(original_query)
     local instance = setmetatable({}, self)
     instance:_init(original_query)
@@ -21,7 +22,7 @@ function QueryRenderer:_init(original_query)
 end
 
 --- Render the query to a string.
--- @return query as string
+---@return string rendered_query query as string
 function QueryRenderer:render()
     local out_query = Query:new()
     local appender = (self.original_query.type == "import") and ImportAppender:new(out_query)

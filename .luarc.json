@@ -20,7 +20,7 @@
             "coroutine": "disable",
             "debug": "disable",
             "ffi": "disable",
-            "io": "enable", // Required by integration tests for reading test.properties
+            "io": "disable",
             "jit": "disable",
             "jit.profile": "disable",
             "jit.util": "disable",
@@ -30,7 +30,7 @@
             "table": "enable",
             "table.clear": "disable",
             "table.new": "disable",
-            "utf8": "disable"
+            "utf8": "enable" // Used by validator.lua
         }
     },
     "type": {
