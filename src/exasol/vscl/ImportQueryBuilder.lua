@@ -50,6 +50,7 @@ end
 
 return ImportQueryBuilder
 
+---The ImportStatement is a record (behavior-less table) that contains the structure of an `IMPORT` SQL statement.
 ---@class ImportStatement
 ---@field type "import"
 ---@field into TypeDefinition[]
