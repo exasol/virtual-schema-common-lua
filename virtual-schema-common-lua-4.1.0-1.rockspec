@@ -1,3 +1,4 @@
+---@diagnostic disable: lowercase-global
 rockspec_format = "3.0"
 
 local tag = "4.1.0"
@@ -6,7 +7,7 @@ package = "virtual-schema-common-lua"
 version = tag .. "-1"
 
 source = {
-    url = 'git://github.com/exasol/virtual-schema-common-lua',
+    url = 'git://github.com/exasol/virtual-schema-common-lua', -- 
     tag = tag
 }
 
@@ -21,22 +22,20 @@ description = {
 }
 
 dependencies = {
-    "lua >= 5.4, < 5.5",
-    "exaerror >= 2.0.3",
+    "lua >= 5.4, < 5.5", --
+    "exaerror >= 2.0.3", --
     "lua-cjson = 2.1.0", -- pinned to prevent "undefined symbol: lua_objlen" in 2.1.0.6 (https://github.com/mpx/lua-cjson/issues/56)
     "remotelog >= 1.1.1"
 }
 
 test_dependencies = {
-    "busted >= 2.2.0",
-    "luacheck >= 1.2.0",
-    "luacov >= 0.15.0",
+    "busted >= 2.2.0", --
+    "luacheck >= 1.2.0", --
+    "luacov >= 0.15.0", --
     "luacov-coveralls >= 0.2.3"
 }
 
-test = {
-    type = "busted"
-}
+test = {type = "busted"}
 
 build = {
     type = "builtin",
@@ -56,5 +55,5 @@ build = {
         ["exasol.vscl.text"] = "src/exasol/vscl/text.lua",
         ["exasol.vscl.validator"] = "src/exasol/vscl/validator.lua"
     },
-    copy_directories = { "doc"}
+    copy_directories = {"doc"}
 }

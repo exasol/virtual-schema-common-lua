@@ -6,7 +6,7 @@
         "source.fixAll": "explicit"
     },
     "files.associations": {
-        ".rockspec": "lua"
+        "*.rockspec": "lua"
     },
     "busted-test-explorer.cwd": "${workspaceFolder}",
     "vscode-lua-format.configPath": ".lua-format"
