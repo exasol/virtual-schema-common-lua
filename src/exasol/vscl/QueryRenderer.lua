@@ -1,5 +1,6 @@
 --- Renderer for SQL queries.
 ---@class QueryRenderer
+---@field original_query SelectExpression
 local QueryRenderer = {}
 QueryRenderer.__index = QueryRenderer
 

@@ -2,7 +2,7 @@
 ---@class ImportQueryBuilder
 ---@field _column_types TypeDefinition[]
 ---@field _connection string
----@field _statement string
+---@field _statement SelectExpression
 local ImportQueryBuilder = {}
 ImportQueryBuilder.__index = ImportQueryBuilder
 
@@ -35,7 +35,7 @@ function ImportQueryBuilder:connection(connection)
 end
 
 --- Set the push-down statement.
----@param statement string push-down statement to be wrapped by the `IMPORT` statement.
+---@param statement SelectExpression push-down statement to be wrapped by the `IMPORT` statement.
 ---@return ImportQueryBuilder self for fluent programming
 function ImportQueryBuilder:statement(statement)
     self._statement = statement
@@ -43,9 +43,15 @@ function ImportQueryBuilder:statement(statement)
 end
 
 --- Build the `IMPORT` query structure.
----@return table import_statement that represents the `IMPORT` statement
+---@return ImportStatement import_statement that represents the `IMPORT` statement
 function ImportQueryBuilder:build()
     return {type = "import", into = self._column_types, connection = self._connection, statement = self._statement}
 end
 
 return ImportQueryBuilder
+
+---@class ImportStatement
+---@field type "import"
+---@field into TypeDefinition[]
+---@field connection string
+---@field statement SelectExpression

@@ -64,7 +64,7 @@ function ExpressionAppender:_append_column_reference(column)
     self:_append('"')
 end
 
----@param sub_select SubSelect
+---@param sub_select ExistsPredicate
 function ExpressionAppender:_append_exists(sub_select)
     self:_append("EXISTS(")
     require("exasol.vscl.queryrenderer.SelectAppender"):new(self._out_query):append_select(sub_select.query)
@@ -119,6 +119,7 @@ function ExpressionAppender:_append_predicate_in(predicate)
     self:_append("))")
 end
 
+---@param predicate LikePredicate
 function ExpressionAppender:_append_predicate_like(predicate)
     self:_append("(")
     self:append_expression(predicate.expression)
@@ -132,6 +133,7 @@ function ExpressionAppender:_append_predicate_like(predicate)
     self:_append(")")
 end
 
+---@param predicate LikeRegexpPredicate
 function ExpressionAppender:_append_predicate_regexp_like(predicate)
     self:_append("(")
     self:append_expression(predicate.expression)
@@ -140,6 +142,7 @@ function ExpressionAppender:_append_predicate_regexp_like(predicate)
     self:_append(")")
 end
 
+---@param predicate PostfixPredicate
 function ExpressionAppender:_append_postfix_predicate(predicate)
     self:_append("(")
     self:append_expression(predicate.expression)
@@ -148,6 +151,7 @@ function ExpressionAppender:_append_postfix_predicate(predicate)
     self:_append(")")
 end
 
+---@param predicate BetweenPredicate
 function ExpressionAppender:_append_between(predicate)
     self:_append("(")
     self:append_expression(predicate.expression)
@@ -158,6 +162,7 @@ function ExpressionAppender:_append_between(predicate)
     self:_append(")")
 end
 
+---@param predicate JsonPredicate
 function ExpressionAppender:_append_predicate_is_json(predicate)
     self:append_expression(predicate.expression)
     self:_append(" ")
@@ -212,7 +217,7 @@ function ExpressionAppender:append_predicate(predicate)
     end
 end
 
----@param literal_expression LiteralString|LiteralDate|LiteralTimestamp|LiteralInterval
+---@param literal_expression StringBasedLiteral
 function ExpressionAppender:_append_quoted_literal_expression(literal_expression)
     self:_append("'")
     self:_append(literal_expression.value)

@@ -45,8 +45,7 @@ M.DoubleTypeDefinition = {}
 ---@field type "BOOLEN"
 M.BooleanTypeDefinition = {}
 
--- Line is too long
--- luacheck: ignore
+-- luacheck: max line length 230
 ---@alias TypeDefinition DecimalTypeDefinition|CharacterTypeDefinition|TimestampTypeDefinition|GeometryTypeDefinition|IntervalTypeDefinition|HashtypeTypeDefinition|DoubleTypeDefinition|DateTypeDefinition|BooleanTypeDefinition
 
 return M

@@ -10,6 +10,10 @@ local function it_asserts(expected, actual, explanation)
     end)
 end
 
+---@param name string
+---@param extra_attributes table<string, any>
+---@param ... number|integer|string|table
+---@return string
 local function run_complex_function(name, extra_attributes, ...)
     local out_query = Query:new()
     local renderer = ScalarFunctionAppender:new(out_query)
@@ -26,7 +30,7 @@ end
 
 --- Run a scalar function.
 ---@param name string name of the scalar function to run
----@param ... Expression arguments passed to the function
+---@param ... number|integer|string|table arguments passed to the function
 ---@return string rendered_function function rendered as string
 local function run_function(name, ...)
     return run_complex_function(name, {}, ...)

@@ -38,16 +38,18 @@ function ImportAppender:_append_connection(connection)
 end
 
 --- Get the statement with extra-quotes where necessary as it will be embedded into the IMPORT statement.
--- @param statement statement for which to escape quotes
--- @return statement with escaped single quotes
+---@param statement SelectExpression statement for which to escape quotes
+---@return string statement statement with escaped single quotes
 local function get_statement_with_escaped_quotes(statement)
     local statement_out_query = Query:new()
     local select_appender = SelectAppender:new(statement_out_query)
     select_appender:append(statement)
     local rendered_statement = statement_out_query:to_string()
-    return rendered_statement:gsub("'", "''")
+    local escaped_statement, _ = rendered_statement:gsub("'", "''")
+    return escaped_statement
 end
 
+---@param statement SelectExpression
 function ImportAppender:_append_statement(statement)
     self:_append(" STATEMENT '")
     self:_append(get_statement_with_escaped_quotes(statement))
@@ -69,7 +71,7 @@ function ImportAppender:_append_into_clause(into)
 end
 
 --- Append an `IMPORT` statement.
--- @param import_query import query appended
+---@param import_query ImportStatement import query appended
 function ImportAppender:append_import(import_query)
     self:_append("IMPORT")
     self:_append_into_clause(import_query.into)

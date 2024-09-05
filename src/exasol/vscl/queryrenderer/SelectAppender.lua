@@ -17,7 +17,7 @@ local JOIN_TYPES<const> = {
 }
 
 --- Get a map of supported JOIN type to the join keyword.
--- @return join type (key) mapped to SQL join keyword
+---@return table<string,string> join type (key) mapped to SQL join keyword
 function SelectAppender.get_join_types()
     return JOIN_TYPES
 end
@@ -83,6 +83,7 @@ function SelectAppender:_append_join(join)
     end
 end
 
+---@param from FromClause
 function SelectAppender:_append_from(from)
     if from then
         self:_append(' FROM ')
@@ -104,6 +105,7 @@ function SelectAppender:_append_expression(expression)
     ExpressionAppender:new(self._out_query):append_expression(expression)
 end
 
+---@param filter PredicateExpression
 function SelectAppender:_append_filter(filter)
     if filter then
         self:_append(" WHERE ")
@@ -118,8 +120,9 @@ end
 -- please note that `GROUP BY <constant>` always leads to grouping with a single group, regardless of the
 -- actual value of the constant (except for `FALSE`, which is reserved).
 --
--- @param group_by_criteria the original `GROUP BY` expression
--- @return a new, alternative expression or the original expression if no replacement is necessary
+---@param group_by_criteria Expression the original `GROUP BY` expression
+---@return Expression alternative_expression a new, alternative expression or the original expression
+---                                          if no replacement is necessary
 local function workaround_group_by_integer(group_by_criteria)
     if group_by_criteria.type == "literal_exactnumeric" then
         local new_value = tostring(group_by_criteria.value)
@@ -130,6 +133,7 @@ local function workaround_group_by_integer(group_by_criteria)
     end
 end
 
+---@param group Expression[]?
 function SelectAppender:_append_group_by(group)
     if group then
         self:_append(" GROUP BY ")
@@ -140,6 +144,8 @@ function SelectAppender:_append_group_by(group)
     end
 end
 
+---@param order OrderByClause[]?
+---@param in_parenthesis boolean?
 function SelectAppender:_append_order_by(order, in_parenthesis)
     if order then
         if not in_parenthesis then
@@ -159,6 +165,7 @@ function SelectAppender:_append_order_by(order, in_parenthesis)
     end
 end
 
+---@param limit LimitClause
 function SelectAppender:_append_limit(limit)
     if limit then
         self:_append(" LIMIT ")
