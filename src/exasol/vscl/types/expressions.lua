@@ -104,65 +104,68 @@ M.AggregateFunctionExpression = {}
 ---@alias SelectList Expression[]
 
 ---@class BinaryPredicateExpression
----@field type  "equal"|"notequal"|"greater"|"less"|"lessequal"|"greaterequal"
+-- luacheck: max line length 140
+---@field type  "predicate_equal"|"predicate_notequal"|"predicate_greater"|"predicate_less"|"predicate_lessequal"|"predicate_greaterequal"
 ---@field left Expression
 ---@field right Expression
 M.BinaryPredicateExpression = {}
 
----@class UnaryPredicate
--- luacheck: max line length 340
----@field type "predicate_equal"|"predicate_notequal"|"predicate_less"|"predicate_greater"|"predicate_lessequal"|"predicate_greaterequal"|"predicate_between"|"predicate_is_not_null"|"predicate_is_null"|"predicate_like"|"predicate_like_regexp"|"predicate_and"|"predicate_or"|"predicate_not"|"predicate_is_json"|"predicate_is_not_json"
+---@class NotPredicate
+---@field type "predicate_not"
 ---@field expression Expression
-M.UnaryPredicate = {}
+M.NotPredicate = {}
+
+---@alias UnaryPredicate NotPredicate
 
 ---@class IteratedPredicate
----@field type "and"|"or"
+---@field type "predicate_and"|"predicate_or"
 ---@field expressions Expression[]
 M.IteratedPredicate = {}
 
 ---@class InPredicate
----@field type "in_constlist"
+---@field type "predicate_in_constlist"
 ---@field expression Expression
 ---@field arguments Expression
 M.InPredicate = {}
 
 ---@class ExistsPredicate
----@field type "exists"
+---@field type "predicate_exists"
 ---@field query_object SubSelect
 M.ExistsPredicate = {}
 
 ---@class JsonPredicate
----@field type "is_json"|"is_not_json"
+---@field type "predicate_is_json"|"predicate_is_not_json"
 ---@field expression Expression
 ---@field typeConstraint "VALUE"|"ARRAY"|"OBJECT"|"SCALAR"
 ---@field keyUniquenessConstraint "WITH UNIQUE KEYS"|"WITHOUT UNIQUE KEYS"
 M.JsonPredicate = {}
 
 ---@class LikePredicate
----@field type "like"
+---@field type "predicate_like"
 ---@field expression Expression
 ---@field pattern Expression
 ---@field escapeChar Expression?
 M.LikePredicate = {}
 
 ---@class LikeRegexpPredicate
----@field type "like_regexp"
+---@field type "predicate_like_regexp"
 ---@field expression Expression
 ---@field pattern Expression
 M.LikeRegexpPredicate = {}
 
 ---@class PostfixPredicate
----@field type "is_null"|"is_not_null"
+---@field type "predicate_is_null"|"predicate_is_not_null"
 ---@field expression Expression
 M.PostfixPredicate = {}
 
 ---@class BetweenPredicate
----@field type "between"
+---@field type "predicate_between"
 ---@field expression Expression
 ---@field left Expression
 ---@field right Expression
 M.BetweenPredicate = {}
 
+-- luacheck: max line length 180
 ---@alias PredicateExpression BinaryPredicateExpression|UnaryPredicate|IteratedPredicate|InPredicate|ExistsPredicate|JsonPredicate|LikePredicate|PostfixPredicate|BetweenPredicate
 
 return M
