@@ -32,7 +32,7 @@ function AbstractQueryAppender:_comma(index)
     end
 end
 
----@param data_type TypeDefinition
+---@param data_type ExasolTypeDefinition
 function AbstractQueryAppender:_append_decimal_type_details(data_type)
     self:_append("(")
     self:_append(data_type.precision)
@@ -41,7 +41,7 @@ function AbstractQueryAppender:_append_decimal_type_details(data_type)
     self:_append(")")
 end
 
----@param data_type TypeDefinition
+---@param data_type ExasolTypeDefinition
 function AbstractQueryAppender:_append_character_type(data_type)
     self:_append("(")
     self:_append(data_type.size)
@@ -53,14 +53,14 @@ function AbstractQueryAppender:_append_character_type(data_type)
     end
 end
 
----@param data_type TypeDefinition
+---@param data_type ExasolTypeDefinition
 function AbstractQueryAppender:_append_timestamp(data_type)
     if data_type.withLocalTimeZone then
         self:_append(" WITH LOCAL TIME ZONE")
     end
 end
 
----@param data_type TypeDefinition
+---@param data_type ExasolTypeDefinition
 function AbstractQueryAppender:_append_geometry(data_type)
     local srid = data_type.srid
     if srid then
@@ -99,7 +99,7 @@ function AbstractQueryAppender:_append_interval(data_type)
     end
 end
 
----@param data_type TypeDefinition
+---@param data_type ExasolTypeDefinition
 function AbstractQueryAppender:_append_hashtype(data_type)
     local byte_size = data_type.bytesize
     if byte_size then
@@ -109,7 +109,7 @@ function AbstractQueryAppender:_append_hashtype(data_type)
     end
 end
 
----@param data_type TypeDefinition
+---@param data_type ExasolTypeDefinition
 function AbstractQueryAppender:_append_data_type(data_type)
     local type = data_type.type
     self:_append(type)

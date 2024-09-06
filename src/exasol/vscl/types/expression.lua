@@ -1,3 +1,4 @@
+---@meta exasol_expressions
 local M = {}
 
 ---@class ColumnReference

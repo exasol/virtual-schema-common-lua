@@ -1,6 +1,6 @@
 --- Builder for an IMPORT query that wraps push-down query
 ---@class ImportQueryBuilder
----@field _column_types TypeDefinition[]
+---@field _column_types ExasolTypeDefinition[]
 ---@field _source_type SourceType default: "EXA"
 ---@field _connection string
 ---@field _statement SelectExpression
@@ -21,7 +21,7 @@ function ImportQueryBuilder:_init()
 end
 
 --- Set the result set column data types.
----@param column_types TypeDefinition[] column types as list of data type structures
+---@param column_types ExasolTypeDefinition[] column types as list of data type structures
 ---@return ImportQueryBuilder self for fluent programming
 function ImportQueryBuilder:column_types(column_types)
     self._column_types = column_types
@@ -69,7 +69,7 @@ return ImportQueryBuilder
 ---The ImportStatement is a record (behavior-less table) that contains the structure of an `IMPORT` SQL statement.
 ---@class ImportStatement
 ---@field type "import"
----@field into TypeDefinition[]
+---@field into ExasolTypeDefinition[]
 ---@field source_type SourceType
 ---@field connection string
 ---@field statement SelectExpression

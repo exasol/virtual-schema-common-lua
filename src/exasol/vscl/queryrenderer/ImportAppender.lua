@@ -48,7 +48,7 @@ function ImportAppender:_append_statement(statement)
     self:_append("'")
 end
 
----@param into TypeDefinition[]
+---@param into ExasolTypeDefinition[]
 function ImportAppender:_append_into_clause(into)
     if (into ~= nil) and (next(into) ~= nil) then
         self:_append(" INTO (")
