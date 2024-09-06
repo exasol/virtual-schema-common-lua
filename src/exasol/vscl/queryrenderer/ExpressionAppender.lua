@@ -42,32 +42,32 @@ end
 
 --- Create a new instance of an `ExpressionRenderer`.
 ---@param out_query Query query that the rendered tokens should be appended too
+---@param appender_config AppenderConfig
 ---@return ExpressionAppender expression_renderer new expression appender
-function ExpressionAppender:new(out_query)
-    assert(out_query ~= nil, "Expression renderer requires a query object that it can append to.")
+function ExpressionAppender:new(out_query, appender_config)
     local instance = setmetatable({}, self)
-    instance:_init(out_query)
+    instance:_init(out_query, appender_config)
     return instance
 end
 
 ---@param out_query Query
-function ExpressionAppender:_init(out_query)
-    AbstractQueryAppender._init(self, out_query)
+---@param appender_config AppenderConfig
+function ExpressionAppender:_init(out_query, appender_config)
+    AbstractQueryAppender._init(self, out_query, appender_config)
 end
 
 ---@param column ColumnReference
 function ExpressionAppender:_append_column_reference(column)
-    self:_append('"')
-    self:_append(column.tableName)
-    self:_append('"."')
-    self:_append(column.name)
-    self:_append('"')
+    self:_append_identifier(column.tableName)
+    self:_append('.')
+    self:_append_identifier(column.name)
 end
 
 ---@param sub_select ExistsPredicate
 function ExpressionAppender:_append_exists(sub_select)
     self:_append("EXISTS(")
-    require("exasol.vscl.queryrenderer.SelectAppender"):new(self._out_query):append_select(sub_select.query)
+    require("exasol.vscl.queryrenderer.SelectAppender"):new(self._out_query, self._appender_config):append_select(
+            sub_select.query)
     self:_append(")")
 end
 
@@ -249,13 +249,16 @@ function ExpressionAppender:append_expression(expression)
         self:_append_quoted_literal_expression(expression)
         self:_append_interval(expression.dataType)
     elseif text.starts_with(type, "function_scalar") then
-        require("exasol.vscl.queryrenderer.ScalarFunctionAppender"):new(self._out_query):append(expression)
+        require("exasol.vscl.queryrenderer.ScalarFunctionAppender"):new(self._out_query, self._appender_config):append(
+                expression)
     elseif text.starts_with(type, "function_aggregate") then
-        require("exasol.vscl.queryrenderer.AggregateFunctionAppender"):new(self._out_query):append(expression)
+        require("exasol.vscl.queryrenderer.AggregateFunctionAppender"):new(self._out_query, self._appender_config)
+                :append(expression)
     elseif text.starts_with(type, "predicate_") then
         self:append_predicate(expression)
     elseif type == "sub_select" then
-        require("exasol.vscl.queryrenderer.SelectAppender"):new(self._out_query):append_sub_select(expression)
+        require("exasol.vscl.queryrenderer.SelectAppender"):new(self._out_query, self._appender_config)
+                :append_sub_select(expression)
     else
         ExaError:new("E-VSCL-1", "Unable to render unknown SQL expression type {{type}}.",
                      {type = {value = expression.type, description = "expression type provided"}})

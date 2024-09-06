@@ -10,13 +10,16 @@ local function it_asserts(expected, actual, explanation)
     end)
 end
 
+---@type AppenderConfig
+local DEFAULT_APPENDER_CONFIG = {}
+
 ---@param name string
 ---@param extra_attributes table<string, any>
 ---@param ... number|integer|string|table
 ---@return string rendered_function function rendered as string
 local function run_complex_function(name, extra_attributes, ...)
     local out_query = Query:new()
-    local renderer = ScalarFunctionAppender:new(out_query)
+    local renderer = ScalarFunctionAppender:new(out_query, DEFAULT_APPENDER_CONFIG)
     local scalar_function = renderer["_" .. string.lower(name)]
     assert(scalar_function ~= nil, "Scalar function " .. name .. " must be present in renderer")
     local wrapped_arguments = literal.wrap_literals(...)
@@ -485,7 +488,7 @@ describe("ScalarFunctionRenderer", function()
     end)
 
     it("raises an error if you try to append a non-existent scalar function", function()
-        local renderer = ScalarFunctionAppender:new(Query:new())
+        local renderer = ScalarFunctionAppender:new(Query:new(), DEFAULT_APPENDER_CONFIG)
         local non_existent_scalar_function = {name = "NON_EXISTENT"}
         assert.error_matches(function()
             renderer:append(non_existent_scalar_function)

@@ -24,16 +24,18 @@ end
 
 --- Create a new query renderer.
 ---@param out_query Query query structure as provided through the Virtual Schema API
+---@param appender_config AppenderConfig
 ---@return SelectAppender query renderer instance
-function SelectAppender:new(out_query)
+function SelectAppender:new(out_query, appender_config)
     local instance = setmetatable({}, self)
-    instance:_init(out_query)
+    instance:_init(out_query, appender_config)
     return instance
 end
 
 ---@param out_query Query
-function SelectAppender:_init(out_query)
-    AbstractQueryAppender._init(self, out_query)
+---@param appender_config AppenderConfig
+function SelectAppender:_init(out_query, appender_config)
+    AbstractQueryAppender._init(self, out_query, appender_config)
 end
 
 ---@param select_list SelectList
@@ -104,16 +106,21 @@ function SelectAppender:_append_from(from)
     end
 end
 
+---@return ExpressionAppender
+function SelectAppender:_expression_appender()
+    return ExpressionAppender:new(self._out_query, self._appender_config)
+end
+
 ---@param expression Expression
 function SelectAppender:_append_expression(expression)
-    ExpressionAppender:new(self._out_query):append_expression(expression)
+    self:_expression_appender():append_expression(expression)
 end
 
 ---@param filter PredicateExpression
 function SelectAppender:_append_filter(filter)
     if filter then
         self:_append(" WHERE ")
-        ExpressionAppender:new(self._out_query):append_predicate(filter)
+        self:_expression_appender():append_predicate(filter)
     end
 end
 
@@ -143,7 +150,7 @@ function SelectAppender:_append_group_by(group)
         self:_append(" GROUP BY ")
         for i, criteria in ipairs(group) do
             self:_comma(i)
-            ExpressionAppender:new(self._out_query):append_expression(workaround_group_by_integer(criteria))
+            self:_expression_appender():append_expression(workaround_group_by_integer(criteria))
         end
     end
 end
@@ -158,7 +165,7 @@ function SelectAppender:_append_order_by(order, in_parenthesis)
         self:_append("ORDER BY ")
         for i, criteria in ipairs(order) do
             self:_comma(i)
-            ExpressionAppender:new(self._out_query):append_expression(criteria.expression)
+            self:_expression_appender():append_expression(criteria.expression)
             if criteria.isAscending ~= nil then
                 self:_append(criteria.isAscending and " ASC" or " DESC")
             end

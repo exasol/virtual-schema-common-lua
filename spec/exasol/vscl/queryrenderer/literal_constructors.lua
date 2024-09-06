@@ -53,8 +53,8 @@ function literal_constructors.interval_ym(value, precision)
 end
 
 ---@param value string
----@param precision integer
----@param fraction integer
+---@param precision integer?
+---@param fraction integer?
 ---@return LiteralInterval
 function literal_constructors.interval_ds(value, precision, fraction)
     return {
