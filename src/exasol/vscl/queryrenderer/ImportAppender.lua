@@ -24,7 +24,7 @@ end
 
 ---@param connection string
 function ImportAppender:_append_connection(connection)
-    self:_append(' AT "')
+    self:_append(' AT "') -- Using double quotes is OK, because this is only used for Exasol databases.
     self:_append(connection)
     self:_append('"')
 end
@@ -37,6 +37,7 @@ local function get_statement_with_escaped_quotes(statement)
     local select_appender = SelectAppender:new(statement_out_query)
     select_appender:append(statement)
     local rendered_statement = statement_out_query:to_string()
+    -- Using double quotes is OK, because this is only used for Exasol databases.
     local escaped_statement, _ = rendered_statement:gsub("'", "''")
     return escaped_statement
 end

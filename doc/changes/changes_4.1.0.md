@@ -8,9 +8,12 @@ This release updates `ImportQueryBuilder` and `ImportAppender` to allow a custom
 
 The release also updates `SelectAppender:_append_table()` to support catalogs in addition to schemas.
 
+The release also allows specifying a custom quote character for identifiers instead of the default `"`.
+
 The release also formats all sources and adds type annotations using LuaLS.
 
 ## Features
 
 * #89: Added support for specifying source for `IMPORT` statement
 * #91: Added support for catalogs
+* #92: Added support for customizing identifier quote character
