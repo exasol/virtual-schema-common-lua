@@ -8,9 +8,21 @@ This release updates `ImportQueryBuilder` and `ImportAppender` to allow a custom
 
 The release also updates `SelectAppender:_append_table()` to support catalogs in addition to schemas.
 
-The release also allows specifying a custom quote character for identifiers instead of the default `"`.
+The release also allows specifying a custom quote character for identifiers instead of the default `"`. This is a breaking change, see below for details.
 
 The release also formats all sources and adds type annotations using LuaLS.
+
+## Breaking Change
+
+Class `AbstractQueryAppender` now requires an `AppenderConfig` as second argument to the constructor method `:new()`. If the configuration is missing, the constructor will fail with error message `AbstractQueryAppender requires an appender configuration`. The following constructors are affected:
+* `QueryRenderer:new()`
+* `AggregateFunctionAppender:new()`
+* `ExpressionAppender:new()`
+* `ImportAppender:new()`
+* `ScalarFunctionAppender:new()`
+* `SelectAppender:new()`
+
+The configuration allows customizing the identifier quote character. If the default value `"` is OK, you can use the predefined configuration `AbstractQueryAppender.DEFAULT_APPENDER_CONFIG`.
 
 ## Features
 
