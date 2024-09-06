@@ -179,7 +179,7 @@ end
 
 --- Append a sub-select statement.
 -- This method is public to allow recursive queries (e.g. embedded into an `EXISTS` clause in an expression.
----@param sub_query SubSelect query appended
+---@param sub_query SelectSqlStatement query appended
 function SelectAppender:append_sub_select(sub_query)
     self:_append("(")
     self:append_select(sub_query)

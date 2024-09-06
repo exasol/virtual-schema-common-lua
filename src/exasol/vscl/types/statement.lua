@@ -2,7 +2,7 @@
 local M = {}
 
 ---@class SelectSqlStatement
----@field type "select"
+---@field type "select"|"sub_select"
 ---@field selectList SelectList[]?
 ---@field from FromClause
 ---@field filter PredicateExpression?
@@ -28,11 +28,6 @@ M.OrderByClause = {}
 ---@field numElements integer
 ---@field offset integer?
 M.LimitClause = {}
-
----@class SubSelect
----@field type "sub_select"
----@field query SelectSqlStatement
-M.SubSelect = {}
 
 ---@class TableExpression
 ---@field type "table"

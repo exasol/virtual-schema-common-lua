@@ -78,7 +78,7 @@ M.InPredicate = {}
 
 ---@class ExistsPredicate
 ---@field type "predicate_exists"
----@field query_object SubSelect
+---@field query_object SelectSqlStatement
 M.ExistsPredicate = {}
 
 ---@class JsonPredicate
