@@ -31,6 +31,7 @@ M.LimitClause = {}
 
 ---@class TableExpression
 ---@field type "table"
+---@field catalog string? Optional catalog. This is not used in Exasol but can be used in other databases that use catalogs.
 ---@field schema string?
 ---@field name string
 M.TableExpression = {}
