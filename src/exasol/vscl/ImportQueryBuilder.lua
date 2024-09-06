@@ -3,7 +3,7 @@
 ---@field _column_types ExasolTypeDefinition[]
 ---@field _source_type SourceType default: "EXA"
 ---@field _connection string
----@field _statement SelectExpression
+---@field _statement SelectSqlStatement
 local ImportQueryBuilder = {}
 ImportQueryBuilder.__index = ImportQueryBuilder
 
@@ -45,7 +45,7 @@ function ImportQueryBuilder:connection(connection)
 end
 
 --- Set the push-down statement.
----@param statement SelectExpression push-down statement to be wrapped by the `IMPORT` statement.
+---@param statement SelectSqlStatement push-down statement to be wrapped by the `IMPORT` statement.
 ---@return ImportQueryBuilder self for fluent programming
 function ImportQueryBuilder:statement(statement)
     self._statement = statement
@@ -53,7 +53,7 @@ function ImportQueryBuilder:statement(statement)
 end
 
 --- Build the `IMPORT` query structure.
----@return ImportStatement import_statement that represents the `IMPORT` statement
+---@return ImportSqlStatement import_statement that represents the `IMPORT` statement
 function ImportQueryBuilder:build()
     return {
         type = "import",
@@ -65,13 +65,5 @@ function ImportQueryBuilder:build()
 end
 
 return ImportQueryBuilder
-
----The ImportStatement is a record (behavior-less table) that contains the structure of an `IMPORT` SQL statement.
----@class ImportStatement
----@field type "import"
----@field into ExasolTypeDefinition[]
----@field source_type SourceType
----@field connection string
----@field statement SelectExpression
 
 ---@alias SourceType "EXA"|"JDBC"|"ORA"

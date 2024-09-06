@@ -187,7 +187,7 @@ function SelectAppender:append_sub_select(sub_query)
 end
 
 --- Append a `SELECT` statement.
----@param sub_query SelectExpression query appended
+---@param sub_query SelectSqlStatement query appended
 function SelectAppender:append_select(sub_query)
     self:_append("SELECT ")
     self:_append_select_list(sub_query.selectList)
