@@ -58,17 +58,15 @@ end
 
 ---@param table TableExpression
 function SelectAppender:_append_table(table)
-    self:_append('"')
     if table.schema then
         if table.catalog then
-            self:_append(table.catalog)
-            self:_append('"."')
+            self:_append_identifier(table.catalog)
+            self:_append('.')
         end
-        self:_append(table.schema)
-        self:_append('"."')
+        self:_append_identifier(table.schema)
+        self:_append('.')
     end
-    self:_append(table.name)
-    self:_append('"')
+    self:_append_identifier(table.name)
 end
 
 ---@param join JoinExpression

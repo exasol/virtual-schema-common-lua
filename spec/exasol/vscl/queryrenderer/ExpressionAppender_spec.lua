@@ -6,8 +6,11 @@ local reference = require("exasol.vscl.queryrenderer.reference_constructors")
 local ExpressionAppender = require("exasol.vscl.queryrenderer.ExpressionAppender")
 local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
 
-local function assert_expression_yields(expression, expected)
-    assert.append_yields(ExpressionAppender, expected, expression)
+---@param expression any
+---@param expected string
+---@param appender_config AppenderConfig?
+local function assert_expression_yields(expression, expected, appender_config)
+    assert.append_yields(ExpressionAppender, expected, expression, appender_config)
 end
 
 local function testee()
@@ -20,10 +23,8 @@ describe("ExpressionRenderer", function()
         "the_column"), '"the_table"."the_column"')
     end)
     it("renders column reference with custom quote", function()
-        local query = Query:new()
-        local appender = ExpressionAppender:new(query, {identifier_quote = "`"})
-        appender:append(reference.column("the_table", "the_column"))
-        assert.is.same('`the_table`.`the_column`', query:to_string())
+        assert_expression_yields(reference.column("the_table", "the_column"), '`the_table`.`the_column`',
+                                 {identifier_quote = "`"})
     end)
 
     describe("renders literal:", function()
