@@ -1,3 +1,4 @@
+---@meta exasol_type_definitions
 local M = {}
 
 ---@class DecimalTypeDefinition
@@ -41,11 +42,33 @@ M.DoubleTypeDefinition = {}
 
 ---@class DateTypeDefinition
 ---@field type "DATE"
+M.DateTypeDefinition = {}
+
 ---@class BooleanTypeDefinition
 ---@field type "BOOLEAN"
 M.BooleanTypeDefinition = {}
 
--- luacheck: max line length 230
----@alias TypeDefinition DecimalTypeDefinition|CharacterTypeDefinition|TimestampTypeDefinition|GeometryTypeDefinition|IntervalTypeDefinition|HashtypeTypeDefinition|DoubleTypeDefinition|DateTypeDefinition|BooleanTypeDefinition
+-- luacheck: max line length 240
+---@alias ExasolTypeDefinition DecimalTypeDefinition|CharacterTypeDefinition|TimestampTypeDefinition|GeometryTypeDefinition|IntervalTypeDefinition|HashtypeTypeDefinition|DoubleTypeDefinition|DateTypeDefinition|BooleanTypeDefinition
+
+---@enum ExasolDataType
+M.DATA_TYPES = {
+    DECIMAL = "DECIMAL",
+    DOUBLE = "DOUBLE",
+    VARCHAR = "VARCHAR",
+    CHAR = "CHAR",
+    DATE = "DATE",
+    TIMESTAMP = "TIMESTAMP",
+    BOOLEAN = "BOOLEAN",
+    GEOMETRY = "GEOMETRY",
+    INTERVAL = "INTERVAL",
+    HASHTYPE = "HASHTYPE"
+}
+
+---@enum ExasolObjectType
+M.OBJECT_TYPES = {TABLE = "table"}
+
+---@enum ExasolIntervalType
+M.INTERVAL_TYPES = {DAY_TO_SECONDS = "DAY TO SECONDS", YEAR_TO_MONTH = "YEAR TO MONTH"}
 
 return M

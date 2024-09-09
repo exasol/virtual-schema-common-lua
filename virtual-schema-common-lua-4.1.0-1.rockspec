@@ -21,39 +21,69 @@ description = {
     maintainer = 'Exasol <opensource@exasol.com>'
 }
 
+-- LuaFormatter off
 dependencies = {
-    "lua >= 5.4, < 5.5", --
-    "exaerror >= 2.0.3", --
+    "lua >= 5.4, < 5.5",
+    "exaerror >= 2.0.3",
     "lua-cjson = 2.1.0", -- pinned to prevent "undefined symbol: lua_objlen" in 2.1.0.6 (https://github.com/mpx/lua-cjson/issues/56)
     "remotelog >= 1.1.1"
 }
 
 test_dependencies = {
-    "busted >= 2.2.0", --
-    "luacheck >= 1.2.0", --
-    "luacov >= 0.15.0", --
+    "busted >= 2.2.0",
+    "luacheck >= 1.2.0",
+    "luacov >= 0.15.0",
     "luacov-coveralls >= 0.2.3"
 }
+-- LuaFormatter on
 
 test = {type = "busted"}
 
+---@param module_name string module name, e.g. `exasol.vscl.AdapterProperties`
+---@return string file_path e.g. `src/exasol/vscl/AdapterProperties.lua`
+local function file_path(module_name)
+    return "src/" .. module_name:gsub("%.", "/") .. ".lua"
+end
+
+---@param module_names string[] module name, e.g. `exasol.vscl.AdapterProperties`
+---@return table<string, string> modules mapping from module name to file path
+local function build_modules(module_names)
+    local modules = {}
+    for i = 1, #module_names do -- ipairs() and pairs() are not supported in rockspec
+        local module_name = module_names[i]
+        modules[module_name] = file_path(module_name)
+    end
+    return modules
+end
+
 build = {
     type = "builtin",
-    modules = {
-        ["exasol.vscl.AdapterProperties"] = "src/exasol/vscl/AdapterProperties.lua",
-        ["exasol.vscl.AbstractVirtualSchemaAdapter"] = "src/exasol/vscl/AbstractVirtualSchemaAdapter.lua",
-        ["exasol.vscl.ImportQueryBuilder"] = "src/exasol/vscl/ImportQueryBuilder.lua",
-        ["exasol.vscl.Query"] = "src/exasol/vscl/Query.lua",
-        ["exasol.vscl.QueryRenderer"] = "src/exasol/vscl/QueryRenderer.lua",
-        ["exasol.vscl.queryrenderer.AbstractQueryAppender"] = "src/exasol/vscl/queryrenderer/AbstractQueryAppender.lua",
-        ["exasol.vscl.queryrenderer.ExpressionAppender"] = "src/exasol/vscl/queryrenderer/ExpressionAppender.lua",
-        ["exasol.vscl.queryrenderer.ScalarFunctionAppender"] = "src/exasol/vscl/queryrenderer/ScalarFunctionAppender.lua",
-        ["exasol.vscl.queryrenderer.AggregateFunctionAppender"] = "src/exasol/vscl/queryrenderer/AggregateFunctionAppender.lua",
-        ["exasol.vscl.queryrenderer.SelectAppender"] = "src/exasol/vscl/queryrenderer/SelectAppender.lua",
-        ["exasol.vscl.queryrenderer.ImportAppender"] = "src/exasol/vscl/queryrenderer/ImportAppender.lua",
-        ["exasol.vscl.RequestDispatcher"] = "src/exasol/vscl/RequestDispatcher.lua",
-        ["exasol.vscl.text"] = "src/exasol/vscl/text.lua",
-        ["exasol.vscl.validator"] = "src/exasol/vscl/validator.lua"
-    },
+
+    -- LuaFormatter off
+    modules = build_modules({
+        "exasol.vscl.AdapterProperties",
+        "exasol.vscl.AbstractVirtualSchemaAdapter",
+        "exasol.vscl.ImportQueryBuilder",
+        "exasol.vscl.Query",
+        "exasol.vscl.QueryRenderer",
+        "exasol.vscl.queryrenderer.AbstractQueryAppender",
+        "exasol.vscl.queryrenderer.ExpressionAppender",
+        "exasol.vscl.queryrenderer.ScalarFunctionAppender",
+        "exasol.vscl.queryrenderer.AggregateFunctionAppender",
+        "exasol.vscl.queryrenderer.SelectAppender",
+        "exasol.vscl.queryrenderer.ImportAppender",
+        "exasol.vscl.RequestDispatcher",
+        "exasol.vscl.text",
+        "exasol.vscl.validator",
+        -- LuaLS type definitions
+        "exasol.vscl.types.udf_context",
+        "exasol.vscl.types.expression",
+        "exasol.vscl.types.type_definition",
+        "exasol.vscl.types.statement",
+        "exasol.vscl.types.vs_request",
+        "exasol.vscl.types.vs_response"
+    }),
+    -- LuaFormatter on
+
     copy_directories = {"doc"}
 }

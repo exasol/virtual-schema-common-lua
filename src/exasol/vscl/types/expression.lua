@@ -1,3 +1,4 @@
+---@meta exasol_expressions
 local M = {}
 
 ---@class ColumnReference
@@ -50,59 +51,6 @@ M.LiteralInterval = {}
 ---@alias LiteralExpression LiteralNull|LiteralBoolean|LiteralExactNumeric|LiteralDouble|StringBasedLiteral
 ---@alias Expression ColumnReference|LiteralExpression
 
----@class SubSelect
----@field type "sub_select"
----@field query SelectExpression
-M.SubSelect = {}
-
----@class SelectExpression
----@field selectList SelectList?
----@field from FromClause
----@field filter PredicateExpression?
----@field groupBy Expression[]?
----@field orderBy OrderByClause[]?
----@field limit LimitClause?
-M.SelectExpression = {}
-
----@alias FromClause TableExpression|JoinExpression
-
-M.FromClause = {}
-
----@class OrderByClause
----@field expression Expression
----@field isAscending boolean?
----@field nullsLast boolean?
-M.OrderByClause = {}
-
----@class LimitClause
----@field numElements integer
----@field offset integer?
-M.LimitClause = {}
-
----@class TableExpression
----@field type "table"
----@field schema string?
----@field name string
-M.TableExpression = {}
-
----@class JoinExpression
----@field type "join"
----@field join_type "inner" | "left_outer" | "right_outer" | "full_outer"
----@field left TableExpression
----@field right TableExpression
----@field condition Expression
-M.JoinExpression = {}
-
----@class ScalarFunctionExpression
----@field name string
-M.ScalarFunctionExpression = {}
-
----@class AggregateFunctionExpression
----@field name string
-M.AggregateFunctionExpression = {}
-
----@alias SelectList Expression[]
-
 ---@class BinaryPredicateExpression
 -- luacheck: max line length 140
 ---@field type  "predicate_equal"|"predicate_notequal"|"predicate_greater"|"predicate_less"|"predicate_lessequal"|"predicate_greaterequal"
@@ -130,7 +78,7 @@ M.InPredicate = {}
 
 ---@class ExistsPredicate
 ---@field type "predicate_exists"
----@field query_object SubSelect
+---@field query SelectSqlStatement
 M.ExistsPredicate = {}
 
 ---@class JsonPredicate

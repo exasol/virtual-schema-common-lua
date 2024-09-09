@@ -17,6 +17,16 @@ describe("ImportAppender", function()
         assert_yields([[IMPORT FROM EXA AT "CON1" STATEMENT 'SELECT * FROM "T1"']], original_query)
     end)
 
+    it("renders IMPORT with source type JDBC", function()
+        local original_query = {
+            type = "import",
+            source_type = "JDBC",
+            connection = "CON1",
+            statement = {type = "select", from = {type = "table", name = "T1"}}
+        }
+        assert_yields([[IMPORT FROM JDBC AT "CON1" STATEMENT 'SELECT * FROM "T1"']], original_query)
+    end)
+
     it("renders an IMPORT with select list data types", function()
         local original_query = {
             type = "import",

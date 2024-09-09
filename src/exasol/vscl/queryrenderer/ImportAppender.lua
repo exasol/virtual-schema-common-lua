@@ -22,23 +22,15 @@ function ImportAppender:_init(out_query)
     AbstractQueryAppender._init(self, out_query)
 end
 
--- TODO: this is not tested, check if this can be deleted
-function ImportAppender:_append_select_list_elements(select_list)
-    for i = 1, #select_list do
-        local element = select_list[i]
-        self:_comma(i)
-        self:_append_expression(element)
-    end
-end
-
+---@param connection string
 function ImportAppender:_append_connection(connection)
-    self:_append(' FROM EXA AT "')
+    self:_append(' AT "')
     self:_append(connection)
     self:_append('"')
 end
 
 --- Get the statement with extra-quotes where necessary as it will be embedded into the IMPORT statement.
----@param statement SelectExpression statement for which to escape quotes
+---@param statement SelectSqlStatement statement for which to escape quotes
 ---@return string statement statement with escaped single quotes
 local function get_statement_with_escaped_quotes(statement)
     local statement_out_query = Query:new()
@@ -49,13 +41,14 @@ local function get_statement_with_escaped_quotes(statement)
     return escaped_statement
 end
 
----@param statement SelectExpression
+---@param statement SelectSqlStatement
 function ImportAppender:_append_statement(statement)
     self:_append(" STATEMENT '")
     self:_append(get_statement_with_escaped_quotes(statement))
     self:_append("'")
 end
 
+---@param into ExasolTypeDefinition[]
 function ImportAppender:_append_into_clause(into)
     if (into ~= nil) and (next(into) ~= nil) then
         self:_append(" INTO (")
@@ -70,11 +63,18 @@ function ImportAppender:_append_into_clause(into)
     end
 end
 
+---@param source_type string?
+function ImportAppender:_append_from_clause(source_type)
+    self:_append(" FROM ")
+    self:_append(source_type or "EXA")
+end
+
 --- Append an `IMPORT` statement.
----@param import_query ImportStatement import query appended
+---@param import_query ImportSqlStatement import query appended
 function ImportAppender:append_import(import_query)
     self:_append("IMPORT")
     self:_append_into_clause(import_query.into)
+    self:_append_from_clause(import_query.source_type)
     self:_append_connection(import_query.connection)
     self:_append_statement(import_query.statement)
 end
