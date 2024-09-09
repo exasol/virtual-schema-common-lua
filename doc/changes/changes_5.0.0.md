@@ -1,4 +1,4 @@
-# virtual-schema-common-lua 4.1.0, released 2024-09-??
+# virtual-schema-common-lua 5.0.0, released 2024-09-09
 
 Code name: Support specifying source for `IMPORT` statement
 
