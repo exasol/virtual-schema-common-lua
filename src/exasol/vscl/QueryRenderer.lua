@@ -11,7 +11,7 @@ local ImportAppender = require("exasol.vscl.queryrenderer.ImportAppender")
 
 --- Create a new query renderer.
 ---@param original_query QueryStatement query structure as provided through the Virtual Schema API
----@param appender_config AppenderConfig
+---@param appender_config AppenderConfig configuration for the query renderer containing identifier quoting
 ---@return QueryRenderer query_renderer instance
 function QueryRenderer:new(original_query, appender_config)
     local instance = setmetatable({}, self)
@@ -20,13 +20,14 @@ function QueryRenderer:new(original_query, appender_config)
 end
 
 ---@param original_query QueryStatement query structure as provided through the Virtual Schema API
----@param appender_config AppenderConfig
+---@param appender_config AppenderConfig configuration for the query renderer containing identifier quoting
 function QueryRenderer:_init(original_query, appender_config)
     self.original_query = original_query
     self._appender_config = appender_config
 end
 
 ---@param query QueryStatement
+---@return ImportAppender|SelectAppender
 local function get_appender_class(query)
     if query.type == "import" then
         return ImportAppender

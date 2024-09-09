@@ -1,8 +1,8 @@
 --- This class is the abstract base class of all query renderers.
 --- It takes care of handling the temporary storage of the query to be constructed.
 ---@class AbstractQueryAppender
----@field _out_query Query
----@field _appender_config AppenderConfig
+---@field _out_query Query query object that the appender appends to
+---@field _appender_config AppenderConfig configuration for the query renderer containing identifier quoting
 local AbstractQueryAppender = {}
 
 ---@type AppenderConfig Default configuration with double quotes for identifiers.
@@ -10,8 +10,10 @@ AbstractQueryAppender.DEFAULT_APPENDER_CONFIG = {identifier_quote = '"'}
 
 local ExaError = require("ExaError")
 
----@param out_query Query
----@param appender_config AppenderConfig
+---Initializes the query appender and verifies that all parameters are set.
+---Raises an error if any of the parameters is missing.
+---@param out_query Query query object that the appender appends to
+---@param appender_config AppenderConfig configuration for the query renderer containing identifier quoting
 function AbstractQueryAppender:_init(out_query, appender_config)
     assert(out_query ~= nil, "AbstractQueryAppender requires a query object that it can append to.")
     assert(appender_config ~= nil, "AbstractQueryAppender requires an appender configuration.")
@@ -150,10 +152,12 @@ function AbstractQueryAppender:_append_string_literal(literal)
     self:_append("'")
 end
 
+local DEFAULT_IDENTIFIER_QUOTE<const> = '"'
+
 ---Append a quoted identifier, e.g. a schema, table or column name.
 ---@param identifier string identifier
 function AbstractQueryAppender:_append_identifier(identifier)
-    local quote_char = self._appender_config.identifier_quote or '"'
+    local quote_char = self._appender_config.identifier_quote or DEFAULT_IDENTIFIER_QUOTE
     self:_append(quote_char)
     self:_append(identifier)
     self:_append(quote_char)
