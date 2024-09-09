@@ -21,6 +21,16 @@ describe("SelectAppender", function()
         assert_yields('SELECT * FROM "S1"."T1"', original_query)
     end)
 
+    it("renders SELECT * from a table with given catalog and schema", function()
+        local original_query = {type = "select", from = {type = "table", catalog = "C1", schema = "S1", name = "T1"}}
+        assert_yields('SELECT * FROM "C1"."S1"."T1"', original_query)
+    end)
+
+    it("renders SELECT * ignoring catalog when schema is missing", function()
+        local original_query = {type = "select", from = {type = "table", catalog = "C1", name = "T1"}}
+        assert_yields('SELECT * FROM "T1"', original_query)
+    end)
+
     it("renders a SELECT with a table and two columns", function()
         local original_query = {
             type = "select",

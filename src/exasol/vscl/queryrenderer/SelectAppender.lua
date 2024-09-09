@@ -58,6 +58,10 @@ end
 function SelectAppender:_append_table(table)
     self:_append('"')
     if table.schema then
+        if table.catalog then
+            self:_append(table.catalog)
+            self:_append('"."')
+        end
         self:_append(table.schema)
         self:_append('"."')
     end
