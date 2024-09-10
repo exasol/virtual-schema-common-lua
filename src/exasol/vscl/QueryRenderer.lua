@@ -1,6 +1,6 @@
 --- Renderer for SQL queries.
 ---@class QueryRenderer
----@field original_query QueryStatement
+---@field _original_query QueryStatement
 ---@field _appender_config AppenderConfig
 local QueryRenderer = {}
 QueryRenderer.__index = QueryRenderer
@@ -22,7 +22,7 @@ end
 ---@param original_query QueryStatement query structure as provided through the Virtual Schema API
 ---@param appender_config AppenderConfig configuration for the query renderer containing identifier quoting
 function QueryRenderer:_init(original_query, appender_config)
-    self.original_query = original_query
+    self._original_query = original_query
     self._appender_config = appender_config
 end
 
@@ -40,9 +40,9 @@ end
 ---@return string rendered_query query as string
 function QueryRenderer:render()
     local out_query = Query:new()
-    local appender_class = get_appender_class(self.original_query)
+    local appender_class = get_appender_class(self._original_query)
     local appender = appender_class:new(out_query, self._appender_config)
-    appender:append(self.original_query)
+    appender:append(self._original_query)
     return out_query:to_string()
 end
 

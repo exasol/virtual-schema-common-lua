@@ -5,8 +5,10 @@
 ---@field _appender_config AppenderConfig configuration for the query renderer (e.g. containing identifier quoting)
 local AbstractQueryAppender = {}
 
+local DEFAULT_IDENTIFIER_QUOTE<const> = '"'
+
 ---@type AppenderConfig Default configuration with double quotes for identifiers.
-AbstractQueryAppender.DEFAULT_APPENDER_CONFIG = {identifier_quote = '"'}
+AbstractQueryAppender.DEFAULT_APPENDER_CONFIG = {identifier_quote = DEFAULT_IDENTIFIER_QUOTE}
 
 local ExaError = require("ExaError")
 
@@ -151,8 +153,6 @@ function AbstractQueryAppender:_append_string_literal(literal)
     self:_append(literal)
     self:_append("'")
 end
-
-local DEFAULT_IDENTIFIER_QUOTE<const> = '"'
 
 ---Append a quoted identifier, e.g. a schema, table or column name.
 ---@param identifier string identifier

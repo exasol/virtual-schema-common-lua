@@ -22,7 +22,7 @@ describe("ExpressionRenderer", function()
         assert_expression_yields(reference.column("the_table", --
         "the_column"), '"the_table"."the_column"')
     end)
-    
+
     it("renders column reference with custom quote", function()
         assert_expression_yields(reference.column("the_table", "the_column"), '`the_table`.`the_column`',
                                  {identifier_quote = "`"})
