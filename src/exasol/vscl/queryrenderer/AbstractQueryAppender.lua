@@ -2,7 +2,7 @@
 --- It takes care of handling the temporary storage of the query to be constructed.
 ---@class AbstractQueryAppender
 ---@field _out_query Query query object that the appender appends to
----@field _appender_config AppenderConfig configuration for the query renderer containing identifier quoting
+---@field _appender_config AppenderConfig configuration for the query renderer (e.g. containing identifier quoting)
 local AbstractQueryAppender = {}
 
 ---@type AppenderConfig Default configuration with double quotes for identifiers.
@@ -13,7 +13,7 @@ local ExaError = require("ExaError")
 ---Initializes the query appender and verifies that all parameters are set.
 ---Raises an error if any of the parameters is missing.
 ---@param out_query Query query object that the appender appends to
----@param appender_config AppenderConfig configuration for the query renderer containing identifier quoting
+---@param appender_config AppenderConfig configuration for the query renderer (e.g. containing identifier quoting)
 function AbstractQueryAppender:_init(out_query, appender_config)
     assert(out_query ~= nil, "AbstractQueryAppender requires a query object that it can append to.")
     assert(appender_config ~= nil, "AbstractQueryAppender requires an appender configuration.")
