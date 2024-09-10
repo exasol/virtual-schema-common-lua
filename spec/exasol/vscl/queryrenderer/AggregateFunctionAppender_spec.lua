@@ -3,6 +3,7 @@ local literal = require("exasol.vscl.queryrenderer.literal_constructors")
 local reference = require("exasol.vscl.queryrenderer.reference_constructors")
 local Query = require("exasol.vscl.Query")
 local AggregateFunctionAppender = require("exasol.vscl.queryrenderer.AggregateFunctionAppender")
+local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
 
 local function it_asserts(expected, actual, explanation)
     it(explanation or expected, function()
@@ -10,9 +11,15 @@ local function it_asserts(expected, actual, explanation)
     end)
 end
 
+---@param out_query Query?
+---@return AggregateFunctionAppender
+local function testee(out_query)
+    return AggregateFunctionAppender:new(out_query or Query:new(), AbstractQueryAppender.DEFAULT_APPENDER_CONFIG)
+end
+
 local function run_complex_function(name, extra_attributes, ...)
     local out_query = Query:new()
-    local renderer = AggregateFunctionAppender:new(out_query)
+    local renderer = testee(out_query)
     local scalar_function = renderer["_" .. string.lower(name)]
     assert(scalar_function ~= nil, "Aggregate function " .. name .. " must be present in renderer")
     local wrapped_arguments = literal.wrap_literals(...)
@@ -85,7 +92,7 @@ describe("AggregateFunctionRenderer", function()
     end
 
     it("asserts functions that are not allowed to have a DISTINCT modifier", function()
-        local renderer = AggregateFunctionAppender:new(Query:new())
+        local renderer = testee()
         assert.has_error(function()
             renderer:append({name = "MEDIAN", distinct = "true"})
         end, "Aggregate function 'MEDIAN' must not have a DISTINCT modifier.")

@@ -11,17 +11,18 @@ local ExaError = require("ExaError")
 
 --- Create a new instance of a `AggregateFunctionAppender`.
 ---@param out_query Query query to which the function will be appended
+---@param appender_config AppenderConfig
 ---@return AggregateFunctionAppender renderer for aggregate functions
-function AggregateFunctionAppender:new(out_query)
-    assert(out_query ~= nil, "Renderer for aggregate function requires a query object that it can append to.")
+function AggregateFunctionAppender:new(out_query, appender_config)
     local instance = setmetatable({}, self)
-    instance:_init(out_query)
+    instance:_init(out_query, appender_config)
     return instance
 end
 
 ---@param out_query Query
-function AggregateFunctionAppender:_init(out_query)
-    AbstractQueryAppender._init(self, out_query)
+---@param appender_config AppenderConfig
+function AggregateFunctionAppender:_init(out_query, appender_config)
+    AbstractQueryAppender._init(self, out_query, appender_config)
 end
 
 --- Append an aggregate function to an SQL query.
@@ -43,7 +44,7 @@ AggregateFunctionAppender.append = AggregateFunctionAppender.append_aggregate_fu
 
 ---@param expression Expression
 function AggregateFunctionAppender:_append_expression(expression)
-    local expression_renderer = ExpressionAppender:new(self._out_query)
+    local expression_renderer = ExpressionAppender:new(self._out_query, self._appender_config)
     expression_renderer:append_expression(expression)
 end
 
@@ -108,6 +109,11 @@ end
 AggregateFunctionAppender._every = AggregateFunctionAppender._append_distinct_function
 AggregateFunctionAppender._first_value = AggregateFunctionAppender._append_simple_function
 
+---@return SelectAppender
+function AggregateFunctionAppender:_select_appender()
+    return SelectAppender:new(self._out_query, self._appender_config)
+end
+
 function AggregateFunctionAppender:_group_concat(f)
     self:_append(string.upper(f.name))
     self:_append("(")
@@ -116,7 +122,7 @@ function AggregateFunctionAppender:_group_concat(f)
     end
     self:_append_comma_separated_arguments(f.arguments)
     if f.orderBy then
-        SelectAppender._append_order_by(self, f.orderBy)
+        self:_select_appender():_append_order_by(f.orderBy)
     end
     if f.separator then
         self:_append(" SEPARATOR ")
@@ -155,7 +161,7 @@ function AggregateFunctionAppender:_listagg(f)
     self:_append(")")
     if f.orderBy then
         self:_append(" WITHIN GROUP (")
-        SelectAppender._append_order_by(self, f.orderBy, true)
+        self:_select_appender():_append_order_by(f.orderBy, true)
         self:_append(")")
     end
 end

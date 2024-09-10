@@ -10,17 +10,18 @@ local ExaError = require("ExaError")
 
 --- Create a new instance of a `ScalarFunctionAppender`.
 ---@param out_query Query query to which the function will be appended
+---@param appender_config AppenderConfig
 ---@return ScalarFunctionAppender renderer for scalar functions
-function ScalarFunctionAppender:new(out_query)
-    assert(out_query ~= nil, "Renderer for scalar function requires a query object that it can append to.")
+function ScalarFunctionAppender:new(out_query, appender_config)
     local instance = setmetatable({}, self)
-    instance:_init(out_query)
+    instance:_init(out_query, appender_config)
     return instance
 end
 
 ---@param out_query Query query to which the function will be appended
-function ScalarFunctionAppender:_init(out_query)
-    AbstractQueryAppender._init(self, out_query)
+---@param appender_config AppenderConfig
+function ScalarFunctionAppender:_init(out_query, appender_config)
+    AbstractQueryAppender._init(self, out_query, appender_config)
 end
 
 --- Append a scalar function to an SQL query.
@@ -42,7 +43,7 @@ ScalarFunctionAppender.append = ScalarFunctionAppender.append_scalar_function
 
 ---@param expression Expression
 function ScalarFunctionAppender:_append_expression(expression)
-    local expression_renderer = ExpressionAppender:new(self._out_query)
+    local expression_renderer = ExpressionAppender:new(self._out_query, self._appender_config)
     expression_renderer:append_expression(expression)
 end
 

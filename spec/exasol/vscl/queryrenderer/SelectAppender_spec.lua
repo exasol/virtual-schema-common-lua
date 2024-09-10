@@ -2,8 +2,11 @@ require("busted.runner")()
 require("assertions.appender_assertions")
 local SelectAppender = require("exasol.vscl.queryrenderer.SelectAppender")
 
-local function assert_yields(expected, original_query)
-    assert.append_yields(SelectAppender, expected, original_query)
+---@param expected string
+---@param original_query any
+---@param appender_config AppenderConfig?
+local function assert_yields(expected, original_query, appender_config)
+    assert.append_yields(SelectAppender, expected, original_query, appender_config)
 end
 
 local function assert_select_error(expected, original_query)
@@ -24,6 +27,11 @@ describe("SelectAppender", function()
     it("renders SELECT * from a table with given catalog and schema", function()
         local original_query = {type = "select", from = {type = "table", catalog = "C1", schema = "S1", name = "T1"}}
         assert_yields('SELECT * FROM "C1"."S1"."T1"', original_query)
+    end)
+
+    it("renders SELECT * with custom identifier quote", function()
+        local original_query = {type = "select", from = {type = "table", catalog = "C1", schema = "S1", name = "T1"}}
+        assert_yields('SELECT * FROM `C1`.`S1`.`T1`', original_query, {identifier_quote = "`"})
     end)
 
     it("renders SELECT * ignoring catalog when schema is missing", function()

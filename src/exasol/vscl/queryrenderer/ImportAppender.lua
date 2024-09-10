@@ -10,20 +10,23 @@ local Query = require("exasol.vscl.Query")
 
 --- Create a new query renderer.
 ---@param out_query Query query structure as provided through the Virtual Schema API
+---@param appender_config AppenderConfig
 ---@return ImportAppender query_renderer instance
-function ImportAppender:new(out_query)
+function ImportAppender:new(out_query, appender_config)
     local instance = setmetatable({}, self)
-    instance:_init(out_query)
+    instance:_init(out_query, appender_config)
     return instance
 end
 
 ---@param out_query Query
-function ImportAppender:_init(out_query)
-    AbstractQueryAppender._init(self, out_query)
+---@param appender_config AppenderConfig
+function ImportAppender:_init(out_query, appender_config)
+    AbstractQueryAppender._init(self, out_query, appender_config)
 end
 
 ---@param connection string
 function ImportAppender:_append_connection(connection)
+    -- Using double quotes for connection identifier is OK, because this is only used for Exasol databases.
     self:_append(' AT "')
     self:_append(connection)
     self:_append('"')
@@ -31,10 +34,11 @@ end
 
 --- Get the statement with extra-quotes where necessary as it will be embedded into the IMPORT statement.
 ---@param statement SelectSqlStatement statement for which to escape quotes
+---@param appender_config AppenderConfig
 ---@return string statement statement with escaped single quotes
-local function get_statement_with_escaped_quotes(statement)
+local function get_statement_with_escaped_quotes(statement, appender_config)
     local statement_out_query = Query:new()
-    local select_appender = SelectAppender:new(statement_out_query)
+    local select_appender = SelectAppender:new(statement_out_query, appender_config)
     select_appender:append(statement)
     local rendered_statement = statement_out_query:to_string()
     local escaped_statement, _ = rendered_statement:gsub("'", "''")
@@ -44,7 +48,7 @@ end
 ---@param statement SelectSqlStatement
 function ImportAppender:_append_statement(statement)
     self:_append(" STATEMENT '")
-    self:_append(get_statement_with_escaped_quotes(statement))
+    self:_append(get_statement_with_escaped_quotes(statement, self._appender_config))
     self:_append("'")
 end
 

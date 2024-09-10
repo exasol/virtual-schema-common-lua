@@ -63,4 +63,6 @@ M.AggregateFunctionExpression = {}
 ---@field statement SelectSqlStatement
 M.ImportSqlStatement = {}
 
+---@alias QueryStatement SelectSqlStatement|ImportSqlStatement
+
 return M

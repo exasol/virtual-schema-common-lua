@@ -4,15 +4,28 @@ local Query = require("exasol.vscl.Query")
 local literal = require("exasol.vscl.queryrenderer.literal_constructors")
 local reference = require("exasol.vscl.queryrenderer.reference_constructors")
 local ExpressionAppender = require("exasol.vscl.queryrenderer.ExpressionAppender")
+local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
 
-local function assert_expression_yields(expression, expected)
-    assert.append_yields(ExpressionAppender, expected, expression)
+---@param expression any
+---@param expected string
+---@param appender_config AppenderConfig?
+local function assert_expression_yields(expression, expected, appender_config)
+    assert.append_yields(ExpressionAppender, expected, expression, appender_config)
+end
+
+local function testee()
+    return ExpressionAppender:new(Query:new(), AbstractQueryAppender.DEFAULT_APPENDER_CONFIG)
 end
 
 describe("ExpressionRenderer", function()
     it("renders column reference", function()
         assert_expression_yields(reference.column("the_table", --
         "the_column"), '"the_table"."the_column"')
+    end)
+
+    it("renders column reference with custom quote", function()
+        assert_expression_yields(reference.column("the_table", "the_column"), '`the_table`.`the_column`',
+                                 {identifier_quote = "`"})
     end)
 
     describe("renders literal:", function()
@@ -258,26 +271,31 @@ describe("ExpressionRenderer", function()
     it("raises an error if the output query is missing", function()
         assert.has_error(function()
             ExpressionAppender:new()
-        end, "Expression renderer requires a query object that it can append to.")
+        end, "AbstractQueryAppender requires a query object that it can append to.")
+    end)
 
+    it("raises an error if the appender configuration is missing", function()
+        assert.has_error(function()
+            ExpressionAppender:new(Query:new())
+        end, "AbstractQueryAppender requires an appender configuration.")
     end)
 
     it("raises an error if an unknown predicate type is used", function()
-        local appender = ExpressionAppender:new(Query:new())
+        local appender = testee()
         assert.error_matches(function()
             appender:_append_unary_predicate({type = "illegal predicate type"})
         end, "Cannot determine operator for unknown predicate type 'illegal predicate type'.", 1, true)
     end)
 
     it("raises an error if the expression type is unknown", function()
-        local appender = ExpressionAppender:new(Query:new())
+        local appender = testee()
         assert.error_matches(function()
             appender:append_expression({type = "illegal expression type"})
         end, "Unable to render unknown SQL expression type 'illegal expression type'.", 1, true)
     end)
 
     it("raises an error if the data type is unknown", function()
-        local appender = ExpressionAppender:new(Query:new())
+        local appender = testee()
         assert.error_matches(function()
             appender:_append_data_type({type = "illegal datatype"})
         end, "Unable to render unknown data type 'illegal datatype'.")

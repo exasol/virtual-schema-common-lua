@@ -1,13 +1,15 @@
 local say = require("say")
 local assert = require("luassert")
 local Query = require("exasol.vscl.Query")
+local AbstractQueryAppender = require("exasol.vscl.queryrenderer.AbstractQueryAppender")
 
 local function append_yields(_, arguments)
     local appender_class = arguments[1]
     local expected = arguments[2]
     local original_query = arguments[3]
+    local appender_config = arguments[4] or AbstractQueryAppender.DEFAULT_APPENDER_CONFIG
     local out_query = Query:new()
-    local appender = appender_class:new(out_query)
+    local appender = appender_class:new(out_query, appender_config)
     local ok, result = pcall(appender.append, appender, original_query)
     local actual = out_query:to_string()
     arguments[1] = original_query
@@ -25,8 +27,9 @@ local function append_error(_, arguments)
     local appender_class = arguments[1]
     local expected = arguments[2]
     local original_query = arguments[3]
+    local appender_config = arguments[4] or AbstractQueryAppender.DEFAULT_APPENDER_CONFIG
     local out_query = Query:new()
-    local appender = appender_class:new(out_query)
+    local appender = appender_class:new(out_query, appender_config)
     local ok, result = pcall(appender.append, appender, original_query)
     arguments[1] = original_query
     arguments[2] = expected
