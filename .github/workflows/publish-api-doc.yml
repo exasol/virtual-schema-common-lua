@@ -13,17 +13,17 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install Lua
-        uses: leafo/gh-actions-lua@v10
+        uses: leafo/gh-actions-lua@v13
         with:
           luaVersion: 5.4
 
       - name: Install LuaRocks
-        uses: leafo/gh-actions-luarocks@v4
+        uses: leafo/gh-actions-luarocks@v6
         with:
-          luaRocksVersion: "3.11.1"
+          luaRocksVersion: "3.13.0"
 
       - name: Generate API documentation
         run: |

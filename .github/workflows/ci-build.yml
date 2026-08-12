@@ -15,20 +15,20 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Install Lua ${{ matrix.lua_version }}
-        uses: leafo/gh-actions-lua@v10
+        uses: leafo/gh-actions-lua@v13
         with:
           luaVersion: ${{ matrix.lua_version }}
       - name: Install LuaRocks
-        uses: leafo/gh-actions-luarocks@v4
+        uses: leafo/gh-actions-luarocks@v6
         with:
-          luaRocksVersion: "3.11.1"
+          luaRocksVersion: "3.13.0"
       - name: Cache Lua dependencies
         id: cache-lua-dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.luarocks
           key: |
@@ -47,14 +47,14 @@ jobs:
       - name: Run shellcheck
         run: tools/shellcheck.sh
       - name: Archive code coverage results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: luacov-report
           path: target/luacov-reports/*
       - name: Build API documentation
         run: tools/build_docs.sh
       - name: Upload API documentation
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: api-documentation
           path: target/luals-doc/
