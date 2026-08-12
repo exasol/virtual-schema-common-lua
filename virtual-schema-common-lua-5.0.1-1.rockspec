@@ -25,7 +25,7 @@ description = {
 dependencies = {
     "lua >= 5.4, < 5.5",
     "exaerror >= 2.0.3",
-    "lua-cjson = 2.1.0.10", -- pinned to prevent "undefined symbol: lua_objlen" in 2.1.0.6 (https://github.com/mpx/lua-cjson/issues/56)
+    "lua-cjson = 2.1.0", -- pinned to prevent "undefined symbol: lua_objlen" in 2.1.0.6 (https://github.com/mpx/lua-cjson/issues/56)
     "remotelog >= 1.1.1"
 }
 
