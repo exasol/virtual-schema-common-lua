@@ -1,7 +1,7 @@
 ---@diagnostic disable: lowercase-global
 rockspec_format = "3.0"
 
-local tag = "5.0.0"
+local tag = "5.0.1"
 
 package = "virtual-schema-common-lua"
 version = tag .. "-1"
@@ -25,14 +25,14 @@ description = {
 dependencies = {
     "lua >= 5.4, < 5.5",
     "exaerror >= 2.0.3",
-    "lua-cjson = 2.1.0", -- pinned to prevent "undefined symbol: lua_objlen" in 2.1.0.6 (https://github.com/mpx/lua-cjson/issues/56)
+    "lua-cjson = 2.1.0.10", -- pinned to prevent "undefined symbol: lua_objlen" in 2.1.0.6 (https://github.com/mpx/lua-cjson/issues/56)
     "remotelog >= 1.1.1"
 }
 
 test_dependencies = {
-    "busted >= 2.2.0",
+    "busted >= 2.3.0",
     "luacheck >= 1.2.0",
-    "luacov >= 0.15.0",
+    "luacov >= 0.17.0",
     "luacov-coveralls >= 0.2.3"
 }
 -- LuaFormatter on
