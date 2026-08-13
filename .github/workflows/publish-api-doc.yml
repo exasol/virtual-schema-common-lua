@@ -20,7 +20,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Install Lua and LuaRocks
-        run: apt install lua luarocks
+        run: sudo apt-get install lua luarocks
       - name: Generate API documentation
         run: |
           ./tools/build_docs.sh

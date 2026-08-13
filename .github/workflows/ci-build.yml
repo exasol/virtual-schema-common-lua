@@ -43,7 +43,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Install Lua and LuaRocks
-        run: apt install lua luarocks
+        run: sudo apt-get install lua luarocks
       - name: Cache Lua dependencies
         id: cache-lua-dependencies
         uses: actions/cache@v6
