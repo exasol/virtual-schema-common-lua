@@ -51,6 +51,7 @@ jobs:
           sudo update-alternatives --set lua-compiler /usr/bin/luac5.4
           luarocks config --scope user lua_version 5.4
           luarocks config --scope user lua_dir /usr
+          luarocks config --local deploy_bin_dir >> "$GITHUB_PATH"
           test "$(lua -e 'print(_VERSION)')" = "Lua 5.4"
           test "$(luarocks config lua_version)" = "5.4"
           test "$(luarocks config variables.LUA_INCDIR)" = "/usr/include/lua5.4"
