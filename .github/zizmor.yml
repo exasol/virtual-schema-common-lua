@@ -1,0 +1,17 @@
+# See https://docs.zizmor.sh/configuration/#settings
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        "actions/*": ref-pin
+        "exasol/python-toolbox/.github/actions/security-issues": ref-pin
+        "*": hash-pin
+  cache-poisoning:
+    ignore:
+      # Enabling caching is OK for non-release workflows
+      - ci-build.yml
+      - ci-build-native-build.yml
+      - ci-build-db-version-matrix.yml
+      - project-keeper-verify.yml
+      - test_on_windows.yml
+      - test_linux_build_on_windows.yml

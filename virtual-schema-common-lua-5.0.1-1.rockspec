@@ -1,7 +1,7 @@
 ---@diagnostic disable: lowercase-global
 rockspec_format = "3.0"
 
-local tag = "5.0.0"
+local tag = "5.0.1"
 
 package = "virtual-schema-common-lua"
 version = tag .. "-1"
@@ -30,9 +30,9 @@ dependencies = {
 }
 
 test_dependencies = {
-    "busted >= 2.2.0",
+    "busted >= 2.3.0",
     "luacheck >= 1.2.0",
-    "luacov >= 0.15.0",
+    "luacov >= 0.17.0",
     "luacov-coveralls >= 0.2.3"
 }
 -- LuaFormatter on

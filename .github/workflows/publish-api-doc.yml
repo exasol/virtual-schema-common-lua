@@ -4,37 +4,43 @@ on:
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
   build:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
-
-      - name: Install Lua
-        uses: leafo/gh-actions-lua@v10
+        uses: actions/checkout@v7
         with:
-          luaVersion: 5.4
-
-      - name: Install LuaRocks
-        uses: leafo/gh-actions-luarocks@v4
-        with:
-          luaRocksVersion: "3.11.1"
-
+          persist-credentials: false
+      - name: Install Lua and LuaRocks
+        run: sudo apt-get install lua5.4 liblua5.4-dev luarocks
       - name: Generate API documentation
         run: |
           ./tools/build_docs.sh
-
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
         with:
-          branch: gh-pages
-          folder: target/luals-doc
-          target-folder: api
-          clean: true
-          single-commit: true
-          force: true
+          path: ./target/luals-doc
+
+  deploy:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    permissions:
+      contents: read
+      id-token: write
+      pages: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

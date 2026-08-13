@@ -7,37 +7,57 @@ on:
   pull_request:
 
 jobs:
-  build:
-    strategy:
-      fail-fast: true
-      matrix:
-        lua_version: [5.4]
-    runs-on: ubuntu-24.04
+  lint-github-actions:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+    defaults:
+      run:
+        shell: bash
+    concurrency:
+      group: '${{ github.workflow }}-github-actions-linter-${{ github.ref }}'
+      cancel-in-progress: true
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        id: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Lint GitHub actions with Zizmore
+        id: lint-github-actions
+        uses: zizmorcore/zizmor-action@192e21d79ab29983730a13d1382995c2307fbcaa
+        with:
+          advanced-security: false
+
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - name: Install Lua ${{ matrix.lua_version }}
-        uses: leafo/gh-actions-lua@v10
+          persist-credentials: false
+      - name: Cache downloaded LuaRocks packages
+        uses: actions/cache@v6
         with:
-          luaVersion: ${{ matrix.lua_version }}
-      - name: Install LuaRocks
-        uses: leafo/gh-actions-luarocks@v4
-        with:
-          luaRocksVersion: "3.11.1"
-      - name: Cache Lua dependencies
-        id: cache-lua-dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.luarocks
-          key: |
-            ${{ runner.os }}-lua-${{ matrix.lua_version }}-${{ hashFiles('*.rockspec') }}
-          restore-keys: |
-            "${{ runner.os }}-lua-${{ matrix.lua_version }}"
-            "${{ runner.os }}-lua"
+          path: ~/.cache/luarocks
+          key: ${{ runner.os }}-luarocks-lua-5.4-${{ hashFiles('*.rockspec') }}
+      - name: Install Lua and LuaRocks
+        run: |
+          sudo apt-get install lua5.4 liblua5.4-dev luarocks
+          sudo update-alternatives --install /usr/bin/lua lua-interpreter /usr/bin/lua5.4 54
+          sudo update-alternatives --install /usr/bin/luac lua-compiler /usr/bin/luac5.4 54
+          sudo update-alternatives --set lua-interpreter /usr/bin/lua5.4
+          sudo update-alternatives --set lua-compiler /usr/bin/luac5.4
+          luarocks config --scope user lua_version 5.4
+          luarocks config --scope user lua_dir /usr
+          luarocks config --local deploy_bin_dir >> "$GITHUB_PATH"
       - name: Install Lua dependencies
-        run: luarocks make --local
+        run: luarocks make --local --lua-version 5.4
       - name: Run tests
         run: tools/run_tests.sh --run=ci
       - name: Run static code analysis
@@ -47,37 +67,21 @@ jobs:
       - name: Run shellcheck
         run: tools/shellcheck.sh
       - name: Archive code coverage results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: luacov-report
           path: target/luacov-reports/*
-      - name: Build API documentation
-        run: tools/build_docs.sh
-      - name: Upload API documentation
-        uses: actions/upload-artifact@v4
-        with:
-          name: api-documentation
-          path: target/luals-doc/
-          if-no-files-found: error
-
-  ## This is a separate job because it requires running apt-get which takes > 40s.
-  ## When the other job also uses apt-get this can be moved back.
-  plantuml:
-    strategy:
-      fail-fast: true
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
-    name: "Build Plantuml diagrams"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
       - name: Install Plantuml
         run: |
           sudo apt-get update -y
           sudo apt-get install -y plantuml
       - name: Build diagrams
         run: tools/build_diagrams.sh
+      - name: Build API documentation
+        run: tools/build_docs.sh
+      - name: Upload API documentation
+        uses: actions/upload-artifact@v7
+        with:
+          name: api-documentation
+          path: target/luals-doc/
+          if-no-files-found: error
