@@ -44,6 +44,7 @@ jobs:
       - name: Install Lua and LuaRocks
         run: |
           sudo apt-get install lua5.4 liblua5.4-dev luarocks
+          sudo apt-get remove lua5.1
           sudo update-alternatives --install /usr/bin/lua lua-interpreter /usr/bin/lua5.4 54
           sudo update-alternatives --install /usr/bin/luac lua-compiler /usr/bin/luac5.4 54
           sudo update-alternatives --set lua-interpreter /usr/bin/lua5.4
