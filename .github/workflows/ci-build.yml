@@ -33,8 +33,6 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    env:
-      LUA_INCDIR: /usr/include/lua5.4
     permissions:
       contents: read
     steps:
@@ -51,6 +49,11 @@ jobs:
           sudo update-alternatives --install /usr/bin/luac lua-compiler /usr/bin/luac5.4 54
           sudo update-alternatives --set lua-interpreter /usr/bin/lua5.4
           sudo update-alternatives --set lua-compiler /usr/bin/luac5.4
+          luarocks config --scope user lua_version 5.4
+          luarocks config --scope user lua_dir /usr
+          test "$(lua -e 'print(_VERSION)')" = "Lua 5.4"
+          test "$(luarocks config lua_version)" = "5.4"
+          test "$(luarocks config variables.LUA_INCDIR)" = "/usr/include/lua5.4"
       - name: Cache Lua dependencies
         id: cache-lua-dependencies
         uses: actions/cache@v6
