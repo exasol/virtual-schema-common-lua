@@ -46,9 +46,9 @@ jobs:
         id: cache-lua-dependencies
         uses: actions/cache@v6
         with:
-          path: ~/.luarocks
+          path: ~/.cache/luarocks
           key: |
-            ${{ runner.os }}-lua-5.4-v2-${{ hashFiles('*.rockspec') }}
+            ${{ runner.os }}-lua-5.4-v3-${{ hashFiles('*.rockspec') }}
       - name: Install Lua and LuaRocks
         run: |
           sudo apt-get install lua5.4 liblua5.4-dev luarocks
