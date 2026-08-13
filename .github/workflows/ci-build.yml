@@ -33,8 +33,6 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    env:
-      LUAROCKS_CONFIG: ${{ github.workspace }}/.github/luarocks-config-5.4.lua
     permissions:
       contents: read
     steps:
@@ -44,7 +42,9 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Install Lua and LuaRocks
-        run: sudo apt-get install lua5.4 liblua5.4-dev luarocks
+        run: |
+          sudo apt-get install lua5.4 liblua5.4-dev luarocks
+          luarocks config lua_version 5.4
       - name: Cache Lua dependencies
         id: cache-lua-dependencies
         uses: actions/cache@v6
