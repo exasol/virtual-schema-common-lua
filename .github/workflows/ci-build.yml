@@ -66,6 +66,12 @@ jobs:
         with:
           name: luacov-report
           path: target/luacov-reports/*
+      - name: Install Plantuml
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y plantuml
+      - name: Build diagrams
+        run: tools/build_diagrams.sh
       - name: Build API documentation
         run: tools/build_docs.sh
       - name: Upload API documentation
@@ -74,24 +80,3 @@ jobs:
           name: api-documentation
           path: target/luals-doc/
           if-no-files-found: error
-
-  ## This is a separate job because it requires running apt-get which takes > 40s.
-  ## When the other job also uses apt-get this can be moved back.
-  plantuml:
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
-    name: "Build Plantuml diagrams"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 1
-          persist-credentials: false
-      - name: Install Plantuml
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y plantuml
-      - name: Build diagrams
-        run: tools/build_diagrams.sh
