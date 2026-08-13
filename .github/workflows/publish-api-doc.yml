@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
   build:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,14 +17,10 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v7
-      - name: Install Lua
-        uses: leafo/gh-actions-lua@v13
         with:
-          luaVersion: 5.4
-      - name: Install LuaRocks
-        uses: leafo/gh-actions-luarocks@v6
-        with:
-          luaRocksVersion: "3.13.0"
+          persist-credentials: false
+      - name: Install Lua and LuaRocks
+        run: apt install lua luarocks
       - name: Generate API documentation
         run: |
           ./tools/build_docs.sh
