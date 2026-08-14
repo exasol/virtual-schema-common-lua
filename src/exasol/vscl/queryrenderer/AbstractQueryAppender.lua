@@ -67,6 +67,12 @@ end
 
 ---@param data_type TimestampTypeDefinition
 function AbstractQueryAppender:_append_timestamp(data_type)
+    local precision = data_type.precision
+    if precision ~= nil then
+        self:_append("(")
+        self:_append(precision)
+        self:_append(")")
+    end
     if data_type.withLocalTimeZone then
         self:_append(" WITH LOCAL TIME ZONE")
     end
