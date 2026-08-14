@@ -17,6 +17,11 @@ readonly type_check_result_json="$type_check_log_dir"/check.json
 
 "$base_dir/tools/install-luals.sh"
 
+# LuaLS 3.19.1 does not create check.json when there are no diagnostics.
+# Initialize the report so that the processing below can handle both cases.
+mkdir -p "$type_check_log_dir"
+printf '{}\n' > "$type_check_result_json"
+
 echo "Running type check using $language_server_executable..."
 if ! "$language_server_executable" --check="$base_dir" --loglevel=trace --logpath="$type_check_log_dir" --checklevel="$type_check_level" ; then
     echo "Type check failed with return code $?"
