@@ -15,7 +15,8 @@ M.CharacterTypeDefinition = {}
 
 ---@class TimestampTypeDefinition
 ---@field type "TIMESTAMP"
----@field withLocalTimeZone boolean
+---@field precision integer?
+---@field withLocalTimeZone boolean?
 M.TimestampTypeDefinition = {}
 
 ---@class GeometryTypeDefinition

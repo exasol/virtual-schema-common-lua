@@ -383,6 +383,23 @@ describe("ScalarFunctionRenderer", function()
         it_asserts("CAST(347 AS VARCHAR(3))",
                    run_complex_function("CAST", {dataType = {type = "VARCHAR", size = 3}}, 347), "number to VARCHAR")
 
+        it_asserts("CAST(347 AS TIMESTAMP(0))",
+                   run_complex_function("CAST", {dataType = {type = "TIMESTAMP", precision = 0}}, 347),
+                   "number to TIMESTAMP with precision")
+
+        it_asserts("CAST(347 AS TIMESTAMP(9) WITH LOCAL TIME ZONE)",
+                   run_complex_function("CAST", {dataType = {
+                       type = "TIMESTAMP", precision = 9, withLocalTimeZone = true
+                   }}, 347),
+                   "number to TIMESTAMP with precision and local time zone")
+
+        it_asserts("CAST(347 AS TIMESTAMP)", run_complex_function("CAST", {dataType = {type = "TIMESTAMP"}}, 347),
+                   "number to TIMESTAMP without precision")
+
+        it_asserts("CAST(347 AS TIMESTAMP WITH LOCAL TIME ZONE)",
+                   run_complex_function("CAST", {dataType = {type = "TIMESTAMP", withLocalTimeZone = true}}, 347),
+                   "number to TIMESTAMP with local time zone without precision")
+
         it_asserts("CAST(INTERVAL '+1-02' YEAR TO MONTH AS VARCHAR(7))",
                    run_complex_function("CAST", {dataType = {type = "VARCHAR", size = 7}}, {
             value = "+1-02",
@@ -451,6 +468,29 @@ describe("ScalarFunctionRenderer", function()
                     error_behavior = {type = "ERROR"},
                     data_type = {size = 100, type = "VARCHAR"},
                     expected = [[JSON_VALUE('{"a": 1}', '$.a' RETURNING VARCHAR(100) NULL ON EMPTY ERROR ON ERROR)]]
+                }, {
+                    argument_1 = '{"a": 1}',
+                    argument_2 = '$.a',
+                    empty_behavior = {type = "NULL"},
+                    error_behavior = {type = "ERROR"},
+                    data_type = {type = "TIMESTAMP", precision = 9},
+                    expected = [[JSON_VALUE('{"a": 1}', '$.a' RETURNING TIMESTAMP(9) NULL ON EMPTY ERROR ON ERROR)]]
+                }, {
+                    argument_1 = '{"a": 1}',
+                    argument_2 = '$.a',
+                    empty_behavior = {type = "NULL"},
+                    error_behavior = {type = "ERROR"},
+                    data_type = {type = "TIMESTAMP", precision = 0, withLocalTimeZone = true},
+                    expected = [[JSON_VALUE('{"a": 1}', '$.a' RETURNING TIMESTAMP(0) WITH LOCAL TIME ZONE ]]
+                            .. "NULL ON EMPTY ERROR ON ERROR)"
+                }, {
+                    argument_1 = '{"a": 1}',
+                    argument_2 = '$.a',
+                    empty_behavior = {type = "NULL"},
+                    error_behavior = {type = "ERROR"},
+                    data_type = {type = "TIMESTAMP", withLocalTimeZone = true},
+                    expected = [[JSON_VALUE('{"a": 1}', '$.a' RETURNING TIMESTAMP WITH LOCAL TIME ZONE ]]
+                            .. "NULL ON EMPTY ERROR ON ERROR)"
                 }
             }
             for _, parameter in ipairs(parameters) do
