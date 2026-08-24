@@ -1,3 +1,13 @@
+> [!IMPORTANT]
+> The content of this repository has been integrated with the mono-repo for Lua-based Virtual Schemas.
+>
+> https://github.com/exasol/exasol-virtual-schema-lua
+>
+> Please refer to this repository for newer versions of this base library.
+
+> [!WARNING]
+> This repository is archived and does not receive updates anymore.
+
 # virtual-schema-common-lua (VSCL)
 
 This project contains a base library that abstracts Exasol's [Virtual Schema API](https://github.com/exasol/virtual-schema-common-java/blob/main/doc/development/api/virtual_schema_api.md) and provides a convenient starting point for implementing Lua-based Virtual Schemas.
